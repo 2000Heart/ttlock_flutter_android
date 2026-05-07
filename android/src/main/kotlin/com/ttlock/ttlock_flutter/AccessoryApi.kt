@@ -317,9 +317,9 @@ class AccessoryApi : TTAccessoryHostApi {
 
     override fun standaloneDoorSensorIsSupportFunction(
         featureValue: String,
-        function: Long
+        lockFunction: Long
     ): Boolean {
-        return FeatureValueUtil.isSupportFeatureValue(featureValue, function.toInt())
+        return FeatureValueUtil.isSupportFeatureValue(featureValue, lockFunction.toInt())
     }
 
     override fun waterMeterConfigServer(
@@ -532,9 +532,9 @@ class AccessoryApi : TTAccessoryHostApi {
 
     override fun waterMeterIsSupportFunction(
         featureValue: String,
-        function: Long
+        lockFunction: Long
     ): Boolean {
-        return FeatureValueUtil.isSupportFeatureValue(featureValue, function.toInt())
+        return FeatureValueUtil.isSupportFeatureValue(featureValue, lockFunction.toInt())
     }
 
     override fun waterMeterConfigApn(
@@ -780,9 +780,9 @@ class AccessoryApi : TTAccessoryHostApi {
 
     override fun electricMeterIsSupportFunction(
         featureValue: String,
-        function: Long
+        lockFunction: Long
     ): Boolean {
-        return FeatureValueUtil.isSupportFeatureValue(featureValue, function.toInt())
+        return FeatureValueUtil.isSupportFeatureValue(featureValue, lockFunction.toInt())
     }
 
 }

@@ -2309,7 +2309,7 @@ interface TTLockHostApi {
   fun verifyLock(lockMac: String, callback: (Result<Unit>) -> Unit)
   fun controlLock(lockData: String, action: TTControlAction, callback: (Result<ControlLockResult>) -> Unit)
   fun getLockSwitchState(lockData: String, callback: (Result<TTLockSwitchState>) -> Unit)
-  fun supportFunction(function: TTLockFunction, lockData: String): Boolean
+  fun supportFunction(lockFunction: TTLockFunction, lockData: String): Boolean
   fun createCustomPasscode(passcode: String, startDate: Long, endDate: Long, lockData: String, callback: (Result<Unit>) -> Unit)
   fun modifyPasscode(passcodeOrigin: String, passcodeNew: String?, startDate: Long, endDate: Long, lockData: String, callback: (Result<Unit>) -> Unit)
   fun deletePasscode(passcode: String, lockData: String, callback: (Result<Unit>) -> Unit)
@@ -2563,10 +2563,10 @@ interface TTLockHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val functionArg = args[0] as TTLockFunction
+            val lockFunctionArg = args[0] as TTLockFunction
             val lockDataArg = args[1] as String
             val wrapped: List<Any?> = try {
-              listOf(api.supportFunction(functionArg, lockDataArg))
+              listOf(api.supportFunction(lockFunctionArg, lockDataArg))
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }
@@ -4132,7 +4132,7 @@ interface TTAccessoryHostApi {
   fun initDoorSensor(mac: String, lockData: String, callback: (Result<TTLockSystemModel>) -> Unit)
   fun standaloneDoorSensorInit(mac: String, info: Map<String, Any?>, callback: (Result<TTStandaloneDoorSensorInfo>) -> Unit)
   fun standaloneDoorSensorReadFeatureValue(mac: String, callback: (Result<String>) -> Unit)
-  fun standaloneDoorSensorIsSupportFunction(featureValue: String, function: Long): Boolean
+  fun standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: Long): Boolean
   fun waterMeterConfigServer(url: String, clientId: String, accessToken: String)
   fun waterMeterConnect(mac: String, callback: (Result<Unit>) -> Unit)
   fun waterMeterDisconnect(mac: String)
@@ -4147,7 +4147,7 @@ interface TTAccessoryHostApi {
   fun waterMeterSetTotalUsage(waterMeterId: String, totalM3: Double, callback: (Result<Unit>) -> Unit)
   fun waterMeterGetFeatureValue(waterMeterId: String, callback: (Result<String>) -> Unit)
   fun waterMeterGetDeviceInfo(waterMeterId: String, callback: (Result<WaterMeterDeviceInfo>) -> Unit)
-  fun waterMeterIsSupportFunction(featureValue: String, function: Long): Boolean
+  fun waterMeterIsSupportFunction(featureValue: String, lockFunction: Long): Boolean
   fun waterMeterConfigApn(apn: String, callback: (Result<Unit>) -> Unit)
   fun waterMeterConfigMeterServer(ip: String, port: String, callback: (Result<Unit>) -> Unit)
   fun waterMeterReset(waterMeterId: String, callback: (Result<Unit>) -> Unit)
@@ -4164,7 +4164,7 @@ interface TTAccessoryHostApi {
   fun electricMeterCharge(electricMeterId: String, amount: Double, callback: (Result<Unit>) -> Unit)
   fun electricMeterSetMaxPower(electricMeterId: String, maxPower: Double, callback: (Result<Unit>) -> Unit)
   fun electricMeterGetFeatureValue(electricMeterId: String, callback: (Result<String>) -> Unit)
-  fun electricMeterIsSupportFunction(featureValue: String, function: Long): Boolean
+  fun electricMeterIsSupportFunction(featureValue: String, lockFunction: Long): Boolean
 
   companion object {
     /** The codec used by TTAccessoryHostApi. */
@@ -4365,9 +4365,9 @@ interface TTAccessoryHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val featureValueArg = args[0] as String
-            val functionArg = args[1] as Long
+            val lockFunctionArg = args[1] as Long
             val wrapped: List<Any?> = try {
-              listOf(api.standaloneDoorSensorIsSupportFunction(featureValueArg, functionArg))
+              listOf(api.standaloneDoorSensorIsSupportFunction(featureValueArg, lockFunctionArg))
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }
@@ -4658,9 +4658,9 @@ interface TTAccessoryHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val featureValueArg = args[0] as String
-            val functionArg = args[1] as Long
+            val lockFunctionArg = args[1] as Long
             val wrapped: List<Any?> = try {
-              listOf(api.waterMeterIsSupportFunction(featureValueArg, functionArg))
+              listOf(api.waterMeterIsSupportFunction(featureValueArg, lockFunctionArg))
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }
@@ -4989,9 +4989,9 @@ interface TTAccessoryHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val featureValueArg = args[0] as String
-            val functionArg = args[1] as Long
+            val lockFunctionArg = args[1] as Long
             val wrapped: List<Any?> = try {
-              listOf(api.electricMeterIsSupportFunction(featureValueArg, functionArg))
+              listOf(api.electricMeterIsSupportFunction(featureValueArg, lockFunctionArg))
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }
