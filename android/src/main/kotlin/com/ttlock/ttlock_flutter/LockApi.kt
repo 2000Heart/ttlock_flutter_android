@@ -220,15 +220,15 @@ class LockApi: TTLockHostApi {
     }
 
     override fun supportFunction(
-        function: TTLockFunction,
+        lockFunction: TTLockFunction,
         lockData: String
     ): Boolean {
-        val featureValue = featureValueConvert(function)
+        val featureValue = featureValueConvert(lockFunction)
         if (featureValue == null) {
             return false
         }
         val r =  FeatureValueUtil.isSupportFeature(lockData, featureValue)
-        LogUtil.d(function.name + ":" + r)
+        LogUtil.d(lockFunction.name + ":" + r)
 
         return r
     }

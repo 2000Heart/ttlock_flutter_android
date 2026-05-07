@@ -80,8 +80,8 @@ fun controlActionConvert(action: TTControlAction): Int {
     }
 }
 
-fun featureValueConvert(function: TTLockFunction): Int? {
-    return when(function) {
+fun featureValueConvert(lockFunction: TTLockFunction): Int? {
+    return when(lockFunction) {
         TTLockFunction.PASSCODE -> FeatureValue.PASSCODE
         TTLockFunction.IC_CARD -> FeatureValue.IC
         TTLockFunction.FINGERPRINT -> FeatureValue.FINGER_PRINT
