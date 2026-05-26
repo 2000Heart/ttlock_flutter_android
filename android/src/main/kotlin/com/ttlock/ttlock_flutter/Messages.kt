@@ -795,6 +795,126 @@ data class TTCycleModel (
   override fun hashCode(): Int = toList().hashCode()
 }
 
+/**
+ * [TTEventChannelApi.lockScanWifi] 订阅前通过 [TTLockHostApi.setLockScanWifiParam] 写入。
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class TTLockScanWifiEventParam (
+  val lockData: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TTLockScanWifiEventParam {
+      val lockData = pigeonVar_list[0] as String
+      return TTLockScanWifiEventParam(lockData)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      lockData,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is TTLockScanWifiEventParam) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return MessagesPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/**
+ * lockAddCard / lockAddFingerprint / lockAddFace 订阅前写入（含有效期，毫秒时间戳）。
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class TTLockCredentialEventParam (
+  val lockData: String,
+  val cycleList: List<TTCycleModel>? = null,
+  val startDate: Long,
+  val endDate: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TTLockCredentialEventParam {
+      val lockData = pigeonVar_list[0] as String
+      val cycleList = pigeonVar_list[1] as List<TTCycleModel>?
+      val startDate = pigeonVar_list[2] as Long
+      val endDate = pigeonVar_list[3] as Long
+      return TTLockCredentialEventParam(lockData, cycleList, startDate, endDate)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      lockData,
+      cycleList,
+      startDate,
+      endDate,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is TTLockCredentialEventParam) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return MessagesPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/**
+ * accessoryAddKeypadFingerprint / accessoryAddKeypadCard 订阅前写入。
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class TTKeypadCredentialEventParam (
+  val keypadMac: String,
+  val lockData: String,
+  val isMultifunctional: Boolean,
+  val cycleList: List<TTCycleModel>? = null,
+  val startDate: Long,
+  val endDate: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TTKeypadCredentialEventParam {
+      val keypadMac = pigeonVar_list[0] as String
+      val lockData = pigeonVar_list[1] as String
+      val isMultifunctional = pigeonVar_list[2] as Boolean
+      val cycleList = pigeonVar_list[3] as List<TTCycleModel>?
+      val startDate = pigeonVar_list[4] as Long
+      val endDate = pigeonVar_list[5] as Long
+      return TTKeypadCredentialEventParam(keypadMac, lockData, isMultifunctional, cycleList, startDate, endDate)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      keypadMac,
+      lockData,
+      isMultifunctional,
+      cycleList,
+      startDate,
+      endDate,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is TTKeypadCredentialEventParam) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return MessagesPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
 /** Generated class from Pigeon that represents data sent in messages. */
 data class ControlLockResult (
   val lockTime: Long,
@@ -1928,130 +2048,145 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
       }
       160.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ControlLockResult.fromList(it)
+          TTLockScanWifiEventParam.fromList(it)
         }
       }
       161.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AutoLockingTime.fromList(it)
+          TTLockCredentialEventParam.fromList(it)
         }
       }
       162.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiInfoModel.fromList(it)
+          TTKeypadCredentialEventParam.fromList(it)
         }
       }
       163.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          CameraLockWifiResult.fromList(it)
+          ControlLockResult.fromList(it)
         }
       }
       164.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockSystemModel.fromList(it)
+          AutoLockingTime.fromList(it)
         }
       }
       165.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AccessoryElectricQuantityResult.fromList(it)
+          TTWifiInfoModel.fromList(it)
         }
       }
       166.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockScanModel.fromList(it)
+          CameraLockWifiResult.fromList(it)
         }
       }
       167.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTPasscodeModel.fromList(it)
+          TTLockSystemModel.fromList(it)
         }
       }
       168.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTICCardModel.fromList(it)
+          AccessoryElectricQuantityResult.fromList(it)
         }
       }
       169.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTFingerprintModel.fromList(it)
+          TTLockScanModel.fromList(it)
         }
       }
       170.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTGatewayScanModel.fromList(it)
+          TTPasscodeModel.fromList(it)
         }
       }
       171.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GatewayDeviceInfo.fromList(it)
+          TTICCardModel.fromList(it)
         }
       }
       172.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTRemoteAccessoryScanModel.fromList(it)
+          TTFingerprintModel.fromList(it)
         }
       }
       173.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorScanModel.fromList(it)
+          TTGatewayScanModel.fromList(it)
         }
       }
       174.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorInfo.fromList(it)
+          GatewayDeviceInfo.fromList(it)
         }
       }
       175.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTMeterScanModel.fromList(it)
+          TTRemoteAccessoryScanModel.fromList(it)
         }
       }
       176.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWaterMeterInitResult.fromList(it)
+          TTStandaloneDoorSensorScanModel.fromList(it)
         }
       }
       177.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTElectricMeterInitResult.fromList(it)
+          TTStandaloneDoorSensorInfo.fromList(it)
         }
       }
       178.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanResult.fromList(it)
+          TTMeterScanModel.fromList(it)
         }
       }
       179.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanEntry.fromList(it)
+          TTWaterMeterInitResult.fromList(it)
         }
       }
       180.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          RemoteKeypadInitResult.fromList(it)
+          TTElectricMeterInitResult.fromList(it)
         }
       }
       181.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          MultifunctionalKeypadInitResult.fromList(it)
+          TTWifiScanResult.fromList(it)
         }
       }
       182.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          WaterMeterDeviceInfo.fromList(it)
+          TTWifiScanEntry.fromList(it)
         }
       }
       183.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddCardEvent.fromList(it)
+          RemoteKeypadInitResult.fromList(it)
         }
       }
       184.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddFingerprintEvent.fromList(it)
+          MultifunctionalKeypadInitResult.fromList(it)
         }
       }
       185.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          WaterMeterDeviceInfo.fromList(it)
+        }
+      }
+      186.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AddCardEvent.fromList(it)
+        }
+      }
+      187.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AddFingerprintEvent.fromList(it)
+        }
+      }
+      188.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           AddFaceEvent.fromList(it)
         }
@@ -2185,108 +2320,120 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
         stream.write(159)
         writeValue(stream, value.toList())
       }
-      is ControlLockResult -> {
+      is TTLockScanWifiEventParam -> {
         stream.write(160)
         writeValue(stream, value.toList())
       }
-      is AutoLockingTime -> {
+      is TTLockCredentialEventParam -> {
         stream.write(161)
         writeValue(stream, value.toList())
       }
-      is TTWifiInfoModel -> {
+      is TTKeypadCredentialEventParam -> {
         stream.write(162)
         writeValue(stream, value.toList())
       }
-      is CameraLockWifiResult -> {
+      is ControlLockResult -> {
         stream.write(163)
         writeValue(stream, value.toList())
       }
-      is TTLockSystemModel -> {
+      is AutoLockingTime -> {
         stream.write(164)
         writeValue(stream, value.toList())
       }
-      is AccessoryElectricQuantityResult -> {
+      is TTWifiInfoModel -> {
         stream.write(165)
         writeValue(stream, value.toList())
       }
-      is TTLockScanModel -> {
+      is CameraLockWifiResult -> {
         stream.write(166)
         writeValue(stream, value.toList())
       }
-      is TTPasscodeModel -> {
+      is TTLockSystemModel -> {
         stream.write(167)
         writeValue(stream, value.toList())
       }
-      is TTICCardModel -> {
+      is AccessoryElectricQuantityResult -> {
         stream.write(168)
         writeValue(stream, value.toList())
       }
-      is TTFingerprintModel -> {
+      is TTLockScanModel -> {
         stream.write(169)
         writeValue(stream, value.toList())
       }
-      is TTGatewayScanModel -> {
+      is TTPasscodeModel -> {
         stream.write(170)
         writeValue(stream, value.toList())
       }
-      is GatewayDeviceInfo -> {
+      is TTICCardModel -> {
         stream.write(171)
         writeValue(stream, value.toList())
       }
-      is TTRemoteAccessoryScanModel -> {
+      is TTFingerprintModel -> {
         stream.write(172)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorScanModel -> {
+      is TTGatewayScanModel -> {
         stream.write(173)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorInfo -> {
+      is GatewayDeviceInfo -> {
         stream.write(174)
         writeValue(stream, value.toList())
       }
-      is TTMeterScanModel -> {
+      is TTRemoteAccessoryScanModel -> {
         stream.write(175)
         writeValue(stream, value.toList())
       }
-      is TTWaterMeterInitResult -> {
+      is TTStandaloneDoorSensorScanModel -> {
         stream.write(176)
         writeValue(stream, value.toList())
       }
-      is TTElectricMeterInitResult -> {
+      is TTStandaloneDoorSensorInfo -> {
         stream.write(177)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanResult -> {
+      is TTMeterScanModel -> {
         stream.write(178)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanEntry -> {
+      is TTWaterMeterInitResult -> {
         stream.write(179)
         writeValue(stream, value.toList())
       }
-      is RemoteKeypadInitResult -> {
+      is TTElectricMeterInitResult -> {
         stream.write(180)
         writeValue(stream, value.toList())
       }
-      is MultifunctionalKeypadInitResult -> {
+      is TTWifiScanResult -> {
         stream.write(181)
         writeValue(stream, value.toList())
       }
-      is WaterMeterDeviceInfo -> {
+      is TTWifiScanEntry -> {
         stream.write(182)
         writeValue(stream, value.toList())
       }
-      is AddCardEvent -> {
+      is RemoteKeypadInitResult -> {
         stream.write(183)
         writeValue(stream, value.toList())
       }
-      is AddFingerprintEvent -> {
+      is MultifunctionalKeypadInitResult -> {
         stream.write(184)
         writeValue(stream, value.toList())
       }
-      is AddFaceEvent -> {
+      is WaterMeterDeviceInfo -> {
         stream.write(185)
+        writeValue(stream, value.toList())
+      }
+      is AddCardEvent -> {
+        stream.write(186)
+        writeValue(stream, value.toList())
+      }
+      is AddFingerprintEvent -> {
+        stream.write(187)
+        writeValue(stream, value.toList())
+      }
+      is AddFaceEvent -> {
+        stream.write(188)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -2299,8 +2446,14 @@ val MessagesPigeonMethodCodec = StandardMethodCodec(MessagesPigeonCodec())
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface TTLockHostApi {
-  /** 在订阅锁相关 EventChannel（如 lockScanWifi、lockAddCard）前设置 lockData，比依赖其它接口副作用更可靠。 */
-  fun setEventLockData(lockData: String)
+  /** 订阅 [TTEventChannelApi.lockScanWifi] 前调用。 */
+  fun setLockScanWifiParam(param: TTLockScanWifiEventParam)
+  /** 订阅 [TTEventChannelApi.lockAddCard] 前调用。 */
+  fun setLockAddCardParam(param: TTLockCredentialEventParam)
+  /** 订阅 [TTEventChannelApi.lockAddFingerprint] 前调用。 */
+  fun setLockAddFingerprintParam(param: TTLockCredentialEventParam)
+  /** 订阅 [TTEventChannelApi.lockAddFace] 前调用。 */
+  fun setLockAddFaceParam(param: TTLockCredentialEventParam)
   fun getBluetoothState(): TTBluetoothState
   fun initLock(params: TTLockInitParams, callback: (Result<String>) -> Unit)
   fun resetLock(lockData: String, callback: (Result<Unit>) -> Unit)
@@ -2387,13 +2540,67 @@ interface TTLockHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: TTLockHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setEventLockData$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setLockScanWifiParam$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val lockDataArg = args[0] as String
+            val paramArg = args[0] as TTLockScanWifiEventParam
             val wrapped: List<Any?> = try {
-              api.setEventLockData(lockDataArg)
+              api.setLockScanWifiParam(paramArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              MessagesPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setLockAddCardParam$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val paramArg = args[0] as TTLockCredentialEventParam
+            val wrapped: List<Any?> = try {
+              api.setLockAddCardParam(paramArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              MessagesPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setLockAddFingerprintParam$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val paramArg = args[0] as TTLockCredentialEventParam
+            val wrapped: List<Any?> = try {
+              api.setLockAddFingerprintParam(paramArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              MessagesPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setLockAddFaceParam$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val paramArg = args[0] as TTLockCredentialEventParam
+            val wrapped: List<Any?> = try {
+              api.setLockAddFaceParam(paramArg)
               listOf(null)
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
@@ -3946,8 +4153,8 @@ interface TTLockHostApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface TTGatewayHostApi {
-  /** 在订阅 gatewayGetNearbyWifi 等流前设置网关 MAC。 */
-  fun setEventGatewayMac(mac: String)
+  /** 订阅 [TTEventChannelApi.gatewayGetNearbyWifi] 前调用。 */
+  fun setGatewayGetNearbyWifiParam(gatewayMac: String)
   fun connect(mac: String, callback: (Result<TTGatewayConnectStatus>) -> Unit)
   fun disconnect(mac: String)
   fun initGateway(params: TTGatewayInitParams, callback: (Result<GatewayDeviceInfo>) -> Unit)
@@ -3966,13 +4173,13 @@ interface TTGatewayHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: TTGatewayHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTGatewayHostApi.setEventGatewayMac$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTGatewayHostApi.setGatewayGetNearbyWifiParam$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val macArg = args[0] as String
+            val gatewayMacArg = args[0] as String
             val wrapped: List<Any?> = try {
-              api.setEventGatewayMac(macArg)
+              api.setGatewayGetNearbyWifiParam(gatewayMacArg)
               listOf(null)
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
@@ -4122,8 +4329,10 @@ interface TTGatewayHostApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface TTAccessoryHostApi {
-  /** 在订阅键盘相关 EventChannel（accessoryAddKeypadFingerprint / accessoryAddKeypadCard）前设置键盘 MAC 及是否为多功能键盘。 */
-  fun setEventKeypadMac(mac: String, isMultifunctional: Boolean)
+  /** 订阅 [TTEventChannelApi.accessoryAddKeypadFingerprint] 前调用。 */
+  fun setAccessoryAddKeypadFingerprintParam(param: TTKeypadCredentialEventParam)
+  /** 订阅 [TTEventChannelApi.accessoryAddKeypadCard] 前调用。 */
+  fun setAccessoryAddKeypadCardParam(param: TTKeypadCredentialEventParam)
   fun initRemoteKey(mac: String, lockData: String, callback: (Result<TTLockSystemModel>) -> Unit)
   fun initRemoteKeypad(mac: String, lockMac: String, callback: (Result<RemoteKeypadInitResult>) -> Unit)
   fun initMultifunctionalKeypad(mac: String, lockData: String, callback: (Result<MultifunctionalKeypadInitResult>) -> Unit)
@@ -4176,14 +4385,31 @@ interface TTAccessoryHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: TTAccessoryHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.setEventKeypadMac$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.setAccessoryAddKeypadFingerprintParam$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val macArg = args[0] as String
-            val isMultifunctionalArg = args[1] as Boolean
+            val paramArg = args[0] as TTKeypadCredentialEventParam
             val wrapped: List<Any?> = try {
-              api.setEventKeypadMac(macArg, isMultifunctionalArg)
+              api.setAccessoryAddKeypadFingerprintParam(paramArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              MessagesPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.setAccessoryAddKeypadCardParam$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val paramArg = args[0] as TTKeypadCredentialEventParam
+            val wrapped: List<Any?> = try {
+              api.setAccessoryAddKeypadCardParam(paramArg)
               listOf(null)
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)

@@ -1,9 +1,11 @@
 package com.ttlock.ttlock_flutter
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.text.TextUtils
+import androidx.annotation.RequiresPermission
 import com.ttlock.bl.sdk.api.ExtendedBluetoothDevice
 import com.ttlock.bl.sdk.api.TTLockClient
 import com.ttlock.bl.sdk.entity.HotelData
@@ -77,10 +79,25 @@ class LockApi: TTLockHostApi {
         TTLockHostApi.setUp(messenger, this)
     }
 
-    override fun setEventLockData(lockData: String) {
-        LockStreamParams.rememberLockData(lockData)
+    override fun setLockScanWifiParam(param: TTLockScanWifiEventParam) {
+        if (param.lockData.isNotEmpty()) {
+            LockStreamParams.scanWifiLockData = param.lockData
+        }
     }
 
+    override fun setLockAddCardParam(param: TTLockCredentialEventParam) {
+        LockStreamParams.addCard.apply(param)
+    }
+
+    override fun setLockAddFingerprintParam(param: TTLockCredentialEventParam) {
+        LockStreamParams.addFingerprint.apply(param)
+    }
+
+    override fun setLockAddFaceParam(param: TTLockCredentialEventParam) {
+        LockStreamParams.addFace.apply(param)
+    }
+
+    @RequiresPermission(Manifest.permission.BLUETOOTH)
     override fun getBluetoothState(): TTBluetoothState {
         if(TTLockClient.getDefault().isBLEEnabled(context)){
             return TTBluetoothState.TURN_ON

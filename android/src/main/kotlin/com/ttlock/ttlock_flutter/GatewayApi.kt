@@ -17,14 +17,9 @@ class GatewayApi : TTGatewayHostApi {
         TTGatewayHostApi.setUp(messenger, this)
     }
 
-    companion object {
-        /** 仅由 [setEventGatewayMac] 写入，供 gatewayGetNearbyWifi 等使用 */
-        var latestGatewayMac: String? = null
-    }
-
-    override fun setEventGatewayMac(mac: String) {
-        if (mac.isNotEmpty()) {
-            latestGatewayMac = mac
+    override fun setGatewayGetNearbyWifiParam(gatewayMac: String) {
+        if (gatewayMac.isNotEmpty()) {
+            GatewayStreamParams.nearbyWifiGatewayMac = gatewayMac
         }
     }
 
