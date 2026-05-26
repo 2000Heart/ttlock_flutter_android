@@ -101,11 +101,11 @@ class ScanLockWifiImpl : LockScanWifiStreamHandler {
         sink: PigeonEventSink<TTWifiScanResult>
     ) {
         super.onListen(p0, sink)
-        val lockData = LockStreamParams.lockData
+        val lockData = LockStreamParams.scanWifiLockData
         if (lockData.isNullOrEmpty()) {
             sink.error(
                 "NO_LOCK_DATA",
-                "请先通过 initLock、controlLock 等传入 lockData 后再使用 lockScanWifi",
+                "请先通过 setLockScanWifiParam 设置 lockData 后再使用 lockScanWifi",
                 null
             )
             return
@@ -154,12 +154,14 @@ class AddLockCardImpl : LockAddCardStreamHandler {
         sink: PigeonEventSink<AddCardEvent>
     ) {
         super.onListen(p0, sink)
-        val lockData = LockStreamParams.lockData
-        if (lockData.isNullOrEmpty()) {
-            sink.error("NO_LOCK_DATA", "请先通过 initLock 等设置 lockData 后再使用 lockAddCard", null)
+        val slot = LockStreamParams.addCard
+        val lockData = try {
+            slot.requireLockData("LockAddCard")
+        } catch (e: IllegalStateException) {
+            sink.error("NO_LOCK_DATA", e.message, null)
             return
         }
-        val validity = LockStreamParams.buildValidityInfo()
+        val validity = slot.buildValidityInfo()
         TTLockClient.getDefault().addICCard(validity, lockData, object : AddICCardCallback {
             override fun onEnterAddMode() {
                 sink.success(AddCardEvent(isProgress = true, cardNumber = null))
@@ -197,12 +199,14 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
         sink: PigeonEventSink<AddFingerprintEvent>
     ) {
         super.onListen(p0, sink)
-        val lockData = LockStreamParams.lockData
-        if (lockData.isNullOrEmpty()) {
-            sink.error("NO_LOCK_DATA", "请先通过 initLock 等设置 lockData 后再使用 lockAddFingerprint", null)
+        val slot = LockStreamParams.addFingerprint
+        val lockData = try {
+            slot.requireLockData("LockAddFingerprint")
+        } catch (e: IllegalStateException) {
+            sink.error("NO_LOCK_DATA", e.message, null)
             return
         }
-        val validity = LockStreamParams.buildValidityInfo()
+        val validity = slot.buildValidityInfo()
         var fingerprintTotal = 0
         TTLockClient.getDefault().addFingerprint(validity, lockData, object : AddFingerprintCallback {
             override fun onEnterAddMode(totalCount: Int) {
@@ -267,12 +271,14 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
         sink: PigeonEventSink<AddFaceEvent>
     ) {
         super.onListen(p0, sink)
-        val lockData = LockStreamParams.lockData
-        if (lockData.isNullOrEmpty()) {
-            sink.error("NO_LOCK_DATA", "请先通过 initLock 等设置 lockData 后再使用 lockAddFace", null)
+        val slot = LockStreamParams.addFace
+        val lockData = try {
+            slot.requireLockData("LockAddFace")
+        } catch (e: IllegalStateException) {
+            sink.error("NO_LOCK_DATA", e.message, null)
             return
         }
-        val validity = LockStreamParams.buildValidityInfo()
+        val validity = slot.buildValidityInfo()
         TTLockClient.getDefault().addFace(lockData, validity, object : AddFaceCallback {
             override fun onEnterAddMode() {
                 sink.success(
@@ -376,9 +382,9 @@ class ScanGatewayWiFiImpl : GatewayGetNearbyWifiStreamHandler {
         sink: PigeonEventSink<TTWifiScanResult>
     ) {
         super.onListen(p0, sink)
-        val mac = GatewayApi.latestGatewayMac
+        val mac = GatewayStreamParams.nearbyWifiGatewayMac
         if (mac.isNullOrEmpty()) {
-            sink.error("NO_GATEWAY", "请先 connect 网关后再使用 gatewayGetNearbyWifi", null)
+            sink.error("NO_GATEWAY", "请先通过 setGatewayGetNearbyWifiParam 设置网关 MAC 后再使用 gatewayGetNearbyWifi", null)
             return
         }
         GatewayClient.getDefault().scanWiFiByGateway(mac, object : ScanWiFiByGatewayCallback {
@@ -569,19 +575,20 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
         sink: PigeonEventSink<AddFingerprintEvent>
     ) {
         super.onListen(p0, sink)
-        val lockData = LockStreamParams.lockData
+        val slot = KeypadStreamParams.addFingerprint
+        val lockData = slot.lockData
         if (lockData.isNullOrEmpty()) {
-            sink.error("NO_LOCK_DATA", "请先初始化键盘并保证 lockData 有效", null)
+            sink.error("NO_LOCK_DATA", "请先通过 setAccessoryAddKeypadFingerprintParam 设置 lockData", null)
             return
         }
-        val mac = AccessoryApi.latestKeypadMac
+        val mac = slot.keypadMac
         if (mac.isNullOrEmpty()) {
-            sink.error("NO_KEYPAD", "请先 initRemoteKeypad / initMultifunctionalKeypad", null)
+            sink.error("NO_KEYPAD", "请先通过 setAccessoryAddKeypadFingerprintParam 设置 keypadMac", null)
             return
         }
 
-        if (AccessoryApi.latestKeypadIsMultifunctional) {
-            val validity = LockStreamParams.buildValidityInfo()
+        if (slot.isMultifunctional) {
+            val validity = slot.buildValidityInfo()
             MultifunctionalKeypadClient.getDefault().addFingerprint(
                 mac,
                 lockData,
@@ -725,19 +732,20 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
         sink: PigeonEventSink<AddCardEvent>
     ) {
         super.onListen(p0, sink)
-        val lockData = LockStreamParams.lockData
+        val slot = KeypadStreamParams.addCard
+        val lockData = slot.lockData
         if (lockData.isNullOrEmpty()) {
-            sink.error("NO_LOCK_DATA", "请先初始化键盘并保证 lockData 有效", null)
+            sink.error("NO_LOCK_DATA", "请先通过 setAccessoryAddKeypadCardParam 设置 lockData", null)
             return
         }
-        val mac = AccessoryApi.latestKeypadMac
+        val mac = slot.keypadMac
         if (mac.isNullOrEmpty()) {
-            sink.error("NO_KEYPAD", "请先 initRemoteKeypad / initMultifunctionalKeypad", null)
+            sink.error("NO_KEYPAD", "请先通过 setAccessoryAddKeypadCardParam 设置 keypadMac", null)
             return
         }
 
-        if (AccessoryApi.latestKeypadIsMultifunctional) {
-            val validity = LockStreamParams.buildValidityInfo()
+        if (slot.isMultifunctional) {
+            val validity = slot.buildValidityInfo()
             MultifunctionalKeypadClient.getDefault().addCard(
                 mac,
                 validity,

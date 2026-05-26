@@ -31,10 +31,6 @@ class AccessoryApi : TTAccessoryHostApi {
     companion object {
         var latestWaterMeterMac: String? = null
         var latestElectricMeterMac: String? = null
-        /** 仅由 [setEventKeypadMac] 写入，供 accessory 流使用 */
-        var latestKeypadMac: String? = null
-        /** 仅由 [setEventKeypadMac] 写入 */
-        var latestKeypadIsMultifunctional: Boolean = false
     }
 
     constructor(context: Context, messenger: BinaryMessenger) {
@@ -42,9 +38,12 @@ class AccessoryApi : TTAccessoryHostApi {
         TTAccessoryHostApi.setUp(messenger, this)
     }
 
-    override fun setEventKeypadMac(mac: String, isMultifunctional: Boolean) {
-        latestKeypadMac = mac
-        latestKeypadIsMultifunctional = isMultifunctional
+    override fun setAccessoryAddKeypadFingerprintParam(param: TTKeypadCredentialEventParam) {
+        KeypadStreamParams.addFingerprint.apply(param)
+    }
+
+    override fun setAccessoryAddKeypadCardParam(param: TTKeypadCredentialEventParam) {
+        KeypadStreamParams.addCard.apply(param)
     }
 
     private fun remoteErrorToFlutterError(error: RemoteError): FlutterError {
