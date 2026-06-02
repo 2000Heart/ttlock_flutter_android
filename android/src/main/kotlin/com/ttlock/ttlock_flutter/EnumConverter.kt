@@ -82,12 +82,12 @@ fun controlActionConvert(action: TTControlAction): Int {
 
 fun featureValueConvert(lockFunction: TTLockFunction): Int? {
     return when(lockFunction) {
-        TTLockFunction.PASSCODE -> FeatureValue.PASSCODE
-        TTLockFunction.IC_CARD -> FeatureValue.IC
-        TTLockFunction.FINGERPRINT -> FeatureValue.FINGER_PRINT
-        TTLockFunction.WRISTBAND -> FeatureValue.WRIST_BAND
-        TTLockFunction.AUTO_LOCK -> FeatureValue.AUTO_LOCK
-        TTLockFunction.DELETE_PASSCODE -> FeatureValue.PASSCODE_WITH_DELETE_FUNCTION
+        TTLockFunction.PASSCODE -> FeatureValue.PASSCODE.toInt()
+        TTLockFunction.IC_CARD -> FeatureValue.IC.toInt()
+        TTLockFunction.FINGERPRINT -> FeatureValue.FINGER_PRINT.toInt()
+        TTLockFunction.WRISTBAND -> FeatureValue.WRIST_BAND.toInt()
+        TTLockFunction.AUTO_LOCK -> FeatureValue.AUTO_LOCK.toInt()
+        TTLockFunction.DELETE_PASSCODE -> FeatureValue.PASSCODE_WITH_DELETE_FUNCTION.toInt()
         TTLockFunction.MANAGE_PASSCODE -> FeatureValue.MODIFY_PASSCODE_FUNCTION
         TTLockFunction.LOCKING -> FeatureValue.MANUAL_LOCK
         TTLockFunction.PASSCODE_VISIBLE -> FeatureValue.PASSWORD_DISPLAY_OR_HIDE
