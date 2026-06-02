@@ -240,10 +240,7 @@ class LockApi: TTLockHostApi {
         lockFunction: TTLockFunction,
         lockData: String
     ): Boolean {
-        val featureValue = featureValueConvert(lockFunction)
-        if (featureValue == null) {
-            return false
-        }
+        val featureValue = featureValueConvert(lockFunction) ?: return false
         val r =  FeatureValueUtil.isSupportFeature(lockData, featureValue)
         LogUtil.d(lockFunction.name + ":" + r)
 
