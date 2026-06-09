@@ -547,6 +547,38 @@ enum class TTFaceState(val raw: Int) {
   }
 }
 
+enum class TTWaterMeterFeature(val raw: Int) {
+  CAT_ONE(0);
+
+  companion object {
+    fun ofRaw(raw: Int): TTWaterMeterFeature? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class TTElectricMeterFeature(val raw: Int) {
+  CAT_ONE(0),
+  TELINK(1);
+
+  companion object {
+    fun ofRaw(raw: Int): TTElectricMeterFeature? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class TTMeterPayMode(val raw: Int) {
+  POSTPAID(0),
+  PREPAID(1);
+
+  companion object {
+    fun ofRaw(raw: Int): TTMeterPayMode? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 enum class TTFaceErrorCode(val raw: Int) {
   NORMAL(0),
   NO_FACE_DETECTED(1),
@@ -1132,6 +1164,46 @@ data class AccessoryElectricQuantityResult (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class TTPassageModeModel (
+  val type: TTPassageModeType,
+  val weekly: List<Long>? = null,
+  val monthly: List<Long>? = null,
+  val startDate: Long,
+  val endDate: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TTPassageModeModel {
+      val type = pigeonVar_list[0] as TTPassageModeType
+      val weekly = pigeonVar_list[1] as List<Long>?
+      val monthly = pigeonVar_list[2] as List<Long>?
+      val startDate = pigeonVar_list[3] as Long
+      val endDate = pigeonVar_list[4] as Long
+      return TTPassageModeModel(type, weekly, monthly, startDate, endDate)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      type,
+      weekly,
+      monthly,
+      startDate,
+      endDate,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is TTPassageModeModel) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return MessagesPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class TTLockScanModel (
   val lockName: String,
   val lockMac: String,
@@ -1536,14 +1608,14 @@ data class TTMeterScanModel (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class TTWaterMeterInitResult (
-  val waterMeterId: String,
-  val featureValue: String? = null
+  val waterMeterId: Long,
+  val featureValue: String
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TTWaterMeterInitResult {
-      val waterMeterId = pigeonVar_list[0] as String
-      val featureValue = pigeonVar_list[1] as String?
+      val waterMeterId = pigeonVar_list[0] as Long
+      val featureValue = pigeonVar_list[1] as String
       return TTWaterMeterInitResult(waterMeterId, featureValue)
     }
   }
@@ -1567,14 +1639,14 @@ data class TTWaterMeterInitResult (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class TTElectricMeterInitResult (
-  val electricMeterId: String,
-  val featureValue: String? = null
+  val electricMeterId: Long,
+  val featureValue: String
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TTElectricMeterInitResult {
-      val electricMeterId = pigeonVar_list[0] as String
-      val featureValue = pigeonVar_list[1] as String?
+      val electricMeterId = pigeonVar_list[0] as Long
+      val featureValue = pigeonVar_list[1] as String
       return TTElectricMeterInitResult(electricMeterId, featureValue)
     }
   }
@@ -1774,6 +1846,120 @@ data class WaterMeterDeviceInfo (
   }
   override fun equals(other: Any?): Boolean {
     if (other !is WaterMeterDeviceInfo) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return MessagesPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class ElectricMeterDeviceInfo (
+  val catOneCardNumber: String,
+  val catOneImsi: String,
+  val catOneNodeId: String,
+  val catOneOperator: String,
+  val catOneRssi: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): ElectricMeterDeviceInfo {
+      val catOneCardNumber = pigeonVar_list[0] as String
+      val catOneImsi = pigeonVar_list[1] as String
+      val catOneNodeId = pigeonVar_list[2] as String
+      val catOneOperator = pigeonVar_list[3] as String
+      val catOneRssi = pigeonVar_list[4] as Long
+      return ElectricMeterDeviceInfo(catOneCardNumber, catOneImsi, catOneNodeId, catOneOperator, catOneRssi)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      catOneCardNumber,
+      catOneImsi,
+      catOneNodeId,
+      catOneOperator,
+      catOneRssi,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is ElectricMeterDeviceInfo) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return MessagesPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class TTWaterMeterInitParam (
+  val mac: String,
+  val name: String,
+  val payMode: TTMeterPayMode,
+  val price: Double
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TTWaterMeterInitParam {
+      val mac = pigeonVar_list[0] as String
+      val name = pigeonVar_list[1] as String
+      val payMode = pigeonVar_list[2] as TTMeterPayMode
+      val price = pigeonVar_list[3] as Double
+      return TTWaterMeterInitParam(mac, name, payMode, price)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      mac,
+      name,
+      payMode,
+      price,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is TTWaterMeterInitParam) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    return MessagesPigeonUtils.deepEquals(toList(), other.toList())  }
+
+  override fun hashCode(): Int = toList().hashCode()
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class TTElectricMeterInitParam (
+  val mac: String,
+  val name: String,
+  val payMode: TTMeterPayMode,
+  val price: Double
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TTElectricMeterInitParam {
+      val mac = pigeonVar_list[0] as String
+      val name = pigeonVar_list[1] as String
+      val payMode = pigeonVar_list[2] as TTMeterPayMode
+      val price = pigeonVar_list[3] as Double
+      return TTElectricMeterInitParam(mac, name, payMode, price)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      mac,
+      name,
+      payMode,
+      price,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other !is TTElectricMeterInitParam) {
       return false
     }
     if (this === other) {
@@ -2018,175 +2204,210 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
       }
       154.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTFaceErrorCode.ofRaw(it.toInt())
+          TTWaterMeterFeature.ofRaw(it.toInt())
         }
       }
       155.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockVersion.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          TTElectricMeterFeature.ofRaw(it.toInt())
         }
       }
       156.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockInitParams.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          TTMeterPayMode.ofRaw(it.toInt())
         }
       }
       157.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TTGatewayInitParams.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          TTFaceErrorCode.ofRaw(it.toInt())
         }
       }
       158.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTIpSetting.fromList(it)
+          TTLockVersion.fromList(it)
         }
       }
       159.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTCycleModel.fromList(it)
+          TTLockInitParams.fromList(it)
         }
       }
       160.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockScanWifiEventParam.fromList(it)
+          TTGatewayInitParams.fromList(it)
         }
       }
       161.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockCredentialEventParam.fromList(it)
+          TTIpSetting.fromList(it)
         }
       }
       162.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTKeypadCredentialEventParam.fromList(it)
+          TTCycleModel.fromList(it)
         }
       }
       163.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ControlLockResult.fromList(it)
+          TTLockScanWifiEventParam.fromList(it)
         }
       }
       164.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AutoLockingTime.fromList(it)
+          TTLockCredentialEventParam.fromList(it)
         }
       }
       165.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiInfoModel.fromList(it)
+          TTKeypadCredentialEventParam.fromList(it)
         }
       }
       166.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          CameraLockWifiResult.fromList(it)
+          ControlLockResult.fromList(it)
         }
       }
       167.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockSystemModel.fromList(it)
+          AutoLockingTime.fromList(it)
         }
       }
       168.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AccessoryElectricQuantityResult.fromList(it)
+          TTWifiInfoModel.fromList(it)
         }
       }
       169.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockScanModel.fromList(it)
+          CameraLockWifiResult.fromList(it)
         }
       }
       170.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTPasscodeModel.fromList(it)
+          TTLockSystemModel.fromList(it)
         }
       }
       171.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTICCardModel.fromList(it)
+          AccessoryElectricQuantityResult.fromList(it)
         }
       }
       172.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTFingerprintModel.fromList(it)
+          TTPassageModeModel.fromList(it)
         }
       }
       173.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTGatewayScanModel.fromList(it)
+          TTLockScanModel.fromList(it)
         }
       }
       174.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GatewayDeviceInfo.fromList(it)
+          TTPasscodeModel.fromList(it)
         }
       }
       175.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTRemoteAccessoryScanModel.fromList(it)
+          TTICCardModel.fromList(it)
         }
       }
       176.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorScanModel.fromList(it)
+          TTFingerprintModel.fromList(it)
         }
       }
       177.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorInfo.fromList(it)
+          TTGatewayScanModel.fromList(it)
         }
       }
       178.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTMeterScanModel.fromList(it)
+          GatewayDeviceInfo.fromList(it)
         }
       }
       179.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWaterMeterInitResult.fromList(it)
+          TTRemoteAccessoryScanModel.fromList(it)
         }
       }
       180.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTElectricMeterInitResult.fromList(it)
+          TTStandaloneDoorSensorScanModel.fromList(it)
         }
       }
       181.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanResult.fromList(it)
+          TTStandaloneDoorSensorInfo.fromList(it)
         }
       }
       182.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanEntry.fromList(it)
+          TTMeterScanModel.fromList(it)
         }
       }
       183.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          RemoteKeypadInitResult.fromList(it)
+          TTWaterMeterInitResult.fromList(it)
         }
       }
       184.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          MultifunctionalKeypadInitResult.fromList(it)
+          TTElectricMeterInitResult.fromList(it)
         }
       }
       185.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          WaterMeterDeviceInfo.fromList(it)
+          TTWifiScanResult.fromList(it)
         }
       }
       186.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddCardEvent.fromList(it)
+          TTWifiScanEntry.fromList(it)
         }
       }
       187.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddFingerprintEvent.fromList(it)
+          RemoteKeypadInitResult.fromList(it)
         }
       }
       188.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          MultifunctionalKeypadInitResult.fromList(it)
+        }
+      }
+      189.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          WaterMeterDeviceInfo.fromList(it)
+        }
+      }
+      190.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ElectricMeterDeviceInfo.fromList(it)
+        }
+      }
+      191.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TTWaterMeterInitParam.fromList(it)
+        }
+      }
+      192.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TTElectricMeterInitParam.fromList(it)
+        }
+      }
+      193.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AddCardEvent.fromList(it)
+        }
+      }
+      194.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AddFingerprintEvent.fromList(it)
+        }
+      }
+      195.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           AddFaceEvent.fromList(it)
         }
@@ -2296,144 +2517,172 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
         stream.write(153)
         writeValue(stream, value.raw)
       }
-      is TTFaceErrorCode -> {
+      is TTWaterMeterFeature -> {
         stream.write(154)
         writeValue(stream, value.raw)
       }
-      is TTLockVersion -> {
+      is TTElectricMeterFeature -> {
         stream.write(155)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is TTLockInitParams -> {
+      is TTMeterPayMode -> {
         stream.write(156)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is TTGatewayInitParams -> {
+      is TTFaceErrorCode -> {
         stream.write(157)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is TTIpSetting -> {
+      is TTLockVersion -> {
         stream.write(158)
         writeValue(stream, value.toList())
       }
-      is TTCycleModel -> {
+      is TTLockInitParams -> {
         stream.write(159)
         writeValue(stream, value.toList())
       }
-      is TTLockScanWifiEventParam -> {
+      is TTGatewayInitParams -> {
         stream.write(160)
         writeValue(stream, value.toList())
       }
-      is TTLockCredentialEventParam -> {
+      is TTIpSetting -> {
         stream.write(161)
         writeValue(stream, value.toList())
       }
-      is TTKeypadCredentialEventParam -> {
+      is TTCycleModel -> {
         stream.write(162)
         writeValue(stream, value.toList())
       }
-      is ControlLockResult -> {
+      is TTLockScanWifiEventParam -> {
         stream.write(163)
         writeValue(stream, value.toList())
       }
-      is AutoLockingTime -> {
+      is TTLockCredentialEventParam -> {
         stream.write(164)
         writeValue(stream, value.toList())
       }
-      is TTWifiInfoModel -> {
+      is TTKeypadCredentialEventParam -> {
         stream.write(165)
         writeValue(stream, value.toList())
       }
-      is CameraLockWifiResult -> {
+      is ControlLockResult -> {
         stream.write(166)
         writeValue(stream, value.toList())
       }
-      is TTLockSystemModel -> {
+      is AutoLockingTime -> {
         stream.write(167)
         writeValue(stream, value.toList())
       }
-      is AccessoryElectricQuantityResult -> {
+      is TTWifiInfoModel -> {
         stream.write(168)
         writeValue(stream, value.toList())
       }
-      is TTLockScanModel -> {
+      is CameraLockWifiResult -> {
         stream.write(169)
         writeValue(stream, value.toList())
       }
-      is TTPasscodeModel -> {
+      is TTLockSystemModel -> {
         stream.write(170)
         writeValue(stream, value.toList())
       }
-      is TTICCardModel -> {
+      is AccessoryElectricQuantityResult -> {
         stream.write(171)
         writeValue(stream, value.toList())
       }
-      is TTFingerprintModel -> {
+      is TTPassageModeModel -> {
         stream.write(172)
         writeValue(stream, value.toList())
       }
-      is TTGatewayScanModel -> {
+      is TTLockScanModel -> {
         stream.write(173)
         writeValue(stream, value.toList())
       }
-      is GatewayDeviceInfo -> {
+      is TTPasscodeModel -> {
         stream.write(174)
         writeValue(stream, value.toList())
       }
-      is TTRemoteAccessoryScanModel -> {
+      is TTICCardModel -> {
         stream.write(175)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorScanModel -> {
+      is TTFingerprintModel -> {
         stream.write(176)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorInfo -> {
+      is TTGatewayScanModel -> {
         stream.write(177)
         writeValue(stream, value.toList())
       }
-      is TTMeterScanModel -> {
+      is GatewayDeviceInfo -> {
         stream.write(178)
         writeValue(stream, value.toList())
       }
-      is TTWaterMeterInitResult -> {
+      is TTRemoteAccessoryScanModel -> {
         stream.write(179)
         writeValue(stream, value.toList())
       }
-      is TTElectricMeterInitResult -> {
+      is TTStandaloneDoorSensorScanModel -> {
         stream.write(180)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanResult -> {
+      is TTStandaloneDoorSensorInfo -> {
         stream.write(181)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanEntry -> {
+      is TTMeterScanModel -> {
         stream.write(182)
         writeValue(stream, value.toList())
       }
-      is RemoteKeypadInitResult -> {
+      is TTWaterMeterInitResult -> {
         stream.write(183)
         writeValue(stream, value.toList())
       }
-      is MultifunctionalKeypadInitResult -> {
+      is TTElectricMeterInitResult -> {
         stream.write(184)
         writeValue(stream, value.toList())
       }
-      is WaterMeterDeviceInfo -> {
+      is TTWifiScanResult -> {
         stream.write(185)
         writeValue(stream, value.toList())
       }
-      is AddCardEvent -> {
+      is TTWifiScanEntry -> {
         stream.write(186)
         writeValue(stream, value.toList())
       }
-      is AddFingerprintEvent -> {
+      is RemoteKeypadInitResult -> {
         stream.write(187)
         writeValue(stream, value.toList())
       }
-      is AddFaceEvent -> {
+      is MultifunctionalKeypadInitResult -> {
         stream.write(188)
+        writeValue(stream, value.toList())
+      }
+      is WaterMeterDeviceInfo -> {
+        stream.write(189)
+        writeValue(stream, value.toList())
+      }
+      is ElectricMeterDeviceInfo -> {
+        stream.write(190)
+        writeValue(stream, value.toList())
+      }
+      is TTWaterMeterInitParam -> {
+        stream.write(191)
+        writeValue(stream, value.toList())
+      }
+      is TTElectricMeterInitParam -> {
+        stream.write(192)
+        writeValue(stream, value.toList())
+      }
+      is AddCardEvent -> {
+        stream.write(193)
+        writeValue(stream, value.toList())
+      }
+      is AddFingerprintEvent -> {
+        stream.write(194)
+        writeValue(stream, value.toList())
+      }
+      is AddFaceEvent -> {
+        stream.write(195)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -2500,10 +2749,13 @@ interface TTLockHostApi {
   fun setRemoteUnlockSwitchState(isOn: Boolean, lockData: String, callback: (Result<String>) -> Unit)
   fun getLockConfig(config: TTLockConfig, lockData: String, callback: (Result<Boolean>) -> Unit)
   fun setLockConfig(config: TTLockConfig, isOn: Boolean, lockData: String, callback: (Result<Unit>) -> Unit)
+  fun getLightTime(lockData: String, callback: (Result<Long>) -> Unit)
+  fun setLightTime(seconds: Long, lockData: String, callback: (Result<Unit>) -> Unit)
   fun getLockDirection(lockData: String, callback: (Result<TTLockDirection>) -> Unit)
   fun setLockDirection(direction: TTLockDirection, lockData: String, callback: (Result<Unit>) -> Unit)
   fun addPassageMode(type: TTPassageModeType, weekly: List<Long>?, monthly: List<Long>?, startTime: Long, endTime: Long, lockData: String, callback: (Result<Unit>) -> Unit)
   fun clearAllPassageModes(lockData: String, callback: (Result<Unit>) -> Unit)
+  fun getPassageModes(lockData: String, callback: (Result<List<TTPassageModeModel>>) -> Unit)
   fun activateLift(floors: String, lockData: String, callback: (Result<ControlLockResult>) -> Unit)
   fun setLiftControlable(floors: String, lockData: String, callback: (Result<Unit>) -> Unit)
   fun setLiftWorkMode(type: TTLiftWorkActivateType, lockData: String, callback: (Result<Unit>) -> Unit)
@@ -2521,6 +2773,7 @@ interface TTLockHostApi {
   fun setSoundVolume(type: TTSoundVolumeType, lockData: String, callback: (Result<Unit>) -> Unit)
   fun getSoundVolume(lockData: String, callback: (Result<TTSoundVolumeType>) -> Unit)
   fun setSensitivity(value: TTSensitivityValue, lockData: String, callback: (Result<Unit>) -> Unit)
+  fun getSensitivity(lockData: String, callback: (Result<TTSensitivityValue>) -> Unit)
   fun setRemoteKeyValidDate(remoteKeyMac: String, cycleList: List<TTCycleModel>?, startDate: Long, endDate: Long, lockData: String, callback: (Result<Unit>) -> Unit)
   fun addRemoteKey(remoteKeyMac: String, cycleList: List<TTCycleModel>?, startDate: Long, endDate: Long, lockData: String, callback: (Result<Unit>) -> Unit)
   fun deleteRemoteKey(remoteKeyMac: String, lockData: String, callback: (Result<Unit>) -> Unit)
@@ -3551,6 +3804,46 @@ interface TTLockHostApi {
         }
       }
       run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getLightTime$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val lockDataArg = args[0] as String
+            api.getLightTime(lockDataArg) { result: Result<Long> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setLightTime$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val secondsArg = args[0] as Long
+            val lockDataArg = args[1] as String
+            api.setLightTime(secondsArg, lockDataArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getLockDirection$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
@@ -3626,6 +3919,26 @@ interface TTLockHostApi {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
               } else {
                 reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getPassageModes$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val lockDataArg = args[0] as String
+            api.getPassageModes(lockDataArg) { result: Result<List<TTPassageModeModel>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
               }
             }
           }
@@ -3975,6 +4288,26 @@ interface TTLockHostApi {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
               } else {
                 reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getSensitivity$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val lockDataArg = args[0] as String
+            api.getSensitivity(lockDataArg) { result: Result<TTSensitivityValue> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
               }
             }
           }
@@ -4342,38 +4675,42 @@ interface TTAccessoryHostApi {
   fun standaloneDoorSensorInit(mac: String, info: Map<String, Any?>, callback: (Result<TTStandaloneDoorSensorInfo>) -> Unit)
   fun standaloneDoorSensorReadFeatureValue(mac: String, callback: (Result<String>) -> Unit)
   fun standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: Long): Boolean
-  fun waterMeterConfigServer(url: String, clientId: String, accessToken: String)
-  fun waterMeterConnect(mac: String, callback: (Result<Unit>) -> Unit)
-  fun waterMeterDisconnect(mac: String)
-  fun waterMeterInit(params: Map<String, Any?>, callback: (Result<TTWaterMeterInitResult>) -> Unit)
-  fun waterMeterDelete(waterMeterId: String, callback: (Result<Unit>) -> Unit)
-  fun waterMeterSetPowerOnOff(waterMeterId: String, isOn: Boolean, callback: (Result<Unit>) -> Unit)
-  fun waterMeterSetRemainderM3(waterMeterId: String, remainderM3: Double, callback: (Result<Unit>) -> Unit)
-  fun waterMeterClearRemainderM3(waterMeterId: String, callback: (Result<Unit>) -> Unit)
-  fun waterMeterReadData(waterMeterId: String, callback: (Result<Map<String, Any?>>) -> Unit)
-  fun waterMeterSetPayMode(waterMeterId: String, payMode: Long, callback: (Result<Unit>) -> Unit)
-  fun waterMeterCharge(waterMeterId: String, amount: Double, callback: (Result<Unit>) -> Unit)
-  fun waterMeterSetTotalUsage(waterMeterId: String, totalM3: Double, callback: (Result<Unit>) -> Unit)
-  fun waterMeterGetFeatureValue(waterMeterId: String, callback: (Result<String>) -> Unit)
-  fun waterMeterGetDeviceInfo(waterMeterId: String, callback: (Result<WaterMeterDeviceInfo>) -> Unit)
-  fun waterMeterIsSupportFunction(featureValue: String, lockFunction: Long): Boolean
-  fun waterMeterConfigApn(apn: String, callback: (Result<Unit>) -> Unit)
-  fun waterMeterConfigMeterServer(ip: String, port: String, callback: (Result<Unit>) -> Unit)
-  fun waterMeterReset(waterMeterId: String, callback: (Result<Unit>) -> Unit)
   fun electricMeterConfigServer(url: String, clientId: String, accessToken: String)
   fun electricMeterConnect(mac: String, callback: (Result<Unit>) -> Unit)
   fun electricMeterDisconnect(mac: String)
-  fun electricMeterInit(params: Map<String, Any?>, callback: (Result<TTElectricMeterInitResult>) -> Unit)
-  fun electricMeterDelete(electricMeterId: String, callback: (Result<Unit>) -> Unit)
-  fun electricMeterSetPowerOnOff(electricMeterId: String, isOn: Boolean, callback: (Result<Unit>) -> Unit)
-  fun electricMeterSetRemainderKwh(electricMeterId: String, remainderKwh: Double, callback: (Result<Unit>) -> Unit)
-  fun electricMeterClearRemainderKwh(electricMeterId: String, callback: (Result<Unit>) -> Unit)
-  fun electricMeterReadData(electricMeterId: String, callback: (Result<Map<String, Any?>>) -> Unit)
-  fun electricMeterSetPayMode(electricMeterId: String, payMode: Long, callback: (Result<Unit>) -> Unit)
-  fun electricMeterCharge(electricMeterId: String, amount: Double, callback: (Result<Unit>) -> Unit)
-  fun electricMeterSetMaxPower(electricMeterId: String, maxPower: Double, callback: (Result<Unit>) -> Unit)
-  fun electricMeterGetFeatureValue(electricMeterId: String, callback: (Result<String>) -> Unit)
-  fun electricMeterIsSupportFunction(featureValue: String, lockFunction: Long): Boolean
+  fun electricMeterInit(params: TTElectricMeterInitParam, callback: (Result<TTElectricMeterInitResult>) -> Unit)
+  fun electricMeterDelete(mac: String, callback: (Result<Unit>) -> Unit)
+  fun electricMeterSetPowerOnOff(mac: String, isOn: Boolean, callback: (Result<Unit>) -> Unit)
+  fun electricMeterSetRemainderKwh(mac: String, remainderKwh: Double, callback: (Result<Unit>) -> Unit)
+  fun electricMeterClearRemainderKwh(mac: String, callback: (Result<Unit>) -> Unit)
+  fun electricMeterReadData(mac: String, callback: (Result<Unit>) -> Unit)
+  fun electricMeterSetPayMode(mac: String, payMode: TTMeterPayMode, price: Double, callback: (Result<Unit>) -> Unit)
+  fun electricMeterCharge(mac: String, amount: Double, kwh: Double, callback: (Result<Unit>) -> Unit)
+  fun electricMeterSetMaxPower(mac: String, maxPower: Double, callback: (Result<Unit>) -> Unit)
+  fun electricMeterGetFeatureValue(mac: String, callback: (Result<String>) -> Unit)
+  fun electricMeterIsSupportFunction(featureValue: String, lockFunction: TTElectricMeterFeature): Boolean
+  fun electricMeterGetDeviceInfo(mac: String, callback: (Result<ElectricMeterDeviceInfo>) -> Unit)
+  fun electricMeterConfigApn(mac: String, apn: String, callback: (Result<Unit>) -> Unit)
+  fun electricMeterConfigMeterServer(mac: String, ip: String, port: String, callback: (Result<Unit>) -> Unit)
+  fun electricMeterReset(mac: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterConfigServer(url: String, clientId: String, accessToken: String)
+  fun waterMeterConnect(mac: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterDisconnect(mac: String)
+  fun waterMeterInit(params: TTWaterMeterInitParam, callback: (Result<TTWaterMeterInitResult>) -> Unit)
+  fun waterMeterDelete(mac: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterSetPowerOnOff(mac: String, isOn: Boolean, callback: (Result<Unit>) -> Unit)
+  fun waterMeterSetRemainderM3(mac: String, remainderM3: Double, callback: (Result<Unit>) -> Unit)
+  fun waterMeterClearRemainderM3(mac: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterReadData(mac: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterSetPayMode(mac: String, payMode: TTMeterPayMode, price: Double, callback: (Result<Unit>) -> Unit)
+  fun waterMeterCharge(mac: String, amount: Double, m3: Double, callback: (Result<Unit>) -> Unit)
+  fun waterMeterSetTotalUsage(mac: String, totalM3: Double, callback: (Result<Unit>) -> Unit)
+  fun waterMeterGetFeatureValue(mac: String, callback: (Result<String>) -> Unit)
+  fun waterMeterGetDeviceInfo(mac: String, callback: (Result<WaterMeterDeviceInfo>) -> Unit)
+  fun waterMeterIsSupportFunction(featureValue: String, lockFunction: TTWaterMeterFeature): Boolean
+  fun waterMeterConfigApn(mac: String, apn: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterConfigMeterServer(mac: String, ip: String, port: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterReset(mac: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by TTAccessoryHostApi. */
@@ -4604,357 +4941,6 @@ interface TTAccessoryHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val urlArg = args[0] as String
-            val clientIdArg = args[1] as String
-            val accessTokenArg = args[2] as String
-            val wrapped: List<Any?> = try {
-              api.waterMeterConfigServer(urlArg, clientIdArg, accessTokenArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              MessagesPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConnect$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val macArg = args[0] as String
-            api.waterMeterConnect(macArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDisconnect$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val macArg = args[0] as String
-            val wrapped: List<Any?> = try {
-              api.waterMeterDisconnect(macArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              MessagesPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterInit$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val paramsArg = args[0] as Map<String, Any?>
-            api.waterMeterInit(paramsArg) { result: Result<TTWaterMeterInitResult> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(MessagesPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDelete$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            api.waterMeterDelete(waterMeterIdArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPowerOnOff$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            val isOnArg = args[1] as Boolean
-            api.waterMeterSetPowerOnOff(waterMeterIdArg, isOnArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetRemainderM3$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            val remainderM3Arg = args[1] as Double
-            api.waterMeterSetRemainderM3(waterMeterIdArg, remainderM3Arg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterClearRemainderM3$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            api.waterMeterClearRemainderM3(waterMeterIdArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReadData$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            api.waterMeterReadData(waterMeterIdArg) { result: Result<Map<String, Any?>> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(MessagesPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPayMode$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            val payModeArg = args[1] as Long
-            api.waterMeterSetPayMode(waterMeterIdArg, payModeArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterCharge$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            val amountArg = args[1] as Double
-            api.waterMeterCharge(waterMeterIdArg, amountArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetTotalUsage$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            val totalM3Arg = args[1] as Double
-            api.waterMeterSetTotalUsage(waterMeterIdArg, totalM3Arg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetFeatureValue$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            api.waterMeterGetFeatureValue(waterMeterIdArg) { result: Result<String> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(MessagesPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetDeviceInfo$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            api.waterMeterGetDeviceInfo(waterMeterIdArg) { result: Result<WaterMeterDeviceInfo> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(MessagesPigeonUtils.wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterIsSupportFunction$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val featureValueArg = args[0] as String
-            val lockFunctionArg = args[1] as Long
-            val wrapped: List<Any?> = try {
-              listOf(api.waterMeterIsSupportFunction(featureValueArg, lockFunctionArg))
-            } catch (exception: Throwable) {
-              MessagesPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigApn$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val apnArg = args[0] as String
-            api.waterMeterConfigApn(apnArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigMeterServer$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val ipArg = args[0] as String
-            val portArg = args[1] as String
-            api.waterMeterConfigMeterServer(ipArg, portArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReset$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val waterMeterIdArg = args[0] as String
-            api.waterMeterReset(waterMeterIdArg) { result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(MessagesPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(MessagesPigeonUtils.wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigServer$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
@@ -5016,7 +5002,7 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val paramsArg = args[0] as Map<String, Any?>
+            val paramsArg = args[0] as TTElectricMeterInitParam
             api.electricMeterInit(paramsArg) { result: Result<TTElectricMeterInitResult> ->
               val error = result.exceptionOrNull()
               if (error != null) {
@@ -5036,8 +5022,8 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
-            api.electricMeterDelete(electricMeterIdArg) { result: Result<Unit> ->
+            val macArg = args[0] as String
+            api.electricMeterDelete(macArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5055,9 +5041,9 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
+            val macArg = args[0] as String
             val isOnArg = args[1] as Boolean
-            api.electricMeterSetPowerOnOff(electricMeterIdArg, isOnArg) { result: Result<Unit> ->
+            api.electricMeterSetPowerOnOff(macArg, isOnArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5075,9 +5061,9 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
+            val macArg = args[0] as String
             val remainderKwhArg = args[1] as Double
-            api.electricMeterSetRemainderKwh(electricMeterIdArg, remainderKwhArg) { result: Result<Unit> ->
+            api.electricMeterSetRemainderKwh(macArg, remainderKwhArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5095,8 +5081,8 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
-            api.electricMeterClearRemainderKwh(electricMeterIdArg) { result: Result<Unit> ->
+            val macArg = args[0] as String
+            api.electricMeterClearRemainderKwh(macArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5114,14 +5100,13 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
-            api.electricMeterReadData(electricMeterIdArg) { result: Result<Map<String, Any?>> ->
+            val macArg = args[0] as String
+            api.electricMeterReadData(macArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
               } else {
-                val data = result.getOrNull()
-                reply.reply(MessagesPigeonUtils.wrapResult(data))
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
               }
             }
           }
@@ -5134,9 +5119,10 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
-            val payModeArg = args[1] as Long
-            api.electricMeterSetPayMode(electricMeterIdArg, payModeArg) { result: Result<Unit> ->
+            val macArg = args[0] as String
+            val payModeArg = args[1] as TTMeterPayMode
+            val priceArg = args[2] as Double
+            api.electricMeterSetPayMode(macArg, payModeArg, priceArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5154,9 +5140,10 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
+            val macArg = args[0] as String
             val amountArg = args[1] as Double
-            api.electricMeterCharge(electricMeterIdArg, amountArg) { result: Result<Unit> ->
+            val kwhArg = args[2] as Double
+            api.electricMeterCharge(macArg, amountArg, kwhArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5174,9 +5161,9 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
+            val macArg = args[0] as String
             val maxPowerArg = args[1] as Double
-            api.electricMeterSetMaxPower(electricMeterIdArg, maxPowerArg) { result: Result<Unit> ->
+            api.electricMeterSetMaxPower(macArg, maxPowerArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5194,8 +5181,8 @@ interface TTAccessoryHostApi {
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val electricMeterIdArg = args[0] as String
-            api.electricMeterGetFeatureValue(electricMeterIdArg) { result: Result<String> ->
+            val macArg = args[0] as String
+            api.electricMeterGetFeatureValue(macArg) { result: Result<String> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -5215,13 +5202,447 @@ interface TTAccessoryHostApi {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val featureValueArg = args[0] as String
-            val lockFunctionArg = args[1] as Long
+            val lockFunctionArg = args[1] as TTElectricMeterFeature
             val wrapped: List<Any?> = try {
               listOf(api.electricMeterIsSupportFunction(featureValueArg, lockFunctionArg))
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }
             reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterGetDeviceInfo$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.electricMeterGetDeviceInfo(macArg) { result: Result<ElectricMeterDeviceInfo> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigApn$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val apnArg = args[1] as String
+            api.electricMeterConfigApn(macArg, apnArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigMeterServer$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val ipArg = args[1] as String
+            val portArg = args[2] as String
+            api.electricMeterConfigMeterServer(macArg, ipArg, portArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterReset$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.electricMeterReset(macArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val urlArg = args[0] as String
+            val clientIdArg = args[1] as String
+            val accessTokenArg = args[2] as String
+            val wrapped: List<Any?> = try {
+              api.waterMeterConfigServer(urlArg, clientIdArg, accessTokenArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              MessagesPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConnect$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.waterMeterConnect(macArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDisconnect$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.waterMeterDisconnect(macArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              MessagesPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterInit$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val paramsArg = args[0] as TTWaterMeterInitParam
+            api.waterMeterInit(paramsArg) { result: Result<TTWaterMeterInitResult> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDelete$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.waterMeterDelete(macArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPowerOnOff$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val isOnArg = args[1] as Boolean
+            api.waterMeterSetPowerOnOff(macArg, isOnArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetRemainderM3$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val remainderM3Arg = args[1] as Double
+            api.waterMeterSetRemainderM3(macArg, remainderM3Arg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterClearRemainderM3$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.waterMeterClearRemainderM3(macArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReadData$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.waterMeterReadData(macArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPayMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val payModeArg = args[1] as TTMeterPayMode
+            val priceArg = args[2] as Double
+            api.waterMeterSetPayMode(macArg, payModeArg, priceArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterCharge$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val amountArg = args[1] as Double
+            val m3Arg = args[2] as Double
+            api.waterMeterCharge(macArg, amountArg, m3Arg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetTotalUsage$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val totalM3Arg = args[1] as Double
+            api.waterMeterSetTotalUsage(macArg, totalM3Arg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetFeatureValue$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.waterMeterGetFeatureValue(macArg) { result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetDeviceInfo$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.waterMeterGetDeviceInfo(macArg) { result: Result<WaterMeterDeviceInfo> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterIsSupportFunction$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val featureValueArg = args[0] as String
+            val lockFunctionArg = args[1] as TTWaterMeterFeature
+            val wrapped: List<Any?> = try {
+              listOf(api.waterMeterIsSupportFunction(featureValueArg, lockFunctionArg))
+            } catch (exception: Throwable) {
+              MessagesPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigApn$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val apnArg = args[1] as String
+            api.waterMeterConfigApn(macArg, apnArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigMeterServer$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            val ipArg = args[1] as String
+            val portArg = args[2] as String
+            api.waterMeterConfigMeterServer(macArg, ipArg, portArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReset$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val macArg = args[0] as String
+            api.waterMeterReset(macArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
           }
         } else {
           channel.setMessageHandler(null)
