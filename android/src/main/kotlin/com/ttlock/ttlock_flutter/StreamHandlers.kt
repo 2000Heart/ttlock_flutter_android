@@ -14,8 +14,6 @@ import com.ttlock.bl.sdk.callback.GetCardAddingResultCallback
 import com.ttlock.bl.sdk.callback.GetFingerprintAddingResultCallback
 import com.ttlock.bl.sdk.callback.ScanLockCallback
 import com.ttlock.bl.sdk.callback.ScanWifiCallback
-import com.ttlock.bl.sdk.device.Remote
-import com.ttlock.bl.sdk.device.WirelessDoorSensor
 import com.ttlock.bl.sdk.device.WirelessKeypad
 import com.ttlock.bl.sdk.electricmeter.api.ElectricMeterClient
 import com.ttlock.bl.sdk.entity.FaceCollectionStatus
@@ -29,11 +27,9 @@ import com.ttlock.bl.sdk.keypad.WirelessKeypadClient
 import com.ttlock.bl.sdk.mulfunkeypad.api.MultifunctionalKeypadClient
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.api.RemoteClient
-import com.ttlock.bl.sdk.remote.callback.ScanRemoteCallback
 import com.ttlock.bl.sdk.util.LogUtil
 import com.ttlock.bl.sdk.watermeter.api.WaterMeterClient
 import com.ttlock.bl.sdk.wirelessdoorsensor.WirelessDoorSensorClient
-import com.ttlock.bl.sdk.wirelessdoorsensor.callback.ScanWirelessDoorSensorCallback
 import io.flutter.plugin.common.BinaryMessenger
 
 class ScanLockImpl : LockScanLockStreamHandler {
@@ -136,9 +132,6 @@ class ScanLockWifiImpl : LockScanWifiStreamHandler {
         })
     }
 
-    override fun onCancel(p0: Any?) {
-        super.onCancel(p0)
-    }
 }
 
 class AddLockCardImpl : LockAddCardStreamHandler {
@@ -181,9 +174,6 @@ class AddLockCardImpl : LockAddCardStreamHandler {
         })
     }
 
-    override fun onCancel(p0: Any?) {
-        super.onCancel(p0)
-    }
 }
 
 class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
@@ -215,7 +205,7 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
                     AddFingerprintEvent(
                         isProgress = true,
                         currentCount = 0L,
-                        totalCount = totalCount.toLong(),
+                        totalCount = fingerprintTotal.toLong(),
                         fingerprintNumber = null
                     )
                 )
@@ -253,9 +243,6 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
         })
     }
 
-    override fun onCancel(p0: Any?) {
-        super.onCancel(p0)
-    }
 }
 
 class AddLockFaceImpl : LockAddFaceStreamHandler {
@@ -325,9 +312,6 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
         })
     }
 
-    override fun onCancel(p0: Any?) {
-        super.onCancel(p0)
-    }
 }
 
 class ScanGatewayImpl : GatewayStartScanStreamHandler {
@@ -352,7 +336,7 @@ class ScanGatewayImpl : GatewayStartScanStreamHandler {
                         gatewayMac = device.address,
                         rssi = device.rssi.toLong(),
                         isDfuMode = device.isDfuMode,
-                        type = TTGatewayType.ofRaw((device.gatewayType - 1).toInt()) ?: TTGatewayType.G2
+                        type = TTGatewayType.ofRaw((device.gatewayType - 1)) ?: TTGatewayType.G2
                     )
                 )
             }
@@ -417,9 +401,6 @@ class ScanGatewayWiFiImpl : GatewayGetNearbyWifiStreamHandler {
         })
     }
 
-    override fun onCancel(p0: Any?) {
-        super.onCancel(p0)
-    }
 }
 
 class ScanRemoteKeyImpl : AccessoryStartScanRemoteKeyStreamHandler {
@@ -435,20 +416,18 @@ class ScanRemoteKeyImpl : AccessoryStartScanRemoteKeyStreamHandler {
         sink: PigeonEventSink<TTRemoteAccessoryScanModel>
     ) {
         super.onListen(p0, sink)
-        RemoteClient.getDefault().startScan(object : ScanRemoteCallback {
-            override fun onScanRemote(remote: Remote) {
-                sink.success(
-                    TTRemoteAccessoryScanModel(
-                        name = remote.name,
-                        mac = remote.address,
-                        rssi = remote.rssi.toLong(),
-                        scanTime = System.currentTimeMillis(),
-                        isMultifunctionalKeypad = false,
-                        advertisementData = emptyMap()
-                    )
+        RemoteClient.getDefault().startScan { remote ->
+            sink.success(
+                TTRemoteAccessoryScanModel(
+                    name = remote.name,
+                    mac = remote.address,
+                    rssi = remote.rssi.toLong(),
+                    scanTime = System.currentTimeMillis(),
+                    isMultifunctionalKeypad = false,
+                    advertisementData = emptyMap()
                 )
-            }
-        })
+            )
+        }
     }
 
     override fun onCancel(p0: Any?) {
@@ -816,20 +795,18 @@ class ScanDoorSensorImpl : AccessoryStartScanDoorSensorStreamHandler {
         sink: PigeonEventSink<TTRemoteAccessoryScanModel>
     ) {
         super.onListen(p0, sink)
-        WirelessDoorSensorClient.getDefault().startScan(object : ScanWirelessDoorSensorCallback {
-            override fun onScan(doorSensor: WirelessDoorSensor) {
-                sink.success(
-                    TTRemoteAccessoryScanModel(
-                        name = doorSensor.name,
-                        mac = doorSensor.address,
-                        rssi = doorSensor.rssi.toLong(),
-                        scanTime = System.currentTimeMillis(),
-                        isMultifunctionalKeypad = false,
-                        advertisementData = emptyMap()
-                    )
+        WirelessDoorSensorClient.getDefault().startScan { doorSensor ->
+            sink.success(
+                TTRemoteAccessoryScanModel(
+                    name = doorSensor.name,
+                    mac = doorSensor.address,
+                    rssi = doorSensor.rssi.toLong(),
+                    scanTime = System.currentTimeMillis(),
+                    isMultifunctionalKeypad = false,
+                    advertisementData = emptyMap()
                 )
-            }
-        })
+            )
+        }
     }
 
     override fun onCancel(p0: Any?) {
@@ -859,9 +836,6 @@ class ScanStandaloneDoorSensorImpl : AccessoryStandaloneDoorSensorStartScanStrea
         )
     }
 
-    override fun onCancel(p0: Any?) {
-        super.onCancel(p0)
-    }
 }
 
 class ScanWaterMeterImpl : AccessoryWaterMeterStartScanStreamHandler {

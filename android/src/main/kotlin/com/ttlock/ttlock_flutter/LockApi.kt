@@ -1,8 +1,8 @@
 package com.ttlock.ttlock_flutter
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.text.TextUtils
 import androidx.annotation.RequiresPermission
@@ -44,8 +44,7 @@ class LockApi: TTLockHostApi {
     }
 
     private fun mapLongValue(data: Map<String, Any?>, key: String): Long {
-        val value = data[key]
-        return when (value) {
+        return when (val value = data[key]) {
             is Number -> value.toLong()
             is String -> value.toLongOrNull()
                 ?: throw IllegalArgumentException("Invalid long value for key: $key")
@@ -99,17 +98,20 @@ class LockApi: TTLockHostApi {
 
     @RequiresPermission(Manifest.permission.BLUETOOTH)
     override fun getBluetoothState(): TTBluetoothState {
-        if(TTLockClient.getDefault().isBLEEnabled(context)){
-            return TTBluetoothState.TURN_ON
+        return if(TTLockClient.getDefault().isBLEEnabled(context)){
+            TTBluetoothState.TURN_ON
         }else{
-            return  TTBluetoothState.TURN_OFF
+            TTBluetoothState.TURN_OFF
         }
     }
 
     override fun initLock(params: TTLockInitParams, callback: (Result<String>) -> Unit) {
         val extendedBluetoothDevice = ExtendedBluetoothDevice()
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
         val device: BluetoothDevice =
-            BluetoothAdapter.getDefaultAdapter().getRemoteDevice(params.lockMac)
+            bluetoothAdapter.getRemoteDevice(params.lockMac)
         extendedBluetoothDevice.setDevice(device)
         extendedBluetoothDevice.address = params.lockMac
 
@@ -1452,6 +1454,65 @@ class LockApi: TTLockHostApi {
         TTLockClient.getDefault().setDoorSensorAlertTime(alertTime.toInt(), lockData, object : SetDoorSensorAlertTimeCallback {
             override fun onSetDoorSensorAlertTimeSuccess() {
                 callback.invoke(Result.success(Unit))
+            }
+
+            override fun onFail(lockError: LockError) {
+                callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+            }
+        })
+    }
+
+    // ---- New API methods (added in gap analysis) ----
+
+    override fun getLightTime(lockData: String, callback: (Result<Long>) -> Unit) {
+        TTLockClient.getDefault().getLightTime(lockData, object : GetLockTimeCallback {
+            override fun onGetLockTimeSuccess(lightTime: Long) {
+                callback.invoke(Result.success(lightTime))
+            }
+
+            override fun onFail(lockError: LockError) {
+                callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+            }
+        })
+    }
+
+    override fun setLightTime(seconds: Long, lockData: String, callback: (Result<Unit>) -> Unit) {
+        TTLockClient.getDefault().setLightTime(seconds.toInt(), lockData, object : SetLightTimeCallback {
+            override fun onSetLightTimeSuccess() {
+                callback.invoke(Result.success(Unit))
+            }
+
+            override fun onFail(lockError: LockError) {
+                callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+            }
+        })
+    }
+
+    override fun getPassageModes(lockData: String, callback: (Result<List<TTPassageModeModel>>) -> Unit) {
+        TTLockClient.getDefault().getPassageMode(lockData, object : GetPassageModeCallback {
+            override fun onGetPassageModeSuccess(passageModeStr: String) {
+                callback.invoke(Result.success(parseJsonListMaps(passageModeStr).map {
+                    TTPassageModeModel(
+                        type = passageModeTypeConvert(if (it["modeType"].toString().toInt() == 1) PassageModeType.Weekly else PassageModeType.Monthly),
+                        weekly = (it["repeatList"] as? List<*>)?.mapNotNull { v -> (v as? Number)?.toLong() },
+                        monthly = null,
+                        startDate = mapLongValue(it, "startDate"),
+                        endDate = mapLongValue(it, "endDate"),
+                    )
+                }))
+            }
+
+            override fun onFail(lockError: LockError) {
+                callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+            }
+        })
+    }
+
+    override fun getSensitivity(lockData: String, callback: (Result<TTSensitivityValue>) -> Unit) {
+        TTLockClient.getDefault().getSensitivity(lockData, object : GetSensitivityCallback {
+            override fun onGetSuccess(sensitivityValue: Int) {
+                val value = TTSensitivityValue.values().find { it.raw == sensitivityValue } ?: TTSensitivityValue.OFF
+                callback.invoke(Result.success(value))
             }
 
             override fun onFail(lockError: LockError) {

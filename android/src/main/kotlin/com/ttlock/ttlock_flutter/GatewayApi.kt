@@ -85,7 +85,7 @@ class GatewayApi : TTGatewayHostApi {
                 )
             }
 
-            override fun onFail(error: com.ttlock.bl.sdk.gateway.model.GatewayError) {
+            override fun onFail(error: GatewayError) {
                 callback(Result.failure(gatewayErrorToFlutterError(error)))
             }
         })
@@ -128,7 +128,7 @@ class GatewayApi : TTGatewayHostApi {
                 callback(Result.success(Unit))
             }
 
-            override fun onFail(error: com.ttlock.bl.sdk.gateway.model.GatewayError) {
+            override fun onFail(error: GatewayError) {
                 callback(Result.failure(gatewayErrorToFlutterError(error)))
             }
         })
@@ -140,14 +140,14 @@ class GatewayApi : TTGatewayHostApi {
                 callback(Result.success(mac))
             }
 
-            override fun onFail(error: com.ttlock.bl.sdk.gateway.model.GatewayError) {
+            override fun onFail(error: GatewayError) {
                 callback(Result.success(null))
             }
         })
     }
 
     override fun enterUpgradeMode(mac: String) {
-        return;
+        return
     }
 
 }

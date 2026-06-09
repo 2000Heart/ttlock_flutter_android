@@ -1,12 +1,11 @@
 package com.ttlock.ttlock_flutter
 
-import androidx.annotation.Nullable
 import com.ttlock.bl.sdk.constant.ControlAction
 import com.ttlock.bl.sdk.constant.FeatureValue
 import com.ttlock.bl.sdk.constant.KeyboardPwdType
-import com.ttlock.bl.sdk.constant.LockDataSwitchValue
 import com.ttlock.bl.sdk.constant.LockStatus
 import com.ttlock.bl.sdk.electricmeter.model.ElectricMeterError
+//import com.ttlock.bl.sdk.electricmeter.model.ElectricMeterFeature
 import com.ttlock.bl.sdk.entity.AccessoryType
 import com.ttlock.bl.sdk.entity.FaceCollectionStatus
 import com.ttlock.bl.sdk.entity.LockError
@@ -21,6 +20,7 @@ import com.ttlock.bl.sdk.keypad.model.KeypadError
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.model.RemoteError
 import com.ttlock.bl.sdk.watermeter.model.WaterMeterError
+import com.ttlock.bl.sdk.watermeter.model.WaterMeterFeature
 import com.ttlock.bl.sdk.wirelessdoorsensor.model.DoorSensorError
 
 fun lockConfigConvert(config: TTLockConfig): TTLockConfigType {
@@ -168,7 +168,7 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.CUSTOM_QRCODE -> FeatureValue.SUPPORT_CUSTOM_QR_CODE
         TTLockFunction.SECURITY_M1CARD -> FeatureValue.SUPPORT_SAFE_M1_CARD
         TTLockFunction.YI_SHENG_PHOTO_FACE -> null
-    } as Int?
+    }
 }
 
 fun lockSwitchStateRevert(state: Int): TTLockSwitchState {
@@ -383,5 +383,32 @@ fun faceErrorCodeRevert(error: FaceCollectionStatus): TTFaceErrorCode {
         FaceCollectionStatus.NEED_TO_BOW_YOUR_HEAD -> TTFaceErrorCode.NEED_LOWER_HEAD
         FaceCollectionStatus.TILT_YOUR_HEAD_TO_THE_LEFT -> TTFaceErrorCode.NEED_TILT_HEAD_TO_LEFT
         FaceCollectionStatus.TILT_YOUR_HEAD_TO_THE_RIGHT -> TTFaceErrorCode.NEED_TILT_HEAD_TO_RIGHT
+    }
+}
+
+fun passageModeTypeConvert(type: PassageModeType): TTPassageModeType {
+    return when(type) {
+        PassageModeType.Weekly -> TTPassageModeType.WEEKLY
+        PassageModeType.Monthly -> TTPassageModeType.MONTHLY
+    }
+}
+//
+//fun waterMeterFeatureConvert(feature: TTWaterMeterFeature): Int {
+//    return when(feature) {
+//        TTWaterMeterFeature.CAT_ONE -> WaterMeterFeature.SUPPORT_CAT_ONE.toInt()
+//    }
+//}
+//
+//fun electricMeterFeatureConvert(feature: TTElectricMeterFeature): Int {
+//    return when(feature) {
+//        TTElectricMeterFeature.CAT_ONE -> ElectricMeterFeature.SUPPORT_CAT_ONE.toInt()
+//        TTElectricMeterFeature.TELINK -> ElectricMeterFeature.TELINK_CHIP
+//    }
+//}
+
+fun payModeConvert(mode: TTMeterPayMode): Int {
+    return when(mode) {
+        TTMeterPayMode.POSTPAID -> 0
+        TTMeterPayMode.PREPAID -> 1
     }
 }
