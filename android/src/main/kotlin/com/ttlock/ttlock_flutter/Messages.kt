@@ -78,6 +78,54 @@ class FlutterError (
   val details: Any? = null
 ) : Throwable()
 
+/** 刷卡录入流阶段。 */
+enum class TTAddCardPhase(val raw: Int) {
+  /** 已进入刷卡模式，等待用户刷卡。 */
+  WAITING(0),
+  /** 刷卡成功，[AddCardEvent.cardNumber] 有效。 */
+  SUCCESS(1);
+
+  companion object {
+    fun ofRaw(raw: Int): TTAddCardPhase? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+/** 指纹录入流阶段。 */
+enum class TTAddFingerprintPhase(val raw: Int) {
+  /** 已进入录入模式，等待首次按压。 */
+  WAITING(0),
+  /** 采集中，见 [AddFingerprintEvent.currentCount] / [totalCount]。 */
+  COLLECTING(1),
+  /** 录入成功，[AddFingerprintEvent.fingerprintNumber] 有效。 */
+  SUCCESS(2);
+
+  companion object {
+    fun ofRaw(raw: Int): TTAddFingerprintPhase? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+/** 人脸录入流阶段。 */
+enum class TTAddFacePhase(val raw: Int) {
+  /** 可开始人脸采集。 */
+  CAN_START_ADD(0),
+  /** 采集中，见 [AddFaceEvent.errorCode] 获取实时反馈。 */
+  COLLECTING(1),
+  /** 采集异常，见 [AddFaceEvent.errorCode]。 */
+  ERROR(2),
+  /** 录入成功，[AddFaceEvent.faceNumber] 有效。 */
+  SUCCESS(3);
+
+  companion object {
+    fun ofRaw(raw: Int): TTAddFacePhase? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 enum class TTBluetoothState(val raw: Int) {
   UNKNOW(0),
   RESETTING(1),
@@ -1972,20 +2020,20 @@ data class TTElectricMeterInitParam (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class AddCardEvent (
-  val isProgress: Boolean,
+  val phase: TTAddCardPhase,
   val cardNumber: String? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AddCardEvent {
-      val isProgress = pigeonVar_list[0] as Boolean
+      val phase = pigeonVar_list[0] as TTAddCardPhase
       val cardNumber = pigeonVar_list[1] as String?
-      return AddCardEvent(isProgress, cardNumber)
+      return AddCardEvent(phase, cardNumber)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      isProgress,
+      phase,
       cardNumber,
     )
   }
@@ -2003,7 +2051,7 @@ data class AddCardEvent (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class AddFingerprintEvent (
-  val isProgress: Boolean,
+  val phase: TTAddFingerprintPhase,
   val currentCount: Long? = null,
   val totalCount: Long? = null,
   val fingerprintNumber: String? = null
@@ -2011,16 +2059,16 @@ data class AddFingerprintEvent (
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AddFingerprintEvent {
-      val isProgress = pigeonVar_list[0] as Boolean
+      val phase = pigeonVar_list[0] as TTAddFingerprintPhase
       val currentCount = pigeonVar_list[1] as Long?
       val totalCount = pigeonVar_list[2] as Long?
       val fingerprintNumber = pigeonVar_list[3] as String?
-      return AddFingerprintEvent(isProgress, currentCount, totalCount, fingerprintNumber)
+      return AddFingerprintEvent(phase, currentCount, totalCount, fingerprintNumber)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      isProgress,
+      phase,
       currentCount,
       totalCount,
       fingerprintNumber,
@@ -2040,25 +2088,22 @@ data class AddFingerprintEvent (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class AddFaceEvent (
-  val isProgress: Boolean,
-  val state: TTFaceState? = null,
+  val phase: TTAddFacePhase,
   val errorCode: TTFaceErrorCode? = null,
   val faceNumber: String? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AddFaceEvent {
-      val isProgress = pigeonVar_list[0] as Boolean
-      val state = pigeonVar_list[1] as TTFaceState?
-      val errorCode = pigeonVar_list[2] as TTFaceErrorCode?
-      val faceNumber = pigeonVar_list[3] as String?
-      return AddFaceEvent(isProgress, state, errorCode, faceNumber)
+      val phase = pigeonVar_list[0] as TTAddFacePhase
+      val errorCode = pigeonVar_list[1] as TTFaceErrorCode?
+      val faceNumber = pigeonVar_list[2] as String?
+      return AddFaceEvent(phase, errorCode, faceNumber)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      isProgress,
-      state,
+      phase,
       errorCode,
       faceNumber,
     )
@@ -2079,335 +2124,350 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
     return when (type) {
       129.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTBluetoothState.ofRaw(it.toInt())
+          TTAddCardPhase.ofRaw(it.toInt())
         }
       }
       130.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTPasscodeType.ofRaw(it.toInt())
+          TTAddFingerprintPhase.ofRaw(it.toInt())
         }
       }
       131.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTOperateRecordType.ofRaw(it.toInt())
+          TTAddFacePhase.ofRaw(it.toInt())
         }
       }
       132.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTControlAction.ofRaw(it.toInt())
+          TTBluetoothState.ofRaw(it.toInt())
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTLockSwitchState.ofRaw(it.toInt())
+          TTPasscodeType.ofRaw(it.toInt())
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTPassageModeType.ofRaw(it.toInt())
+          TTOperateRecordType.ofRaw(it.toInt())
         }
       }
       135.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTLockConfig.ofRaw(it.toInt())
+          TTControlAction.ofRaw(it.toInt())
         }
       }
       136.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTLockDirection.ofRaw(it.toInt())
+          TTLockSwitchState.ofRaw(it.toInt())
         }
       }
       137.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTSoundVolumeType.ofRaw(it.toInt())
+          TTPassageModeType.ofRaw(it.toInt())
         }
       }
       138.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTSensitivityValue.ofRaw(it.toInt())
+          TTLockConfig.ofRaw(it.toInt())
         }
       }
       139.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTLockError.ofRaw(it.toInt())
+          TTLockDirection.ofRaw(it.toInt())
         }
       }
       140.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTErrorDevice.ofRaw(it.toInt())
+          TTSoundVolumeType.ofRaw(it.toInt())
         }
       }
       141.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTLiftWorkActivateType.ofRaw(it.toInt())
+          TTSensitivityValue.ofRaw(it.toInt())
         }
       }
       142.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTPowerSaverWorkType.ofRaw(it.toInt())
+          TTLockError.ofRaw(it.toInt())
         }
       }
       143.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTGatewayType.ofRaw(it.toInt())
+          TTErrorDevice.ofRaw(it.toInt())
         }
       }
       144.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTGatewayConnectStatus.ofRaw(it.toInt())
+          TTLiftWorkActivateType.ofRaw(it.toInt())
         }
       }
       145.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTGatewayError.ofRaw(it.toInt())
+          TTPowerSaverWorkType.ofRaw(it.toInt())
         }
       }
       146.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTRemoteAccessoryError.ofRaw(it.toInt())
+          TTGatewayType.ofRaw(it.toInt())
         }
       }
       147.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTMultifunctionalKeypadError.ofRaw(it.toInt())
+          TTGatewayConnectStatus.ofRaw(it.toInt())
         }
       }
       148.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTRemoteAccessory.ofRaw(it.toInt())
+          TTGatewayError.ofRaw(it.toInt())
         }
       }
       149.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTIpSettingType.ofRaw(it.toInt())
+          TTRemoteAccessoryError.ofRaw(it.toInt())
         }
       }
       150.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTNbAwakeMode.ofRaw(it.toInt())
+          TTMultifunctionalKeypadError.ofRaw(it.toInt())
         }
       }
       151.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTNbAwakeTimeType.ofRaw(it.toInt())
+          TTRemoteAccessory.ofRaw(it.toInt())
         }
       }
       152.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTLockFunction.ofRaw(it.toInt())
+          TTIpSettingType.ofRaw(it.toInt())
         }
       }
       153.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTFaceState.ofRaw(it.toInt())
+          TTNbAwakeMode.ofRaw(it.toInt())
         }
       }
       154.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTWaterMeterFeature.ofRaw(it.toInt())
+          TTNbAwakeTimeType.ofRaw(it.toInt())
         }
       }
       155.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTElectricMeterFeature.ofRaw(it.toInt())
+          TTLockFunction.ofRaw(it.toInt())
         }
       }
       156.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTMeterPayMode.ofRaw(it.toInt())
+          TTFaceState.ofRaw(it.toInt())
         }
       }
       157.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          TTFaceErrorCode.ofRaw(it.toInt())
+          TTWaterMeterFeature.ofRaw(it.toInt())
         }
       }
       158.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockVersion.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          TTElectricMeterFeature.ofRaw(it.toInt())
         }
       }
       159.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockInitParams.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          TTMeterPayMode.ofRaw(it.toInt())
         }
       }
       160.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TTGatewayInitParams.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          TTFaceErrorCode.ofRaw(it.toInt())
         }
       }
       161.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTIpSetting.fromList(it)
+          TTLockVersion.fromList(it)
         }
       }
       162.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTCycleModel.fromList(it)
+          TTLockInitParams.fromList(it)
         }
       }
       163.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockScanWifiEventParam.fromList(it)
+          TTGatewayInitParams.fromList(it)
         }
       }
       164.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockCredentialEventParam.fromList(it)
+          TTIpSetting.fromList(it)
         }
       }
       165.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTKeypadCredentialEventParam.fromList(it)
+          TTCycleModel.fromList(it)
         }
       }
       166.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ControlLockResult.fromList(it)
+          TTLockScanWifiEventParam.fromList(it)
         }
       }
       167.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AutoLockingTime.fromList(it)
+          TTLockCredentialEventParam.fromList(it)
         }
       }
       168.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiInfoModel.fromList(it)
+          TTKeypadCredentialEventParam.fromList(it)
         }
       }
       169.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          CameraLockWifiResult.fromList(it)
+          ControlLockResult.fromList(it)
         }
       }
       170.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockSystemModel.fromList(it)
+          AutoLockingTime.fromList(it)
         }
       }
       171.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AccessoryElectricQuantityResult.fromList(it)
+          TTWifiInfoModel.fromList(it)
         }
       }
       172.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTPassageModeModel.fromList(it)
+          CameraLockWifiResult.fromList(it)
         }
       }
       173.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTLockScanModel.fromList(it)
+          TTLockSystemModel.fromList(it)
         }
       }
       174.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTPasscodeModel.fromList(it)
+          AccessoryElectricQuantityResult.fromList(it)
         }
       }
       175.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTICCardModel.fromList(it)
+          TTPassageModeModel.fromList(it)
         }
       }
       176.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTFingerprintModel.fromList(it)
+          TTLockScanModel.fromList(it)
         }
       }
       177.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTGatewayScanModel.fromList(it)
+          TTPasscodeModel.fromList(it)
         }
       }
       178.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GatewayDeviceInfo.fromList(it)
+          TTICCardModel.fromList(it)
         }
       }
       179.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTRemoteAccessoryScanModel.fromList(it)
+          TTFingerprintModel.fromList(it)
         }
       }
       180.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorScanModel.fromList(it)
+          TTGatewayScanModel.fromList(it)
         }
       }
       181.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorInfo.fromList(it)
+          GatewayDeviceInfo.fromList(it)
         }
       }
       182.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTMeterScanModel.fromList(it)
+          TTRemoteAccessoryScanModel.fromList(it)
         }
       }
       183.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWaterMeterInitResult.fromList(it)
+          TTStandaloneDoorSensorScanModel.fromList(it)
         }
       }
       184.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTElectricMeterInitResult.fromList(it)
+          TTStandaloneDoorSensorInfo.fromList(it)
         }
       }
       185.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanResult.fromList(it)
+          TTMeterScanModel.fromList(it)
         }
       }
       186.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanEntry.fromList(it)
+          TTWaterMeterInitResult.fromList(it)
         }
       }
       187.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          RemoteKeypadInitResult.fromList(it)
+          TTElectricMeterInitResult.fromList(it)
         }
       }
       188.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          MultifunctionalKeypadInitResult.fromList(it)
+          TTWifiScanResult.fromList(it)
         }
       }
       189.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          WaterMeterDeviceInfo.fromList(it)
+          TTWifiScanEntry.fromList(it)
         }
       }
       190.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ElectricMeterDeviceInfo.fromList(it)
+          RemoteKeypadInitResult.fromList(it)
         }
       }
       191.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWaterMeterInitParam.fromList(it)
+          MultifunctionalKeypadInitResult.fromList(it)
         }
       }
       192.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTElectricMeterInitParam.fromList(it)
+          WaterMeterDeviceInfo.fromList(it)
         }
       }
       193.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddCardEvent.fromList(it)
+          ElectricMeterDeviceInfo.fromList(it)
         }
       }
       194.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddFingerprintEvent.fromList(it)
+          TTWaterMeterInitParam.fromList(it)
         }
       }
       195.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TTElectricMeterInitParam.fromList(it)
+        }
+      }
+      196.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AddCardEvent.fromList(it)
+        }
+      }
+      197.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AddFingerprintEvent.fromList(it)
+        }
+      }
+      198.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           AddFaceEvent.fromList(it)
         }
@@ -2417,272 +2477,284 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
-      is TTBluetoothState -> {
+      is TTAddCardPhase -> {
         stream.write(129)
         writeValue(stream, value.raw)
       }
-      is TTPasscodeType -> {
+      is TTAddFingerprintPhase -> {
         stream.write(130)
         writeValue(stream, value.raw)
       }
-      is TTOperateRecordType -> {
+      is TTAddFacePhase -> {
         stream.write(131)
         writeValue(stream, value.raw)
       }
-      is TTControlAction -> {
+      is TTBluetoothState -> {
         stream.write(132)
         writeValue(stream, value.raw)
       }
-      is TTLockSwitchState -> {
+      is TTPasscodeType -> {
         stream.write(133)
         writeValue(stream, value.raw)
       }
-      is TTPassageModeType -> {
+      is TTOperateRecordType -> {
         stream.write(134)
         writeValue(stream, value.raw)
       }
-      is TTLockConfig -> {
+      is TTControlAction -> {
         stream.write(135)
         writeValue(stream, value.raw)
       }
-      is TTLockDirection -> {
+      is TTLockSwitchState -> {
         stream.write(136)
         writeValue(stream, value.raw)
       }
-      is TTSoundVolumeType -> {
+      is TTPassageModeType -> {
         stream.write(137)
         writeValue(stream, value.raw)
       }
-      is TTSensitivityValue -> {
+      is TTLockConfig -> {
         stream.write(138)
         writeValue(stream, value.raw)
       }
-      is TTLockError -> {
+      is TTLockDirection -> {
         stream.write(139)
         writeValue(stream, value.raw)
       }
-      is TTErrorDevice -> {
+      is TTSoundVolumeType -> {
         stream.write(140)
         writeValue(stream, value.raw)
       }
-      is TTLiftWorkActivateType -> {
+      is TTSensitivityValue -> {
         stream.write(141)
         writeValue(stream, value.raw)
       }
-      is TTPowerSaverWorkType -> {
+      is TTLockError -> {
         stream.write(142)
         writeValue(stream, value.raw)
       }
-      is TTGatewayType -> {
+      is TTErrorDevice -> {
         stream.write(143)
         writeValue(stream, value.raw)
       }
-      is TTGatewayConnectStatus -> {
+      is TTLiftWorkActivateType -> {
         stream.write(144)
         writeValue(stream, value.raw)
       }
-      is TTGatewayError -> {
+      is TTPowerSaverWorkType -> {
         stream.write(145)
         writeValue(stream, value.raw)
       }
-      is TTRemoteAccessoryError -> {
+      is TTGatewayType -> {
         stream.write(146)
         writeValue(stream, value.raw)
       }
-      is TTMultifunctionalKeypadError -> {
+      is TTGatewayConnectStatus -> {
         stream.write(147)
         writeValue(stream, value.raw)
       }
-      is TTRemoteAccessory -> {
+      is TTGatewayError -> {
         stream.write(148)
         writeValue(stream, value.raw)
       }
-      is TTIpSettingType -> {
+      is TTRemoteAccessoryError -> {
         stream.write(149)
         writeValue(stream, value.raw)
       }
-      is TTNbAwakeMode -> {
+      is TTMultifunctionalKeypadError -> {
         stream.write(150)
         writeValue(stream, value.raw)
       }
-      is TTNbAwakeTimeType -> {
+      is TTRemoteAccessory -> {
         stream.write(151)
         writeValue(stream, value.raw)
       }
-      is TTLockFunction -> {
+      is TTIpSettingType -> {
         stream.write(152)
         writeValue(stream, value.raw)
       }
-      is TTFaceState -> {
+      is TTNbAwakeMode -> {
         stream.write(153)
         writeValue(stream, value.raw)
       }
-      is TTWaterMeterFeature -> {
+      is TTNbAwakeTimeType -> {
         stream.write(154)
         writeValue(stream, value.raw)
       }
-      is TTElectricMeterFeature -> {
+      is TTLockFunction -> {
         stream.write(155)
         writeValue(stream, value.raw)
       }
-      is TTMeterPayMode -> {
+      is TTFaceState -> {
         stream.write(156)
         writeValue(stream, value.raw)
       }
-      is TTFaceErrorCode -> {
+      is TTWaterMeterFeature -> {
         stream.write(157)
         writeValue(stream, value.raw)
       }
-      is TTLockVersion -> {
+      is TTElectricMeterFeature -> {
         stream.write(158)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is TTLockInitParams -> {
+      is TTMeterPayMode -> {
         stream.write(159)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is TTGatewayInitParams -> {
+      is TTFaceErrorCode -> {
         stream.write(160)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw)
       }
-      is TTIpSetting -> {
+      is TTLockVersion -> {
         stream.write(161)
         writeValue(stream, value.toList())
       }
-      is TTCycleModel -> {
+      is TTLockInitParams -> {
         stream.write(162)
         writeValue(stream, value.toList())
       }
-      is TTLockScanWifiEventParam -> {
+      is TTGatewayInitParams -> {
         stream.write(163)
         writeValue(stream, value.toList())
       }
-      is TTLockCredentialEventParam -> {
+      is TTIpSetting -> {
         stream.write(164)
         writeValue(stream, value.toList())
       }
-      is TTKeypadCredentialEventParam -> {
+      is TTCycleModel -> {
         stream.write(165)
         writeValue(stream, value.toList())
       }
-      is ControlLockResult -> {
+      is TTLockScanWifiEventParam -> {
         stream.write(166)
         writeValue(stream, value.toList())
       }
-      is AutoLockingTime -> {
+      is TTLockCredentialEventParam -> {
         stream.write(167)
         writeValue(stream, value.toList())
       }
-      is TTWifiInfoModel -> {
+      is TTKeypadCredentialEventParam -> {
         stream.write(168)
         writeValue(stream, value.toList())
       }
-      is CameraLockWifiResult -> {
+      is ControlLockResult -> {
         stream.write(169)
         writeValue(stream, value.toList())
       }
-      is TTLockSystemModel -> {
+      is AutoLockingTime -> {
         stream.write(170)
         writeValue(stream, value.toList())
       }
-      is AccessoryElectricQuantityResult -> {
+      is TTWifiInfoModel -> {
         stream.write(171)
         writeValue(stream, value.toList())
       }
-      is TTPassageModeModel -> {
+      is CameraLockWifiResult -> {
         stream.write(172)
         writeValue(stream, value.toList())
       }
-      is TTLockScanModel -> {
+      is TTLockSystemModel -> {
         stream.write(173)
         writeValue(stream, value.toList())
       }
-      is TTPasscodeModel -> {
+      is AccessoryElectricQuantityResult -> {
         stream.write(174)
         writeValue(stream, value.toList())
       }
-      is TTICCardModel -> {
+      is TTPassageModeModel -> {
         stream.write(175)
         writeValue(stream, value.toList())
       }
-      is TTFingerprintModel -> {
+      is TTLockScanModel -> {
         stream.write(176)
         writeValue(stream, value.toList())
       }
-      is TTGatewayScanModel -> {
+      is TTPasscodeModel -> {
         stream.write(177)
         writeValue(stream, value.toList())
       }
-      is GatewayDeviceInfo -> {
+      is TTICCardModel -> {
         stream.write(178)
         writeValue(stream, value.toList())
       }
-      is TTRemoteAccessoryScanModel -> {
+      is TTFingerprintModel -> {
         stream.write(179)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorScanModel -> {
+      is TTGatewayScanModel -> {
         stream.write(180)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorInfo -> {
+      is GatewayDeviceInfo -> {
         stream.write(181)
         writeValue(stream, value.toList())
       }
-      is TTMeterScanModel -> {
+      is TTRemoteAccessoryScanModel -> {
         stream.write(182)
         writeValue(stream, value.toList())
       }
-      is TTWaterMeterInitResult -> {
+      is TTStandaloneDoorSensorScanModel -> {
         stream.write(183)
         writeValue(stream, value.toList())
       }
-      is TTElectricMeterInitResult -> {
+      is TTStandaloneDoorSensorInfo -> {
         stream.write(184)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanResult -> {
+      is TTMeterScanModel -> {
         stream.write(185)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanEntry -> {
+      is TTWaterMeterInitResult -> {
         stream.write(186)
         writeValue(stream, value.toList())
       }
-      is RemoteKeypadInitResult -> {
+      is TTElectricMeterInitResult -> {
         stream.write(187)
         writeValue(stream, value.toList())
       }
-      is MultifunctionalKeypadInitResult -> {
+      is TTWifiScanResult -> {
         stream.write(188)
         writeValue(stream, value.toList())
       }
-      is WaterMeterDeviceInfo -> {
+      is TTWifiScanEntry -> {
         stream.write(189)
         writeValue(stream, value.toList())
       }
-      is ElectricMeterDeviceInfo -> {
+      is RemoteKeypadInitResult -> {
         stream.write(190)
         writeValue(stream, value.toList())
       }
-      is TTWaterMeterInitParam -> {
+      is MultifunctionalKeypadInitResult -> {
         stream.write(191)
         writeValue(stream, value.toList())
       }
-      is TTElectricMeterInitParam -> {
+      is WaterMeterDeviceInfo -> {
         stream.write(192)
         writeValue(stream, value.toList())
       }
-      is AddCardEvent -> {
+      is ElectricMeterDeviceInfo -> {
         stream.write(193)
         writeValue(stream, value.toList())
       }
-      is AddFingerprintEvent -> {
+      is TTWaterMeterInitParam -> {
         stream.write(194)
         writeValue(stream, value.toList())
       }
-      is AddFaceEvent -> {
+      is TTElectricMeterInitParam -> {
         stream.write(195)
+        writeValue(stream, value.toList())
+      }
+      is AddCardEvent -> {
+        stream.write(196)
+        writeValue(stream, value.toList())
+      }
+      is AddFingerprintEvent -> {
+        stream.write(197)
+        writeValue(stream, value.toList())
+      }
+      is AddFaceEvent -> {
+        stream.write(198)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)

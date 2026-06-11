@@ -157,11 +157,11 @@ class AddLockCardImpl : LockAddCardStreamHandler {
         val validity = slot.buildValidityInfo()
         TTLockClient.getDefault().addICCard(validity, lockData, object : AddICCardCallback {
             override fun onEnterAddMode() {
-                sink.success(AddCardEvent(isProgress = true, cardNumber = null))
+                sink.success(AddCardEvent(phase = TTAddCardPhase.WAITING, cardNumber = null))
             }
 
             override fun onAddICCardSuccess(cardNumber: Long) {
-                sink.success(AddCardEvent(isProgress = false, cardNumber = cardNumber.toString()))
+                sink.success(AddCardEvent(phase = TTAddCardPhase.SUCCESS, cardNumber = cardNumber.toString()))
             }
 
             override fun onFail(lockError: LockError?) {
@@ -203,7 +203,7 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
                 fingerprintTotal = totalCount
                 sink.success(
                     AddFingerprintEvent(
-                        isProgress = true,
+                        phase = TTAddFingerprintPhase.WAITING,
                         currentCount = 0L,
                         totalCount = fingerprintTotal.toLong(),
                         fingerprintNumber = null
@@ -212,9 +212,14 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
             }
 
             override fun onCollectFingerprint(currentCount: Int) {
+                val phase = if (currentCount > 0) {
+                    TTAddFingerprintPhase.COLLECTING
+                } else {
+                    TTAddFingerprintPhase.WAITING
+                }
                 sink.success(
                     AddFingerprintEvent(
-                        isProgress = true,
+                        phase = phase,
                         currentCount = currentCount.toLong(),
                         totalCount = fingerprintTotal.toLong(),
                         fingerprintNumber = null
@@ -225,7 +230,7 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
             override fun onAddFingerpintFinished(fingerprintNumber: Long) {
                 sink.success(
                     AddFingerprintEvent(
-                        isProgress = false,
+                        phase = TTAddFingerprintPhase.SUCCESS,
                         currentCount = null,
                         totalCount = null,
                         fingerprintNumber = fingerprintNumber.toString()
@@ -270,8 +275,7 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
             override fun onEnterAddMode() {
                 sink.success(
                     AddFaceEvent(
-                        isProgress = true,
-                        state = TTFaceState.CAN_START_ADD,
+                        phase = TTAddFacePhase.CAN_START_ADD,
                         errorCode = TTFaceErrorCode.NORMAL,
                         faceNumber = null
                     )
@@ -280,11 +284,14 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
 
             override fun onCollectionStatus(status: FaceCollectionStatus) {
                 val err = faceErrorCodeRevert(status)
-                val state = if(err != TTFaceErrorCode.NORMAL) TTFaceState.ERROR else null
+                val phase = if (err != TTFaceErrorCode.NORMAL) {
+                    TTAddFacePhase.ERROR
+                } else {
+                    TTAddFacePhase.COLLECTING
+                }
                 sink.success(
                     AddFaceEvent(
-                        isProgress = true,
-                        state = state,
+                        phase = phase,
                         errorCode = err,
                         faceNumber = null
                     )
@@ -294,8 +301,7 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
             override fun onAddFinished(faceNumber: Long) {
                 sink.success(
                     AddFaceEvent(
-                        isProgress = false,
-                        state = null,
+                        phase = TTAddFacePhase.SUCCESS,
                         errorCode = null,
                         faceNumber = faceNumber.toString()
                     )
@@ -532,7 +538,7 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
                     stopPolling()
                     sink.success(
                         AddFingerprintEvent(
-                            isProgress = false,
+                            phase = TTAddFingerprintPhase.SUCCESS,
                             currentCount = null,
                             totalCount = null,
                             fingerprintNumber = fingerprintNumber.toString()
@@ -576,7 +582,7 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
                     override fun onEnterAddingMode() {
                         sink.success(
                             AddFingerprintEvent(
-                                isProgress = true,
+                                phase = TTAddFingerprintPhase.WAITING,
                                 currentCount = 0L,
                                 totalCount = 0L,
                                 fingerprintNumber = null
@@ -585,9 +591,14 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
                     }
 
                     override fun onCollectFingerprint(currentCount: Int, totalCount: Int) {
+                        val phase = if (currentCount > 0) {
+                            TTAddFingerprintPhase.COLLECTING
+                        } else {
+                            TTAddFingerprintPhase.WAITING
+                        }
                         sink.success(
                             AddFingerprintEvent(
-                                isProgress = true,
+                                phase = phase,
                                 currentCount = currentCount.toLong(),
                                 totalCount = totalCount.toLong(),
                                 fingerprintNumber = null
@@ -598,7 +609,7 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
                     override fun onAddFingerprintFinished(fingerprintNumber: Long) {
                         sink.success(
                             AddFingerprintEvent(
-                                isProgress = false,
+                                phase = TTAddFingerprintPhase.SUCCESS,
                                 currentCount = null,
                                 totalCount = null,
                                 fingerprintNumber = fingerprintNumber.toString()
@@ -632,7 +643,7 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
                 override fun onEnterAddingMode() {
                     sink.success(
                         AddFingerprintEvent(
-                            isProgress = true,
+                            phase = TTAddFingerprintPhase.WAITING,
                             currentCount = 0,
                             totalCount = 0,
                             fingerprintNumber = null
@@ -694,7 +705,7 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
             TTLockClient.getDefault().getCardAddingResult(lockData, object : GetCardAddingResultCallback {
                 override fun onGetCardAddingResult(cardNumber: Long) {
                     stopPolling()
-                    sink.success(AddCardEvent(isProgress = false, cardNumber = cardNumber.toString()))
+                    sink.success(AddCardEvent(phase = TTAddCardPhase.SUCCESS, cardNumber = cardNumber.toString()))
                 }
 
                 override fun onFail(lockError: LockError?) {
@@ -730,11 +741,11 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
                 validity,
                 object : com.ttlock.bl.sdk.mulfunkeypad.callback.AddCardCallback {
                     override fun onEnterAddingMode() {
-                        sink.success(AddCardEvent(isProgress = true, cardNumber = null))
+                        sink.success(AddCardEvent(phase = TTAddCardPhase.WAITING, cardNumber = null))
                     }
 
                     override fun onAddCardSuccess(cardNumber: Long) {
-                        sink.success(AddCardEvent(isProgress = false, cardNumber = cardNumber.toString()))
+                        sink.success(AddCardEvent(phase = TTAddCardPhase.SUCCESS, cardNumber = cardNumber.toString()))
                     }
 
                     override fun onLockFail(lockError: LockError) {
@@ -761,7 +772,7 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
             lockData,
             object : EnterKeypadCardAddingModeCallback {
                 override fun onEnterAddingMode() {
-                    sink.success(AddCardEvent(isProgress = true, cardNumber = null))
+                    sink.success(AddCardEvent(phase = TTAddCardPhase.WAITING, cardNumber = null))
                     pollWirelessCardResult(sink, lockData)
                 }
 
