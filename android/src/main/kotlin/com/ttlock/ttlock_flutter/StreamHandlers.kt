@@ -320,6 +320,69 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
 
 }
 
+class AddLockPalmVeinImpl : LockAddPalmVeinStreamHandler {
+    var context: Context
+
+    constructor(context: Context, messenger: BinaryMessenger) {
+        this.context = context
+        register(messenger, this)
+    }
+
+    override fun onListen(
+        p0: Any?,
+        sink: PigeonEventSink<AddPalmVeinEvent>
+    ) {
+        super.onListen(p0, sink)
+        val slot = LockStreamParams.addPalmVein
+        val lockData = try {
+            slot.requireLockData("LockAddPalmVein")
+        } catch (e: IllegalStateException) {
+            sink.error("NO_LOCK_DATA", e.message, null)
+            return
+        }
+        val validity = slot.buildValidityInfo()
+        TTLockClient.getDefault().addPalmVein(lockData, validity, object : AddPalmVeinCallback {
+            override fun onEnterAddMode() {
+                sink.success(
+                    AddPalmVeinEvent(
+                        phase = TTAddPalmVeinPhase.CAN_START_ADD,
+                        errorCode = null,
+                        palmVeinNumber = null
+                    )
+                )
+            }
+
+            override fun onCollectionStatus(status: PalmVeinCollectionStatus) {
+                sink.success(
+                    AddPalmVeinEvent(
+                        phase = TTAddPalmVeinPhase.ERROR,
+                        errorCode = palmVeinErrorCodeRevert(status),
+                        palmVeinNumber = null
+                    )
+                )
+            }
+
+            override fun onAddFinished(palmVeinNumber: Long) {
+                sink.success(
+                    AddPalmVeinEvent(
+                        phase = TTAddPalmVeinPhase.SUCCESS,
+                        errorCode = null,
+                        palmVeinNumber = palmVeinNumber.toString()
+                    )
+                )
+            }
+
+            override fun onFail(lockError: LockError?) {
+                sink.error(
+                    lockError?.errorCode ?: "",
+                    lockError?.errorMsg,
+                    lockError?.description
+                )
+            }
+        })
+    }
+}
+
 class ScanGatewayImpl : GatewayStartScanStreamHandler {
     var context: Context
 

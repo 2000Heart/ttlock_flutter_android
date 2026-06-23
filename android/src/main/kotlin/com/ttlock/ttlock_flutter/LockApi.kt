@@ -96,6 +96,10 @@ class LockApi: TTLockHostApi {
         LockStreamParams.addFace.apply(param)
     }
 
+    override fun setLockAddPalmVeinParam(param: TTLockCredentialEventParam) {
+        LockStreamParams.addPalmVein.apply(param)
+    }
+
     @RequiresPermission(Manifest.permission.BLUETOOTH)
     override fun getBluetoothState(): TTBluetoothState {
         return if(TTLockClient.getDefault().isBLEEnabled(context)){
@@ -725,6 +729,152 @@ class LockApi: TTLockHostApi {
                 callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
             }
         })
+    }
+
+    override fun modifyPalmVein(
+        palmVeinNumber: String,
+        cycleList: List<TTCycleModel>?,
+        startDate: Long,
+        endDate: Long,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        val palmVeinNo = palmVeinNumber.toLongOrNull()
+        if (palmVeinNo == null) {
+            callback.invoke(
+                Result.failure(
+                    FlutterError(
+                        code = "INVALID_PARAMETER",
+                        message = "palmVeinNumber is not a number",
+                        details = palmVeinNumber
+                    )
+                )
+            )
+            return
+        }
+
+        TTLockClient.getDefault().modifyPalmVeinValidityPeriod(
+            lockData,
+            palmVeinNo,
+            buildValidityInfo(cycleList, startDate, endDate),
+            object : ModifyPalmVeinPeriodCallback {
+                override fun onModifySuccess() {
+                    callback.invoke(Result.success(Unit))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
+        )
+    }
+
+    override fun deletePalmVein(
+        palmVeinNumber: String,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        val palmVeinNo = palmVeinNumber.toLongOrNull()
+        if (palmVeinNo == null) {
+            callback.invoke(
+                Result.failure(
+                    FlutterError("INVALID_PARAMETER", "palmVeinNumber is not a number", palmVeinNumber)
+                )
+            )
+            return
+        }
+
+        TTLockClient.getDefault().deletePalmVein(
+            lockData,
+            palmVeinNo,
+            object : DeletePalmVeinCallback {
+                override fun onDeleteSuccess() {
+                    callback.invoke(Result.success(Unit))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
+        )
+    }
+
+    override fun clearPalmVein(lockData: String, callback: (Result<Unit>) -> Unit) {
+        TTLockClient.getDefault().clearPalmVein(lockData, object : ClearPalmVeinCallback {
+            override fun onClearSuccess() {
+                callback.invoke(Result.success(Unit))
+            }
+
+            override fun onFail(lockError: LockError) {
+                callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+            }
+        })
+    }
+
+    override fun getAllValidPalmVeins(
+        lockData: String,
+        callback: (Result<List<TTPalmVeinModel>>) -> Unit
+    ) {
+        TTLockClient.getDefault().getAllValidPalmVeins(lockData, object : GetAllPalmVeinsCallback {
+            override fun onGetAllPalmVeins(palmVeinListStr: String) {
+                callback.invoke(
+                    Result.success(
+                        parseJsonListMaps(palmVeinListStr).map {
+                            TTPalmVeinModel(
+                                palmVeinNumber = it["palmVeinNumber"] as String,
+                                startDate = mapLongValue(it, "startDate"),
+                                endDate = mapLongValue(it, "endDate"),
+                            )
+                        }
+                    )
+                )
+            }
+
+            override fun onFail(lockError: LockError) {
+                callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+            }
+        })
+    }
+
+    override fun setMotorTorqueLevel(
+        torqueLevel: Long,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        TTLockClient.getDefault().setMotorTorqueLevel(
+            torqueLevel.toInt(),
+            lockData,
+            object : SetMotorTorqueLevelCallback {
+                override fun onSetSuccess() {
+                    callback.invoke(Result.success(Unit))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
+        )
+    }
+
+    override fun setLockLatchBolt(
+        keepTime: Long,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        TTLockClient.getDefault().setLatchBolt(
+            -1,
+            keepTime.toInt(),
+            lockData,
+            object : SetLatchBoltCallback {
+                override fun onSetSuccess() {
+                    callback.invoke(Result.success(Unit))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
+        )
     }
 
     override fun setLockTime(timestamp: Long, lockData: String, callback: (Result<Unit>) -> Unit) {

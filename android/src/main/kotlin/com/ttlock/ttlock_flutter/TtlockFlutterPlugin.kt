@@ -22,6 +22,7 @@ class TtlockFlutterPlugin: FlutterPlugin {
   private var addLockCardImpl: AddLockCardImpl? = null
   private var addLockFingerprintImpl: AddLockFingerprintImpl? = null
   private var addLockFaceImpl: AddLockFaceImpl? = null
+  private var addLockPalmVeinImpl: AddLockPalmVeinImpl? = null
   private var scanGatewayImpl: ScanGatewayImpl? = null
   private var scanGatewayWiFiImpl: ScanGatewayWiFiImpl? = null
   private var scanRemoteKeyImpl: ScanRemoteKeyImpl? = null
@@ -58,6 +59,7 @@ class TtlockFlutterPlugin: FlutterPlugin {
     addLockCardImpl = AddLockCardImpl(context!!, messenger!!)
     addLockFingerprintImpl = AddLockFingerprintImpl(context!!, messenger!!)
     addLockFaceImpl = AddLockFaceImpl(context!!, messenger!!)
+    addLockPalmVeinImpl = AddLockPalmVeinImpl(context!!, messenger!!)
     scanGatewayImpl = ScanGatewayImpl(context!!, messenger!!)
     scanGatewayWiFiImpl = ScanGatewayWiFiImpl(context!!, messenger!!)
     scanRemoteKeyImpl = ScanRemoteKeyImpl(context!!, messenger!!)
