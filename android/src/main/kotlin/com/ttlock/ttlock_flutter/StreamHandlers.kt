@@ -14,10 +14,12 @@ import com.ttlock.bl.sdk.callback.GetCardAddingResultCallback
 import com.ttlock.bl.sdk.callback.GetFingerprintAddingResultCallback
 import com.ttlock.bl.sdk.callback.ScanLockCallback
 import com.ttlock.bl.sdk.callback.ScanWifiCallback
+import com.ttlock.bl.sdk.callback.AddPalmVeinCallback
 import com.ttlock.bl.sdk.device.WirelessKeypad
 import com.ttlock.bl.sdk.electricmeter.api.ElectricMeterClient
 import com.ttlock.bl.sdk.entity.FaceCollectionStatus
 import com.ttlock.bl.sdk.entity.LockError
+import com.ttlock.bl.sdk.entity.PalmVeinCollectionStatus
 import com.ttlock.bl.sdk.gateway.api.GatewayClient
 import com.ttlock.bl.sdk.gateway.callback.ScanGatewayCallback
 import com.ttlock.bl.sdk.gateway.callback.ScanWiFiByGatewayCallback

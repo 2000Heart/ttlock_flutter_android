@@ -10,6 +10,7 @@ import com.ttlock.bl.sdk.entity.AccessoryType
 import com.ttlock.bl.sdk.entity.FaceCollectionStatus
 import com.ttlock.bl.sdk.entity.LockError
 import com.ttlock.bl.sdk.entity.OperateLogType
+import com.ttlock.bl.sdk.entity.PalmVeinCollectionStatus
 import com.ttlock.bl.sdk.entity.PassageModeType
 import com.ttlock.bl.sdk.entity.PowerSaverWorkMode
 import com.ttlock.bl.sdk.entity.SoundVolume
@@ -37,8 +38,9 @@ fun lockConfigConvert(config: TTLockConfig): TTLockConfigType {
         TTLockConfig.PUBLIC_MODE -> TTLockConfigType.PUBLIC_MODE
         TTLockConfig.LOW_BATTERY_AUTO_UNLOCK -> TTLockConfigType.LOW_BATTERY_AUTO_UNLOCK
         TTLockConfig.SECURITY_M1CARD -> TTLockConfigType.M1_CARD
-        TTLockConfig.SEMI_AUTOMATIC_MODE_CONTROL -> TTLockConfigType.SEMI_AUTOMATIC_MODE_CONTROL
-        TTLockConfig.LOCK_SUPERVISION -> TTLockConfigType.LOCK_SUPERVISION
+//        TTLockConfig.SEMI_AUTOMATIC_MODE_CONTROL -> TTLockConfigType.SEMI_AUTOMATIC_MODE_CONTROL
+//        TTLockConfig.LOCK_SUPERVISION -> TTLockConfigType.LOCK_SUPERVISION
+        else -> TTLockConfigType.LOW_BATTERY_AUTO_UNLOCK
     }
 }
 
@@ -171,12 +173,13 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.CUSTOM_QRCODE -> FeatureValue.SUPPORT_CUSTOM_QR_CODE
         TTLockFunction.SECURITY_M1CARD -> FeatureValue.SUPPORT_SAFE_M1_CARD
         TTLockFunction.YI_SHENG_PHOTO_FACE -> null
-        TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
-        TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
-        TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
+//        TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
+//        TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
+//        TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
         TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
         TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
-        TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
+//        TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
+        else -> null
     }
 }
 

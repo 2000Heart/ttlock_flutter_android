@@ -841,19 +841,19 @@ class LockApi: TTLockHostApi {
         lockData: String,
         callback: (Result<Unit>) -> Unit
     ) {
-        TTLockClient.getDefault().setMotorTorqueLevel(
-            torqueLevel.toInt(),
-            lockData,
-            object : SetMotorTorqueLevelCallback {
-                override fun onSetSuccess() {
-                    callback.invoke(Result.success(Unit))
-                }
-
-                override fun onFail(lockError: LockError) {
-                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
-                }
-            }
-        )
+//        TTLockClient.getDefault().setMotorTorqueLevel(
+//            torqueLevel.toInt(),
+//            lockData,
+//            object : SetMotorTorqueLevelCallback {
+//                override fun onSetSuccess() {
+//                    callback.invoke(Result.success(Unit))
+//                }
+//
+//                override fun onFail(lockError: LockError) {
+//                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+//                }
+//            }
+//        )
     }
 
     override fun setLockLatchBolt(
@@ -861,20 +861,20 @@ class LockApi: TTLockHostApi {
         lockData: String,
         callback: (Result<Unit>) -> Unit
     ) {
-        TTLockClient.getDefault().setLatchBolt(
-            -1,
-            keepTime.toInt(),
-            lockData,
-            object : SetLatchBoltCallback {
-                override fun onSetSuccess() {
-                    callback.invoke(Result.success(Unit))
-                }
-
-                override fun onFail(lockError: LockError) {
-                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
-                }
-            }
-        )
+//        TTLockClient.getDefault().setLatchBolt(
+//            -1,
+//            keepTime.toInt(),
+//            lockData,
+//            object : SetLatchBoltCallback {
+//                override fun onSetSuccess() {
+//                    callback.invoke(Result.success(Unit))
+//                }
+//
+//                override fun onFail(lockError: LockError) {
+//                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+//                }
+//            }
+//        )
     }
 
     override fun setLockTime(timestamp: Long, lockData: String, callback: (Result<Unit>) -> Unit) {
