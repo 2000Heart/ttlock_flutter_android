@@ -36,6 +36,9 @@ fun lockConfigConvert(config: TTLockConfig): TTLockConfigType {
         TTLockConfig.DOUBLE_AUTH -> TTLockConfigType.DOUBLE_CHECK
         TTLockConfig.PUBLIC_MODE -> TTLockConfigType.PUBLIC_MODE
         TTLockConfig.LOW_BATTERY_AUTO_UNLOCK -> TTLockConfigType.LOW_BATTERY_AUTO_UNLOCK
+        TTLockConfig.SECURITY_M1CARD -> TTLockConfigType.M1_CARD
+        TTLockConfig.SEMI_AUTOMATIC_MODE_CONTROL -> TTLockConfigType.SEMI_AUTOMATIC_MODE_CONTROL
+        TTLockConfig.LOCK_SUPERVISION -> TTLockConfigType.LOCK_SUPERVISION
     }
 }
 
@@ -168,6 +171,12 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.CUSTOM_QRCODE -> FeatureValue.SUPPORT_CUSTOM_QR_CODE
         TTLockFunction.SECURITY_M1CARD -> FeatureValue.SUPPORT_SAFE_M1_CARD
         TTLockFunction.YI_SHENG_PHOTO_FACE -> null
+        TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
+        TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
+        TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
+        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
+        TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
+        TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
     }
 }
 
@@ -383,6 +392,20 @@ fun faceErrorCodeRevert(error: FaceCollectionStatus): TTFaceErrorCode {
         FaceCollectionStatus.NEED_TO_BOW_YOUR_HEAD -> TTFaceErrorCode.NEED_LOWER_HEAD
         FaceCollectionStatus.TILT_YOUR_HEAD_TO_THE_LEFT -> TTFaceErrorCode.NEED_TILT_HEAD_TO_LEFT
         FaceCollectionStatus.TILT_YOUR_HEAD_TO_THE_RIGHT -> TTFaceErrorCode.NEED_TILT_HEAD_TO_RIGHT
+    }
+}
+
+fun palmVeinErrorCodeRevert(error: PalmVeinCollectionStatus): TTPalmVeinErrorCode {
+    return when (error) {
+        PalmVeinCollectionStatus.UNKNOWN_STATUS -> TTPalmVeinErrorCode.UNKNOWN_STATUS
+        PalmVeinCollectionStatus.NO_PALM_VEIN_DETECTED -> TTPalmVeinErrorCode.NO_PALM_VEIN_DETECTED
+        PalmVeinCollectionStatus.PLAM_RECT_CONF_LOW -> TTPalmVeinErrorCode.PALM_RECT_CONF_LOW
+        PalmVeinCollectionStatus.PLAM_LANDMARK_CONF_LOW -> TTPalmVeinErrorCode.PALM_LANDMARK_CONF_LOW
+        PalmVeinCollectionStatus.PALM_ANGLE_ROLL_ERROR -> TTPalmVeinErrorCode.PALM_ANGLE_ROLL_ERROR
+        PalmVeinCollectionStatus.PALM_ANGLE_LEAN_ERROR -> TTPalmVeinErrorCode.PALM_ANGLE_LEAN_ERROR
+        PalmVeinCollectionStatus.PALM_BLOCK_1 -> TTPalmVeinErrorCode.PALM_BLOCK
+        PalmVeinCollectionStatus.PLAM_BLUR_1 -> TTPalmVeinErrorCode.PALM_BLUR
+        PalmVeinCollectionStatus.PLAM_BACK -> TTPalmVeinErrorCode.PALM_BACK
     }
 }
 

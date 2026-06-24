@@ -17,6 +17,7 @@ object LockStreamParams {
     val addCard = CredentialSlot()
     val addFingerprint = CredentialSlot()
     val addFace = CredentialSlot()
+    val addPalmVein = CredentialSlot()
 
     class CredentialSlot {
         @Volatile
