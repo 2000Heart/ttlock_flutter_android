@@ -13,9 +13,9 @@ import com.ttlock.bl.sdk.mulfunkeypad.api.MultifunctionalKeypadClient
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.api.RemoteClient
 import com.ttlock.bl.sdk.remote.model.RemoteError
-//import com.ttlock.bl.sdk.standalonedoorsensor.api.StandaloneDoorSensorClient
-//import com.ttlock.bl.sdk.standalonedoorsensor.model.StandaloneDoorSensorConfigInfo
-//import com.ttlock.bl.sdk.standalonedoorsensor.model.StandaloneDoorSensorError
+import com.ttlock.bl.sdk.standalonedoorsensor.api.StandaloneDoorSensorClient
+import com.ttlock.bl.sdk.standalonedoorsensor.model.StandaloneDoorSensorConfigInfo
+import com.ttlock.bl.sdk.standalonedoorsensor.model.StandaloneDoorSensorError
 import com.ttlock.bl.sdk.util.FeatureValueUtil
 import com.ttlock.bl.sdk.watermeter.api.WaterMeterClient
 import com.ttlock.bl.sdk.watermeter.model.WaterMeterError
@@ -87,13 +87,13 @@ class AccessoryApi : TTAccessoryHostApi {
         )
     }
 
-//    private fun standaloneDoorSensorErrorToFlutterError(error: StandaloneDoorSensorError): FlutterError {
-//        return FlutterError(
-//            code = error.name,
-//            message = error.errorMsg,
-//            details = error.errorCode.toString()
-//        )
-//    }
+    private fun standaloneDoorSensorErrorToFlutterError(error: StandaloneDoorSensorError): FlutterError {
+        return FlutterError(
+            code = error.name,
+            message = error.errorMsg,
+            details = error.errorCode.toString()
+        )
+    }
 
     override fun initRemoteKey(
         mac: String,
@@ -257,56 +257,56 @@ class AccessoryApi : TTAccessoryHostApi {
         info: Map<String, Any?>,
         callback: (Result<TTStandaloneDoorSensorInfo>) -> Unit
     ) {
-//        val config = StandaloneDoorSensorConfigInfo()
-//        config.mac = mac
-//        config.wifiName = info["SSID"] as? String ?: ""
-//        config.wifiPassword = info["wifiPwd"] as? String ?: ""
-//        config.serverAddress = info["serverAddress"] as? String ?: ""
-//        config.portNumber = (info["portNumber"] as? Number)?.toInt() ?: 0
-//
-//        StandaloneDoorSensorClient.getDefault().init(
-//            config,
-//            object : com.ttlock.bl.sdk.standalonedoorsensor.callback.InitCallback {
-//                override fun onInitSuccess(result: com.ttlock.bl.sdk.standalonedoorsensor.model.InitModel) {
-//                    val deviceInfo = result.deviceInfo
-//                    callback(
-//                        Result.success(
-//                            TTStandaloneDoorSensorInfo(
-//                                doorSensorData = result.doorSensorData,
-//                                electricQuantity = deviceInfo.electricQuantity.toLong(),
-//                                featureValue = deviceInfo.featureValue,
-//                                wifiMac = deviceInfo.wifiMac,
-//                                modelNum = deviceInfo.modelNum,
-//                                hardwareRevision = deviceInfo.hardwareRevision,
-//                                firmwareRevision = deviceInfo.firmwareRevision
-//                            )
-//                        )
-//                    )
-//                }
-//
-//                override fun onFail(error: StandaloneDoorSensorError) {
-//                    callback(Result.failure(standaloneDoorSensorErrorToFlutterError(error)))
-//                }
-//            }
-//        )
+        val config = StandaloneDoorSensorConfigInfo()
+        config.mac = mac
+        config.wifiName = info["SSID"] as? String ?: ""
+        config.wifiPassword = info["wifiPwd"] as? String ?: ""
+        config.serverAddress = info["serverAddress"] as? String ?: ""
+        config.portNumber = (info["portNumber"] as? Number)?.toInt() ?: 0
+
+        StandaloneDoorSensorClient.getDefault().init(
+            config,
+            object : com.ttlock.bl.sdk.standalonedoorsensor.callback.InitCallback {
+                override fun onInitSuccess(result: com.ttlock.bl.sdk.standalonedoorsensor.model.InitModel) {
+                    val deviceInfo = result.deviceInfo
+                    callback(
+                        Result.success(
+                            TTStandaloneDoorSensorInfo(
+                                doorSensorData = result.doorSensorData,
+                                electricQuantity = deviceInfo.electricQuantity.toLong(),
+                                featureValue = deviceInfo.featureValue,
+                                wifiMac = deviceInfo.wifiMac,
+                                modelNum = deviceInfo.modelNum,
+                                hardwareRevision = deviceInfo.hardwareRevision,
+                                firmwareRevision = deviceInfo.firmwareRevision
+                            )
+                        )
+                    )
+                }
+
+                override fun onFail(error: StandaloneDoorSensorError) {
+                    callback(Result.failure(standaloneDoorSensorErrorToFlutterError(error)))
+                }
+            }
+        )
     }
 
     override fun standaloneDoorSensorReadFeatureValue(
         mac: String,
         callback: (Result<String>) -> Unit
     ) {
-//        StandaloneDoorSensorClient.getDefault().getDeviceInfo(
-//            mac,
-//            object : com.ttlock.bl.sdk.standalonedoorsensor.callback.GetDeviceInfoCallback {
-//                override fun onGetDeviceInfoSuccess(deviceInfo: com.ttlock.bl.sdk.standalonedoorsensor.model.DeviceInfo) {
-//                    callback(Result.success(deviceInfo.featureValue ?: ""))
-//                }
-//
-//                override fun onFail(error: StandaloneDoorSensorError) {
-//                    callback(Result.failure(standaloneDoorSensorErrorToFlutterError(error)))
-//                }
-//            }
-//        )
+        StandaloneDoorSensorClient.getDefault().getDeviceInfo(
+            mac,
+            object : com.ttlock.bl.sdk.standalonedoorsensor.callback.GetDeviceInfoCallback {
+                override fun onGetDeviceInfoSuccess(deviceInfo: com.ttlock.bl.sdk.standalonedoorsensor.model.DeviceInfo) {
+                    callback(Result.success(deviceInfo.featureValue ?: ""))
+                }
+
+                override fun onFail(error: StandaloneDoorSensorError) {
+                    callback(Result.failure(standaloneDoorSensorErrorToFlutterError(error)))
+                }
+            }
+        )
     }
 
     override fun standaloneDoorSensorIsSupportFunction(
@@ -509,30 +509,29 @@ class AccessoryApi : TTAccessoryHostApi {
         mac: String,
         callback: (Result<WaterMeterDeviceInfo>) -> Unit
     ) {
-//        WaterMeterClient.getDefault().getDeviceInfo(mac, object : com.ttlock.bl.sdk.watermeter.callback.GetDeviceInfoCallback {
-//            override fun onGetSuccess(deviceInfo: com.ttlock.bl.sdk.meter.model.DeviceInfo) {
-//                @Suppress("UNCHECKED_CAST")
-//                callback(Result.success(WaterMeterDeviceInfo(
-//                    catOneCardNumber = deviceInfo.catOneCardNumber,
-//                    catOneImsi = deviceInfo.catOneImsi,
-//                    catOneNodeId = deviceInfo.catOneNodeId,
-//                    catOneOperator = deviceInfo.catOneOperator,
-//                    catOneRssi = deviceInfo.catOneRssi.toLong()
-//                )))
-//            }
-//
-//            override fun onFail(error: WaterMeterError) {
-//                callback(Result.failure(waterMeterErrorToFlutterError(error)))
-//            }
-//        })
+        WaterMeterClient.getDefault().getDeviceInfo(mac, object : com.ttlock.bl.sdk.watermeter.callback.GetDeviceInfoCallback {
+            override fun onGetSuccess(deviceInfo: com.ttlock.bl.sdk.meter.model.DeviceInfo) {
+                @Suppress("UNCHECKED_CAST")
+                callback(Result.success(WaterMeterDeviceInfo(
+                    catOneCardNumber = deviceInfo.catOneCardNumber,
+                    catOneImsi = deviceInfo.catOneImsi,
+                    catOneNodeId = deviceInfo.catOneNodeId,
+                    catOneOperator = deviceInfo.catOneOperator,
+                    catOneRssi = deviceInfo.catOneRssi.toLong()
+                )))
+            }
+
+            override fun onFail(error: WaterMeterError) {
+                callback(Result.failure(waterMeterErrorToFlutterError(error)))
+            }
+        })
     }
 
     override fun waterMeterIsSupportFunction(
         featureValue: String,
         lockFunction: TTWaterMeterFeature
     ): Boolean {
-        return false
-//        return FeatureValueUtil.isSupportFeatureValue(featureValue, waterMeterFeatureConvert(lockFunction))
+        return FeatureValueUtil.isSupportFeatureValue(featureValue, waterMeterFeatureConvert(lockFunction))
     }
 
     override fun waterMeterConfigApn(
@@ -540,15 +539,15 @@ class AccessoryApi : TTAccessoryHostApi {
         apn: String,
         callback: (Result<Unit>) -> Unit
     ) {
-//        WaterMeterClient.getDefault().configApn(mac, apn, object : com.ttlock.bl.sdk.watermeter.callback.ConfigApnCallback {
-//            override fun onConfigSuccess() {
-//                callback(Result.success(Unit))
-//            }
-//
-//            override fun onFail(p0: WaterMeterError) {
-//                callback(Result.failure(waterMeterErrorToFlutterError(p0)))
-//            }
-//        })
+        WaterMeterClient.getDefault().configApn(mac, apn, object : com.ttlock.bl.sdk.watermeter.callback.ConfigApnCallback {
+            override fun onConfigSuccess() {
+                callback(Result.success(Unit))
+            }
+
+            override fun onFail(p0: WaterMeterError) {
+                callback(Result.failure(waterMeterErrorToFlutterError(p0)))
+            }
+        })
     }
 
     override fun waterMeterConfigMeterServer(
@@ -557,15 +556,15 @@ class AccessoryApi : TTAccessoryHostApi {
         port: String,
         callback: (Result<Unit>) -> Unit
     ) {
-//        WaterMeterClient.getDefault().configServer(mac, ip, port.toInt(), object : com.ttlock.bl.sdk.watermeter.callback.ConfigServerCallback {
-//            override fun onConfigSuccess() {
-//                callback(Result.success(Unit))
-//            }
-//
-//            override fun onFail(error: WaterMeterError) {
-//                callback(Result.failure(waterMeterErrorToFlutterError(error)))
-//            }
-//        })
+        WaterMeterClient.getDefault().configServer(mac, ip, port.toInt(), object : com.ttlock.bl.sdk.watermeter.callback.ConfigServerCallback {
+            override fun onConfigSuccess() {
+                callback(Result.success(Unit))
+            }
+
+            override fun onFail(error: WaterMeterError) {
+                callback(Result.failure(waterMeterErrorToFlutterError(error)))
+            }
+        })
     }
 
     override fun waterMeterReset(
@@ -614,20 +613,20 @@ class AccessoryApi : TTAccessoryHostApi {
         params: TTElectricMeterInitParam,
         callback: (Result<TTElectricMeterInitResult>) -> Unit
     ) {
-//        val map = HashMap<String, String>()
-//        map["mac"] = params.mac
-//        map["number"] = params.name
-//        map["payMode"] = (if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1).toString()
-//        map["price"] = params.price.toString()
-//        ElectricMeterClient.getDefault().add(map, object : com.ttlock.bl.sdk.electricmeter.callback.AddCallback {
-//            override fun onAddSuccess(info: com.ttlock.bl.sdk.electricmeter.model.ElectricMeterInfo) {
-//                callback(Result.success(TTElectricMeterInitResult(electricMeterId = info.electricMeterId.toLong(), featureValue = info.featureValue)))
-//            }
-//
-//            override fun onFail(error: ElectricMeterError) {
-//                callback(Result.failure(electricMeterErrorToFlutterError(error)))
-//            }
-//        })
+        val map = HashMap<String, String>()
+        map["mac"] = params.mac
+        map["number"] = params.name
+        map["payMode"] = (if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1).toString()
+        map["price"] = params.price.toString()
+        ElectricMeterClient.getDefault().add(map, object : com.ttlock.bl.sdk.electricmeter.callback.AddCallback {
+            override fun onAddSuccess(info: com.ttlock.bl.sdk.electricmeter.model.ElectricMeterInfo) {
+                callback(Result.success(TTElectricMeterInitResult(electricMeterId = info.electricMeterId.toLong(), featureValue = info.featureValue)))
+            }
+
+            override fun onFail(error: ElectricMeterError) {
+                callback(Result.failure(electricMeterErrorToFlutterError(error)))
+            }
+        })
     }
 
     override fun electricMeterDelete(
@@ -776,29 +775,28 @@ class AccessoryApi : TTAccessoryHostApi {
         featureValue: String,
         lockFunction: TTElectricMeterFeature
     ): Boolean {
-        return false
-//        return FeatureValueUtil.isSupportFeatureValue(featureValue, electricMeterFeatureConvert(lockFunction))
+        return FeatureValueUtil.isSupportFeatureValue(featureValue, electricMeterFeatureConvert(lockFunction))
     }
 
     override fun electricMeterGetDeviceInfo(
         mac: String,
         callback: (Result<ElectricMeterDeviceInfo>) -> Unit
     ) {
-//        ElectricMeterClient.getDefault().getDeviceInfo(mac, object : com.ttlock.bl.sdk.electricmeter.callback.GetDeviceInfoCallback {
-//            override fun onGetSuccess(deviceInfo: com.ttlock.bl.sdk.meter.model.DeviceInfo) {
-//                callback(Result.success(ElectricMeterDeviceInfo(
-//                    catOneCardNumber = deviceInfo.catOneCardNumber,
-//                    catOneImsi = deviceInfo.catOneImsi,
-//                    catOneNodeId = deviceInfo.catOneNodeId,
-//                    catOneOperator = deviceInfo.catOneOperator,
-//                    catOneRssi = deviceInfo.catOneRssi.toLong()
-//                )))
-//            }
-//
-//            override fun onFail(error: ElectricMeterError) {
-//                callback(Result.failure(electricMeterErrorToFlutterError(error)))
-//            }
-//        })
+        ElectricMeterClient.getDefault().getDeviceInfo(mac, object : com.ttlock.bl.sdk.electricmeter.callback.GetDeviceInfoCallback {
+            override fun onGetSuccess(deviceInfo: com.ttlock.bl.sdk.meter.model.DeviceInfo) {
+                callback(Result.success(ElectricMeterDeviceInfo(
+                    catOneCardNumber = deviceInfo.catOneCardNumber,
+                    catOneImsi = deviceInfo.catOneImsi,
+                    catOneNodeId = deviceInfo.catOneNodeId,
+                    catOneOperator = deviceInfo.catOneOperator,
+                    catOneRssi = deviceInfo.catOneRssi.toLong()
+                )))
+            }
+
+            override fun onFail(error: ElectricMeterError) {
+                callback(Result.failure(electricMeterErrorToFlutterError(error)))
+            }
+        })
     }
 
     override fun electricMeterConfigApn(
@@ -806,15 +804,15 @@ class AccessoryApi : TTAccessoryHostApi {
         apn: String,
         callback: (Result<Unit>) -> Unit
     ) {
-//        ElectricMeterClient.getDefault().configApn(mac, apn, object : com.ttlock.bl.sdk.electricmeter.callback.ConfigApnCallback {
-//            override fun onConfigSuccess() {
-//                callback(Result.success(Unit))
-//            }
-//
-//            override fun onFail(error: ElectricMeterError) {
-//                callback(Result.failure(electricMeterErrorToFlutterError(error)))
-//            }
-//        })
+        ElectricMeterClient.getDefault().configApn(mac, apn, object : com.ttlock.bl.sdk.electricmeter.callback.ConfigApnCallback {
+            override fun onConfigSuccess() {
+                callback(Result.success(Unit))
+            }
+
+            override fun onFail(error: ElectricMeterError) {
+                callback(Result.failure(electricMeterErrorToFlutterError(error)))
+            }
+        })
     }
 
     override fun electricMeterConfigMeterServer(
@@ -823,30 +821,30 @@ class AccessoryApi : TTAccessoryHostApi {
         port: String,
         callback: (Result<Unit>) -> Unit
     ) {
-//        ElectricMeterClient.getDefault().configServer(mac, ip, port.toInt(), object : com.ttlock.bl.sdk.electricmeter.callback.ConfigServerCallback {
-//            override fun onConfigSuccess() {
-//                callback(Result.success(Unit))
-//            }
-//
-//            override fun onFail(error: ElectricMeterError) {
-//                callback(Result.failure(electricMeterErrorToFlutterError(error)))
-//            }
-//        })
+        ElectricMeterClient.getDefault().configServer(mac, ip, port.toInt(), object : com.ttlock.bl.sdk.electricmeter.callback.ConfigServerCallback {
+            override fun onConfigSuccess() {
+                callback(Result.success(Unit))
+            }
+
+            override fun onFail(error: ElectricMeterError) {
+                callback(Result.failure(electricMeterErrorToFlutterError(error)))
+            }
+        })
     }
 
     override fun electricMeterReset(
         mac: String,
         callback: (Result<Unit>) -> Unit
     ) {
-//        ElectricMeterClient.getDefault().reset(mac, object : com.ttlock.bl.sdk.electricmeter.callback.ResetCallback {
-//            override fun onResetSuccess() {
-//                callback(Result.success(Unit))
-//            }
-//
-//            override fun onFail(error: ElectricMeterError) {
-//                callback(Result.failure(electricMeterErrorToFlutterError(error)))
-//            }
-//        })
+        ElectricMeterClient.getDefault().reset(mac, object : com.ttlock.bl.sdk.electricmeter.callback.ResetCallback {
+            override fun onResetSuccess() {
+                callback(Result.success(Unit))
+            }
+
+            override fun onFail(error: ElectricMeterError) {
+                callback(Result.failure(electricMeterErrorToFlutterError(error)))
+            }
+        })
     }
 
 }

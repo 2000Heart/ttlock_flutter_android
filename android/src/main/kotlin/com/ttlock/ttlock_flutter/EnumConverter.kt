@@ -5,7 +5,7 @@ import com.ttlock.bl.sdk.constant.FeatureValue
 import com.ttlock.bl.sdk.constant.KeyboardPwdType
 import com.ttlock.bl.sdk.constant.LockStatus
 import com.ttlock.bl.sdk.electricmeter.model.ElectricMeterError
-//import com.ttlock.bl.sdk.electricmeter.model.ElectricMeterFeature
+import com.ttlock.bl.sdk.electricmeter.model.ElectricMeterFeature
 import com.ttlock.bl.sdk.entity.AccessoryType
 import com.ttlock.bl.sdk.entity.FaceCollectionStatus
 import com.ttlock.bl.sdk.entity.LockError
@@ -36,11 +36,11 @@ fun lockConfigConvert(config: TTLockConfig): TTLockConfigType {
         TTLockConfig.WIFI_LOCK_POWER_SAVING_MODE -> TTLockConfigType.WIFI_LOCK_POWER_SAVING_MODE
         TTLockConfig.DOUBLE_AUTH -> TTLockConfigType.DOUBLE_CHECK
         TTLockConfig.PUBLIC_MODE -> TTLockConfigType.PUBLIC_MODE
-        TTLockConfig.LOW_BATTERY_AUTO_UNLOCK -> TTLockConfigType.LOW_BATTERY_AUTO_UNLOCK
+        TTLockConfig.LOW_BATTERY_AUTO_UNLOCK -> TTLockConfigType.LOW_BATTERY_UNLOCK
         TTLockConfig.SECURITY_M1CARD -> TTLockConfigType.M1_CARD
-//        TTLockConfig.SEMI_AUTOMATIC_MODE_CONTROL -> TTLockConfigType.SEMI_AUTOMATIC_MODE_CONTROL
-//        TTLockConfig.LOCK_SUPERVISION -> TTLockConfigType.LOCK_SUPERVISION
-        else -> TTLockConfigType.LOW_BATTERY_AUTO_UNLOCK
+        TTLockConfig.SEMI_AUTOMATIC_MODE_CONTROL -> TTLockConfigType.SEMI_AUTOMATIC_MODE_CONTROL
+        TTLockConfig.LOCK_SUPERVISION -> TTLockConfigType.LOCK_SUPERVISION
+//        else -> TTLockConfigType.LOW_BATTERY_UNLOCK
     }
 }
 
@@ -173,13 +173,13 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.CUSTOM_QRCODE -> FeatureValue.SUPPORT_CUSTOM_QR_CODE
         TTLockFunction.SECURITY_M1CARD -> FeatureValue.SUPPORT_SAFE_M1_CARD
         TTLockFunction.YI_SHENG_PHOTO_FACE -> null
-//        TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
-//        TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
-//        TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
+        TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
+        TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
+        TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
         TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
         TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
-//        TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
-        else -> null
+        TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
+//        else -> null
     }
 }
 
@@ -418,19 +418,19 @@ fun passageModeTypeConvert(type: PassageModeType): TTPassageModeType {
         PassageModeType.Monthly -> TTPassageModeType.MONTHLY
     }
 }
-//
-//fun waterMeterFeatureConvert(feature: TTWaterMeterFeature): Int {
-//    return when(feature) {
-//        TTWaterMeterFeature.CAT_ONE -> WaterMeterFeature.SUPPORT_CAT_ONE.toInt()
-//    }
-//}
-//
-//fun electricMeterFeatureConvert(feature: TTElectricMeterFeature): Int {
-//    return when(feature) {
-//        TTElectricMeterFeature.CAT_ONE -> ElectricMeterFeature.SUPPORT_CAT_ONE.toInt()
-//        TTElectricMeterFeature.TELINK -> ElectricMeterFeature.TELINK_CHIP
-//    }
-//}
+
+fun waterMeterFeatureConvert(feature: TTWaterMeterFeature): Int {
+    return when(feature) {
+        TTWaterMeterFeature.CAT_ONE -> WaterMeterFeature.SUPPORT_CAT_ONE.toInt()
+    }
+}
+
+fun electricMeterFeatureConvert(feature: TTElectricMeterFeature): Int {
+    return when(feature) {
+        TTElectricMeterFeature.CAT_ONE -> ElectricMeterFeature.SUPPORT_CAT_ONE.toInt()
+        TTElectricMeterFeature.TELINK -> ElectricMeterFeature.TELINK_CHIP
+    }
+}
 
 fun payModeConvert(mode: TTMeterPayMode): Int {
     return when(mode) {

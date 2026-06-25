@@ -29,6 +29,7 @@ import com.ttlock.bl.sdk.keypad.WirelessKeypadClient
 import com.ttlock.bl.sdk.mulfunkeypad.api.MultifunctionalKeypadClient
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.api.RemoteClient
+import com.ttlock.bl.sdk.standalonedoorsensor.api.StandaloneDoorSensorClient
 import com.ttlock.bl.sdk.util.LogUtil
 import com.ttlock.bl.sdk.watermeter.api.WaterMeterClient
 import com.ttlock.bl.sdk.wirelessdoorsensor.WirelessDoorSensorClient
@@ -904,12 +905,16 @@ class ScanStandaloneDoorSensorImpl : AccessoryStandaloneDoorSensorStartScanStrea
         sink: PigeonEventSink<TTStandaloneDoorSensorScanModel>
     ) {
         super.onListen(p0, sink)
-        // TTLockOnPremise.aar 当前未包含 standalonedoorsensor；若需支持请按 android/build.gradle 注释叠加 ttlock-release.aar 后再接入 SDK 扫描
-        sink.error(
-            "NOT_SUPPORTED",
-            "当前 On-Premise AAR 未包含独立门磁扫描 API；请使用完整 TTLock SDK AAR 后实现 StandaloneDoorSensorClient.startScan",
-            null
-        )
+        StandaloneDoorSensorClient.getDefault().startScan { standaloneDoorSensor ->
+            sink.success(
+                TTStandaloneDoorSensorScanModel(
+                    name = standaloneDoorSensor.name,
+                    mac = standaloneDoorSensor.address,
+                    rssi = standaloneDoorSensor.rssi.toLong(),
+                    scanTime = System.currentTimeMillis()
+                )
+            )
+        }
     }
 
 }
