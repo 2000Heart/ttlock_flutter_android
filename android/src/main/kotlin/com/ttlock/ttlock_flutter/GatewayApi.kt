@@ -35,13 +35,20 @@ class GatewayApi : TTGatewayHostApi {
         mac: String,
         callback: (Result<TTGatewayConnectStatus>) -> Unit
     ) {
+        var replied = false
+        fun replyOnce(result: Result<TTGatewayConnectStatus>) {
+            if (replied) return
+            replied = true
+            callback(result)
+        }
         GatewayClient.getDefault().connectGateway(mac, object : com.ttlock.bl.sdk.gateway.callback.ConnectCallback {
             override fun onConnectSuccess(device: ExtendedBluetoothDevice) {
-                callback(Result.success(TTGatewayConnectStatus.SUCCESS))
+                replyOnce(Result.success(TTGatewayConnectStatus.SUCCESS))
             }
 
             override fun onDisconnected() {
-                callback(Result.success(TTGatewayConnectStatus.TIMEOUT))
+                // 连接成功后初始化阶段 BLE 可能断开，避免重复 reply 导致崩溃。
+                replyOnce(Result.success(TTGatewayConnectStatus.TIMEOUT))
             }
         })
     }
