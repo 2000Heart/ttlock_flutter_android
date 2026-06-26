@@ -8,6 +8,7 @@ import com.ttlock.bl.sdk.api.TTLockClient
 import com.ttlock.bl.sdk.callback.AddFaceCallback
 import com.ttlock.bl.sdk.callback.AddFingerprintCallback
 import com.ttlock.bl.sdk.callback.AddICCardCallback
+import com.ttlock.bl.sdk.callback.AddPalmVeinCallback
 import com.ttlock.bl.sdk.callback.EnterKeypadCardAddingModeCallback
 import com.ttlock.bl.sdk.callback.EnterKeypadFingerprintAddingModeCallback
 import com.ttlock.bl.sdk.callback.GetCardAddingResultCallback
@@ -408,7 +409,7 @@ class ScanGatewayImpl : GatewayStartScanStreamHandler {
                         gatewayMac = device.address,
                         rssi = device.rssi.toLong(),
                         isDfuMode = device.isDfuMode,
-                        type = TTGatewayType.ofRaw((device.gatewayType - 1)) ?: TTGatewayType.G2
+                        type = gatewayTypeRevert(device.gatewayType)
                     )
                 )
             }

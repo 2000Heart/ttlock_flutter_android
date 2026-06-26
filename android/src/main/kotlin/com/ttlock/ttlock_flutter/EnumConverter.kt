@@ -17,6 +17,7 @@ import com.ttlock.bl.sdk.entity.SoundVolume
 import com.ttlock.bl.sdk.entity.TTLiftWorkMode
 import com.ttlock.bl.sdk.entity.TTLockConfigType
 import com.ttlock.bl.sdk.gateway.model.GatewayError
+import com.ttlock.bl.sdk.gateway.model.GatewayType
 import com.ttlock.bl.sdk.keypad.model.KeypadError
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.model.RemoteError
@@ -176,7 +177,7 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
         TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
         TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
-        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> FeatureValue.SUPPORT_SEMI_AUTOMATIC_MODE_CONTROL
+        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
         TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
         TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
 //        else -> null
@@ -281,6 +282,27 @@ fun lockErrorRevert(error: LockError): TTLockError {
         LockError.DEVICE_CONNECT_FAILED -> TTLockError.DEVICE_CONNECT_FAILED
         LockError.SIGNATURE_VERIFICATION_FAILED -> TTLockError.SIGNATURE_VERIFICATION_FAILED
         LockError.INVALID_APPLICATION -> TTLockError.INVALID_APPLICATION
+    }
+}
+
+fun gatewayTypeConvert(type: TTGatewayType): Int {
+    return when(type) {
+        TTGatewayType.G2 -> GatewayType.G2
+        TTGatewayType.G3 -> GatewayType.G3
+        TTGatewayType.G4 -> GatewayType.G4
+        TTGatewayType.G5 -> GatewayType.G5
+        TTGatewayType.G6 -> GatewayType.G6
+    }
+}
+
+fun gatewayTypeRevert(nativeGatewayType: Int): TTGatewayType {
+    return when(nativeGatewayType) {
+        GatewayType.G2 -> TTGatewayType.G2
+        GatewayType.G3 -> TTGatewayType.G3
+        GatewayType.G4 -> TTGatewayType.G4
+        GatewayType.G5 -> TTGatewayType.G5
+        GatewayType.G6 -> TTGatewayType.G6
+        else -> TTGatewayType.G2
     }
 }
 
