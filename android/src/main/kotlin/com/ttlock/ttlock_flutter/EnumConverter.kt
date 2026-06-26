@@ -167,14 +167,14 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.FORCED_OPENING_DOOR_ALARM -> FeatureValue.SUPPORT_FORCED_OPENING_DOOR_ALARM
         TTLockFunction.ZHI_AN_FACE_FEATURE_SECOND_GENERATION -> FeatureValue.ZHI_AN_FACE_FEATURE_SECOND_GENERATION
         TTLockFunction.SUPPORT_DEAD_LOCKING -> FeatureValue.SUPPORT_DEAD_LOCKING
-        TTLockFunction.WORKING_TIME -> null
+        TTLockFunction.WORKING_TIME -> FeatureValue.SUPPORT_WORKING_TIMES
         TTLockFunction.CUSTOM_QRCODE -> FeatureValue.SUPPORT_CUSTOM_QR_CODE
         TTLockFunction.SECURITY_M1CARD -> FeatureValue.SUPPORT_SAFE_M1_CARD
-        TTLockFunction.YI_SHENG_PHOTO_FACE -> null
+        TTLockFunction.YI_SHENG_PHOTO_FACE -> FeatureValue.YI_SHENG_FACE_DELIVERY
         TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
         TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
         TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
-        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
+        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> FeatureValue.SUPPORT_SEMI_AUTOMATIC_MODE_CONTROL
         TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
         TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
     }
