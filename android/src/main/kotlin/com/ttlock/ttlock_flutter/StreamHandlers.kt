@@ -407,7 +407,7 @@ class ScanGatewayImpl : GatewayStartScanStreamHandler {
                         gatewayMac = device.address,
                         rssi = device.rssi.toLong(),
                         isDfuMode = device.isDfuMode,
-                        type = TTGatewayType.ofRaw((device.gatewayType - 1)) ?: TTGatewayType.G2
+                        type = gatewayTypeRevert(device.gatewayType)
                     )
                 )
             }

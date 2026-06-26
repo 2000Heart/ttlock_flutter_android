@@ -56,8 +56,9 @@ class GatewayApi : TTGatewayHostApi {
     ) {
         val info = ConfigureGatewayInfo()
         info.plugName = params.gatewayName
-        info.plugVersion = params.type.toInt() + 1
-        if (info.plugVersion == 2 || info.plugVersion == 5) {
+        val plugVersion = gatewayTypeConvert(params.type)
+        info.plugVersion = plugVersion
+        if (params.type == TTGatewayType.G2 || params.type == TTGatewayType.G5 || params.type == TTGatewayType.G6) {
             info.ssid = params.wifi
             info.wifiPwd = params.wifiPassword
         }

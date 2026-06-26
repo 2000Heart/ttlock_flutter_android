@@ -374,11 +374,11 @@ enum class TTPowerSaverWorkType(val raw: Int) {
 }
 
 enum class TTGatewayType(val raw: Int) {
-  G1(0),
-  G2(1),
-  G3(2),
-  G4(3),
-  G5(4);
+  G2(0),
+  G3(1),
+  G4(2),
+  G5(3),
+  G6(4);
 
   companion object {
     fun ofRaw(raw: Int): TTGatewayType? {
@@ -788,7 +788,7 @@ data class TTLockInitParams (
 
 /** Generated class from Pigeon that represents data sent in messages. */
 data class TTGatewayInitParams (
-  val type: Long,
+  val type: TTGatewayType,
   val ttlockUid: Long,
   val gatewayName: String? = null,
   val ttlockLoginPassword: String? = null,
@@ -802,7 +802,7 @@ data class TTGatewayInitParams (
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TTGatewayInitParams {
-      val type = pigeonVar_list[0] as Long
+      val type = pigeonVar_list[0] as TTGatewayType
       val ttlockUid = pigeonVar_list[1] as Long
       val gatewayName = pigeonVar_list[2] as String?
       val ttlockLoginPassword = pigeonVar_list[3] as String?

@@ -17,6 +17,7 @@ import com.ttlock.bl.sdk.entity.SoundVolume
 import com.ttlock.bl.sdk.entity.TTLiftWorkMode
 import com.ttlock.bl.sdk.entity.TTLockConfigType
 import com.ttlock.bl.sdk.gateway.model.GatewayError
+import com.ttlock.bl.sdk.gateway.model.GatewayType
 import com.ttlock.bl.sdk.keypad.model.KeypadError
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.model.RemoteError
@@ -278,6 +279,27 @@ fun lockErrorRevert(error: LockError): TTLockError {
         LockError.WIRELESS_KEYBOARD_NO_RESPONSE -> TTLockError.WIRELESS_KEYBOARD_NO_RESPONSE
         LockError.DEVICE_CONNECT_FAILED -> TTLockError.DEVICE_CONNECT_FAILED
         LockError.SIGNATURE_VERIFICATION_FAILED -> TTLockError.SIGNATURE_VERIFICATION_FAILED
+    }
+}
+
+fun gatewayTypeConvert(type: TTGatewayType): Int {
+    return when(type) {
+        TTGatewayType.G2 -> GatewayType.G2
+        TTGatewayType.G3 -> GatewayType.G3
+        TTGatewayType.G4 -> GatewayType.G4
+        TTGatewayType.G5 -> GatewayType.G5
+        TTGatewayType.G6 -> GatewayType.G6
+    }
+}
+
+fun gatewayTypeRevert(nativeGatewayType: Int): TTGatewayType {
+    return when(nativeGatewayType) {
+        GatewayType.G2 -> TTGatewayType.G2
+        GatewayType.G3 -> TTGatewayType.G3
+        GatewayType.G4 -> TTGatewayType.G4
+        GatewayType.G5 -> TTGatewayType.G5
+        GatewayType.G6 -> TTGatewayType.G6
+        else -> TTGatewayType.G2
     }
 }
 
