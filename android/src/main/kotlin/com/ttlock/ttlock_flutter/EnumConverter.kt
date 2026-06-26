@@ -10,6 +10,7 @@ import com.ttlock.bl.sdk.entity.AccessoryType
 import com.ttlock.bl.sdk.entity.FaceCollectionStatus
 import com.ttlock.bl.sdk.entity.LockError
 import com.ttlock.bl.sdk.entity.OperateLogType
+import com.ttlock.bl.sdk.entity.PalmVeinCollectionStatus
 import com.ttlock.bl.sdk.entity.PassageModeType
 import com.ttlock.bl.sdk.entity.PowerSaverWorkMode
 import com.ttlock.bl.sdk.entity.SoundVolume
@@ -174,7 +175,7 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
         TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
         TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
-        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> FeatureValue.SUPPORT_SEMI_AUTOMATIC_MODE_CONTROL
+        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
         TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
         TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
     }

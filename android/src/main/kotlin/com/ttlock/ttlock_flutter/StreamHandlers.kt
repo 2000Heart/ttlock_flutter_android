@@ -8,6 +8,7 @@ import com.ttlock.bl.sdk.api.TTLockClient
 import com.ttlock.bl.sdk.callback.AddFaceCallback
 import com.ttlock.bl.sdk.callback.AddFingerprintCallback
 import com.ttlock.bl.sdk.callback.AddICCardCallback
+import com.ttlock.bl.sdk.callback.AddPalmVeinCallback
 import com.ttlock.bl.sdk.callback.EnterKeypadCardAddingModeCallback
 import com.ttlock.bl.sdk.callback.EnterKeypadFingerprintAddingModeCallback
 import com.ttlock.bl.sdk.callback.GetCardAddingResultCallback
@@ -18,6 +19,7 @@ import com.ttlock.bl.sdk.device.WirelessKeypad
 import com.ttlock.bl.sdk.electricmeter.api.ElectricMeterClient
 import com.ttlock.bl.sdk.entity.FaceCollectionStatus
 import com.ttlock.bl.sdk.entity.LockError
+import com.ttlock.bl.sdk.entity.PalmVeinCollectionStatus
 import com.ttlock.bl.sdk.gateway.api.GatewayClient
 import com.ttlock.bl.sdk.gateway.callback.ScanGatewayCallback
 import com.ttlock.bl.sdk.gateway.callback.ScanWiFiByGatewayCallback
