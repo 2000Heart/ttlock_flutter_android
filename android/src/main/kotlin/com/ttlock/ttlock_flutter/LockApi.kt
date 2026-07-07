@@ -52,6 +52,15 @@ class LockApi: TTLockHostApi {
         }
     }
 
+    private fun mapOptionalLongValue(data: Map<String, Any?>, key: String): Long? {
+        return when (val value = data[key]) {
+            null -> null
+            is Number -> value.toLong()
+            is String -> value.toLongOrNull()
+            else -> null
+        }
+    }
+
     private fun buildValidityInfo(cycleList: List<TTCycleModel>?, startDate: Long, endDate: Long): ValidityInfo {
         val validityInfo = ValidityInfo()
         if(startDate != 0L){
@@ -379,7 +388,7 @@ class LockApi: TTLockHostApi {
                                 startDate = mapLongValue(it, "startDate"),
                                 endDate = mapLongValue(it, "endDate"),
                                 keyboardPwdType = mapLongValue(it, "keyboardPwdType"),
-                                cycleType = mapLongValue(it, "cycleType"),
+                                cycleType = mapOptionalLongValue(it, "cycleType"),
                             ) 
                         }
                     )

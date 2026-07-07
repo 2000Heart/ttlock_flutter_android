@@ -30,6 +30,7 @@ import com.ttlock.bl.sdk.mulfunkeypad.api.MultifunctionalKeypadClient
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.api.RemoteClient
 import com.ttlock.bl.sdk.standalonedoorsensor.api.StandaloneDoorSensorClient
+import com.ttlock.bl.sdk.standalonedoorsensor.callback.ScanStandaloneDoorSensorCallback
 import com.ttlock.bl.sdk.util.LogUtil
 import com.ttlock.bl.sdk.watermeter.api.WaterMeterClient
 import com.ttlock.bl.sdk.wirelessdoorsensor.WirelessDoorSensorClient
@@ -905,16 +906,23 @@ class ScanStandaloneDoorSensorImpl : AccessoryStandaloneDoorSensorStartScanStrea
         sink: PigeonEventSink<TTStandaloneDoorSensorScanModel>
     ) {
         super.onListen(p0, sink)
-        StandaloneDoorSensorClient.getDefault().startScan { standaloneDoorSensor ->
-            sink.success(
-                TTStandaloneDoorSensorScanModel(
-                    name = standaloneDoorSensor.name,
-                    mac = standaloneDoorSensor.address,
-                    rssi = standaloneDoorSensor.rssi.toLong(),
-                    scanTime = System.currentTimeMillis()
+        StandaloneDoorSensorClient.getDefault().startScan(object : ScanStandaloneDoorSensorCallback {
+            override fun onScan(doorSensor: com.ttlock.bl.sdk.device.StandaloneDoorSensor) {
+                sink.success(
+                    TTStandaloneDoorSensorScanModel(
+                        name = doorSensor.name ?: "",
+                        mac = doorSensor.address,
+                        rssi = doorSensor.rssi.toLong(),
+                        scanTime = doorSensor.date
+                    )
                 )
-            )
-        }
+            }
+        })
+    }
+
+    override fun onCancel(p0: Any?) {
+        super.onCancel(p0)
+        StandaloneDoorSensorClient.getDefault().stopScan()
     }
 
 }

@@ -89,7 +89,7 @@ class AccessoryApi : TTAccessoryHostApi {
 
     private fun standaloneDoorSensorErrorToFlutterError(error: StandaloneDoorSensorError): FlutterError {
         return FlutterError(
-            code = error.name,
+            code = standaloneDoorSensorErrorRevert(error).raw.toString(),
             message = error.errorMsg,
             details = error.errorCode.toString()
         )
@@ -253,16 +253,16 @@ class AccessoryApi : TTAccessoryHostApi {
     }
 
     override fun standaloneDoorSensorInit(
-        mac: String,
-        info: Map<String, Any?>,
+        params: TTStandaloneDoorSensorInitParams,
         callback: (Result<TTStandaloneDoorSensorInfo>) -> Unit
     ) {
         val config = StandaloneDoorSensorConfigInfo()
-        config.mac = mac
-        config.wifiName = info["SSID"] as? String ?: ""
-        config.wifiPassword = info["wifiPwd"] as? String ?: ""
-        config.serverAddress = info["serverAddress"] as? String ?: ""
-        config.portNumber = (info["portNumber"] as? Number)?.toInt() ?: 0
+        config.mac = params.mac
+        config.doorSensorNumber = params.doorSensorName
+        config.wifiName = params.wifiName
+        config.wifiPassword = params.wifiPassword
+        config.serverAddress = params.serverAddress
+        config.portNumber = params.portNumber.toInt()
 
         StandaloneDoorSensorClient.getDefault().init(
             config,
@@ -311,9 +311,12 @@ class AccessoryApi : TTAccessoryHostApi {
 
     override fun standaloneDoorSensorIsSupportFunction(
         featureValue: String,
-        lockFunction: Long
+        lockFunction: TTStandaloneDoorSensorFeature
     ): Boolean {
-        return FeatureValueUtil.isSupportFeatureValue(featureValue, lockFunction.toInt())
+        return FeatureValueUtil.isSupportFeatureValue(
+            featureValue,
+            standaloneDoorSensorFeatureConvert(lockFunction)
+        )
     }
 
     override fun waterMeterConfigServer(
