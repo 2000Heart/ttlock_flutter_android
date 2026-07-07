@@ -21,6 +21,8 @@ import com.ttlock.bl.sdk.gateway.model.GatewayType
 import com.ttlock.bl.sdk.keypad.model.KeypadError
 import com.ttlock.bl.sdk.mulfunkeypad.model.MultifunctionalKeypadError
 import com.ttlock.bl.sdk.remote.model.RemoteError
+import com.ttlock.bl.sdk.standalonedoorsensor.model.DoorSensorFeature
+import com.ttlock.bl.sdk.standalonedoorsensor.model.StandaloneDoorSensorError
 import com.ttlock.bl.sdk.watermeter.model.WaterMeterError
 import com.ttlock.bl.sdk.watermeter.model.WaterMeterFeature
 import com.ttlock.bl.sdk.wirelessdoorsensor.model.DoorSensorError
@@ -380,6 +382,22 @@ fun electricMeterErrorRevert(error: ElectricMeterError): TTRemoteAccessoryError 
     }
 }
 
+fun standaloneDoorSensorErrorRevert(error: StandaloneDoorSensorError): TTStandaloneDoorSensorError {
+    return when(error) {
+        StandaloneDoorSensorError.SUCCESS -> TTStandaloneDoorSensorError.SUCCESS
+        StandaloneDoorSensorError.FAILED -> TTStandaloneDoorSensorError.FAILED
+        StandaloneDoorSensorError.CRC_CHECK_ERROR -> TTStandaloneDoorSensorError.WRONG_CRC
+        StandaloneDoorSensorError.BAD_WIFI_NAME -> TTStandaloneDoorSensorError.WRONG_SSID
+        StandaloneDoorSensorError.BAD_WIFI_PASSWORD -> TTStandaloneDoorSensorError.WRONG_WIFI_PASSWORD
+        StandaloneDoorSensorError.BAD_MAC_ADDRESS -> TTStandaloneDoorSensorError.BAD_MAC_ADDRESS
+        StandaloneDoorSensorError.BAD_TOKEN -> TTStandaloneDoorSensorError.BAD_TOKEN
+        StandaloneDoorSensorError.NO_RESPONSE -> TTStandaloneDoorSensorError.NO_RESPONSE
+        StandaloneDoorSensorError.CONNECT_FAIL -> TTStandaloneDoorSensorError.CONNECT_FAILED
+        StandaloneDoorSensorError.DOOR_SENSOR_IS_BUSY -> TTStandaloneDoorSensorError.DEVICE_IS_BUSY
+        StandaloneDoorSensorError.DATA_FORMAT_ERROR -> TTStandaloneDoorSensorError.DATA_FORMAT_ERROR
+    }
+}
+
 fun multifunctionalKeypadErrorRevert(error: MultifunctionalKeypadError): TTMultifunctionalKeypadError {
     return when(error) {
         MultifunctionalKeypadError.SUCCESS -> TTMultifunctionalKeypadError.SUCCESS
@@ -448,6 +466,15 @@ fun electricMeterFeatureConvert(feature: TTElectricMeterFeature): Int {
     return when(feature) {
         TTElectricMeterFeature.CAT_ONE -> ElectricMeterFeature.SUPPORT_CAT_ONE.toInt()
         TTElectricMeterFeature.TELINK -> ElectricMeterFeature.TELINK_CHIP
+    }
+}
+
+fun standaloneDoorSensorFeatureConvert(feature: TTStandaloneDoorSensorFeature): Int {
+    return when(feature) {
+        TTStandaloneDoorSensorFeature.WIFI24_G -> DoorSensorFeature.WIFI_24G
+        TTStandaloneDoorSensorFeature.WIFI5_G -> DoorSensorFeature.WIFI_5G
+        TTStandaloneDoorSensorFeature.AUTH_CODE -> DoorSensorFeature.AUTH_CODE
+        TTStandaloneDoorSensorFeature.ALARM -> DoorSensorFeature.ALARM
     }
 }
 
