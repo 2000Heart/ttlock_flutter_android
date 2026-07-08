@@ -474,8 +474,8 @@ fun electricMeterFeatureConvert(feature: TTElectricMeterFeature): Int {
 
 fun standaloneDoorSensorFeatureConvert(feature: TTStandaloneDoorSensorFeature): Int {
     return when(feature) {
-        TTStandaloneDoorSensorFeature.WIFI24_G -> DoorSensorFeature.WIFI_24G
-        TTStandaloneDoorSensorFeature.WIFI5_G -> DoorSensorFeature.WIFI_5G
+        TTStandaloneDoorSensorFeature.WIFI24G -> DoorSensorFeature.WIFI_24G
+        TTStandaloneDoorSensorFeature.WIFI5G -> DoorSensorFeature.WIFI_5G
         TTStandaloneDoorSensorFeature.AUTH_CODE -> DoorSensorFeature.AUTH_CODE
         TTStandaloneDoorSensorFeature.ALARM -> DoorSensorFeature.ALARM
     }

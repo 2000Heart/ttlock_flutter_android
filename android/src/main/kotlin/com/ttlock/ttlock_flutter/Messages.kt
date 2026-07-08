@@ -6963,7 +6963,7 @@ interface TTAccessoryHostApi {
    */
   fun standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: TTStandaloneDoorSensorFeature): Boolean
   /**
-   * 配置电表服务器。
+   * 配置蓝牙电表服务器。
    *
    * [url] 服务器地址。
    * [clientId] 客户端 ID。
@@ -7070,7 +7070,7 @@ interface TTAccessoryHostApi {
    */
   fun electricMeterConfigApn(mac: String, apn: String, callback: (Result<Unit>) -> Unit)
   /**
-   * 配置电表计量服务器。
+   * 配置4G卡蓝牙电表服务器。
    *
    * [mac] 电表 MAC 地址。
    * [ip] 服务器 IP。
@@ -7084,7 +7084,7 @@ interface TTAccessoryHostApi {
    */
   fun electricMeterReset(mac: String, callback: (Result<Unit>) -> Unit)
   /**
-   * 配置水表服务器。
+   * 配置蓝牙水表服务器。
    *
    * [url] 服务器地址。
    * [clientId] 客户端 ID。
@@ -7191,7 +7191,7 @@ interface TTAccessoryHostApi {
    */
   fun waterMeterConfigApn(mac: String, apn: String, callback: (Result<Unit>) -> Unit)
   /**
-   * 配置水表计量服务器。
+   * 配置4G卡蓝牙水表服务器。
    *
    * [mac] 水表 MAC 地址。
    * [ip] 服务器 IP。
