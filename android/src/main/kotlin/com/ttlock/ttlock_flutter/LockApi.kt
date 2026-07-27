@@ -706,6 +706,35 @@ class LockApi: TTLockHostApi {
         )
     }
 
+    override fun addFaceUrl(
+        url: String,
+        cycleList: List<TTCycleModel>?,
+        startDate: Long,
+        endDate: Long,
+        lockData: String,
+        callback: (Result<String>) -> Unit
+    ) {
+        callback(
+            Result.failure(
+                FlutterError("NOT_IMPLEMENTED", "addFaceUrl is not implemented", null)
+            )
+        )
+    }
+
+    override fun setAlias(
+        type: TTAliasType,
+        credentialId: String,
+        alias: String,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        callback(
+            Result.failure(
+                FlutterError("NOT_IMPLEMENTED", "setAlias is not implemented", null)
+            )
+        )
+    }
+
     override fun deleteFace(faceNumber: String, lockData: String, callback: (Result<Unit>) -> Unit) {
         val faceNo = faceNumber.toLongOrNull()
         if (faceNo == null) {

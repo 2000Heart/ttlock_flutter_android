@@ -181,6 +181,9 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
         TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
         TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
+        TTLockFunction.YI_NUO_PHOTO_FACE -> null
+        TTLockFunction.URL_FACE -> null
+        TTLockFunction.HUMAN_PRESENCE_SENSOR -> null
     }
 }
 
