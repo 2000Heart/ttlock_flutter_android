@@ -284,7 +284,7 @@ fun lockErrorRevert(error: LockError): TTLockError {
         LockError.COMMAND_RECEIVED -> TTLockError.INVALID_COMMAND
         LockError.BAD_WIFI_NAME -> TTLockError.WRONG_WIFI
         LockError.BAD_WIFI_PASSWORD -> TTLockError.WRONG_WIFI_PASSWORD
-        LockError.QR_CODE_ALREADY_EXIST -> TTLockError.PASSCODE_EXIST
+        LockError.DATA_ALREADY_EXIST -> TTLockError.PASSCODE_EXIST
         LockError.AES_PARSE_ERROR -> TTLockError.AES_KEY
         LockError.KEY_INVALID -> TTLockError.RESETED
         LockError.LOCK_CONNECT_FAIL -> TTLockError.BLUETOOTH_CONNECT_TIMEOUNT
