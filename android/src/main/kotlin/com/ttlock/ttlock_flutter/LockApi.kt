@@ -714,10 +714,28 @@ class LockApi: TTLockHostApi {
         lockData: String,
         callback: (Result<String>) -> Unit
     ) {
-        callback(
-            Result.failure(
-                FlutterError("NOT_IMPLEMENTED", "addFaceUrl is not implemented", null)
-            )
+        val validityInfo = buildValidityInfo(cycleList, startDate, endDate)
+        TTLockClient.getDefault().addFaceUrl(
+            lockData,
+            url,
+            validityInfo,
+            object : AddFaceCallback {
+                override fun onEnterAddMode() {
+                    // no-op: one-shot API has no progress channel
+                }
+
+                override fun onCollectionStatus(faceCollectionStatus: FaceCollectionStatus) {
+                    // no-op: URL delivery does not report collection progress
+                }
+
+                override fun onAddFinished(faceNumber: Long) {
+                    callback.invoke(Result.success(faceNumber.toString()))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
         )
     }
 
@@ -728,10 +746,20 @@ class LockApi: TTLockHostApi {
         lockData: String,
         callback: (Result<Unit>) -> Unit
     ) {
-        callback(
-            Result.failure(
-                FlutterError("NOT_IMPLEMENTED", "setAlias is not implemented", null)
-            )
+        TTLockClient.getDefault().setAlias(
+            lockData,
+            aliasTypeConvert(type),
+            credentialId,
+            alias,
+            object : SetAliasCallback {
+                override fun onSetAliasSuccess() {
+                    callback.invoke(Result.success(Unit))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
         )
     }
 
