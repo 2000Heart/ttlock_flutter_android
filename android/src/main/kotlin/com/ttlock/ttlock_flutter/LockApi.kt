@@ -702,6 +702,63 @@ class LockApi: TTLockHostApi {
         )
     }
 
+    override fun addFaceUrl(
+        url: String,
+        cycleList: List<TTCycleModel>?,
+        startDate: Long,
+        endDate: Long,
+        lockData: String,
+        callback: (Result<String>) -> Unit
+    ) {
+        val validityInfo = buildValidityInfo(cycleList, startDate, endDate)
+        TTLockClient.getDefault().addFaceUrl(
+            lockData,
+            url,
+            validityInfo,
+            object : AddFaceCallback {
+                override fun onEnterAddMode() {
+                    // no-op: one-shot API has no progress channel
+                }
+
+                override fun onCollectionStatus(faceCollectionStatus: FaceCollectionStatus) {
+                    // no-op: URL delivery does not report collection progress
+                }
+
+                override fun onAddFinished(faceNumber: Long) {
+                    callback.invoke(Result.success(faceNumber.toString()))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
+        )
+    }
+
+    override fun setAlias(
+        type: TTAliasType,
+        credentialId: String,
+        alias: String,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        TTLockClient.getDefault().setAlias(
+            lockData,
+            aliasTypeConvert(type),
+            credentialId,
+            alias,
+            object : SetAliasCallback {
+                override fun onSetAliasSuccess() {
+                    callback.invoke(Result.success(Unit))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            }
+        )
+    }
+
     override fun deleteFace(faceNumber: String, lockData: String, callback: (Result<Unit>) -> Unit) {
         val faceNo = faceNumber.toLongOrNull()
         if (faceNo == null) {

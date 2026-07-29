@@ -4,6 +4,7 @@ import com.ttlock.bl.sdk.constant.ControlAction
 import com.ttlock.bl.sdk.constant.FeatureValue
 import com.ttlock.bl.sdk.constant.KeyboardPwdType
 import com.ttlock.bl.sdk.constant.LockStatus
+import com.ttlock.bl.sdk.constant.UserCategory
 import com.ttlock.bl.sdk.electricmeter.model.ElectricMeterError
 import com.ttlock.bl.sdk.electricmeter.model.ElectricMeterFeature
 import com.ttlock.bl.sdk.entity.AccessoryType
@@ -179,10 +180,29 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
         TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
         TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
-        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> null
+        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> FeatureValue.SUPPORT_SEMI_AUTOMATIC_MODE_CONTROL
         TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
         TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
+        // Android FeatureValue bit 112 is SUPPORT_PICTURE_FACE_DELIVERY (= iOS YiNuoPhotoFace).
+        TTLockFunction.YI_NUO_PHOTO_FACE -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
+        TTLockFunction.URL_FACE -> FeatureValue.SUPPORT_URL_FACE_DELIVERY
+        TTLockFunction.HUMAN_PRESENCE_SENSOR -> FeatureValue.SUPPORT_HUMAN_PRESENCE_SENSOR
 //        else -> null
+    }
+}
+
+/**
+ * Pigeon [TTAliasType]（ordinal 0…6）→ Android [UserCategory]（1…7）。
+ */
+fun aliasTypeConvert(type: TTAliasType): Int {
+    return when (type) {
+        TTAliasType.FINGERPRINT -> UserCategory.FINGERPRINT.toInt()
+        TTAliasType.CARD -> UserCategory.CARD.toInt()
+        TTAliasType.WIRELESS_KEY_FOB -> UserCategory.REMOTE.toInt()
+        TTAliasType.FACE -> UserCategory.FACE.toInt()
+        TTAliasType.PALM_VEIN -> UserCategory.PALM_VEIN.toInt()
+        TTAliasType.PASSCODE -> UserCategory.PASSCODE.toInt()
+        TTAliasType.QR_CODE -> UserCategory.QR_CODE.toInt()
     }
 }
 
