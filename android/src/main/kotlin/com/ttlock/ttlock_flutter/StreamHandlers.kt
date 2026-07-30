@@ -124,6 +124,10 @@ class ScanLockWifiImpl : LockScanWifiStreamHandler {
                     )
                 } ?: emptyList()
                 sink.success(TTWifiScanResult(wifiList = list))
+                // scanState==1 表示扫描完成，结束流；调用方通过 onDone 感知
+                if (scanState == 1) {
+                    sink.endOfStream()
+                }
             }
 
             override fun onFail(lockError: LockError?) {
@@ -461,7 +465,8 @@ class ScanGatewayWiFiImpl : GatewayGetNearbyWifiStreamHandler {
             }
 
             override fun onScanWiFiByGatewaySuccess() {
-                // 扫描结束；部分固件仅回调此项，不再重复列表
+                // 扫描结束；调用方通过 onDone 感知完成
+                sink.endOfStream()
             }
 
             override fun onFail(error: GatewayError) {
