@@ -4776,9 +4776,10 @@ interface TTLockHostApi {
    *
    * [wifiName] WiFi 名称。
    * [wifiPassword] WiFi 密码。
+   * [lockMac] 锁蓝牙 MAC 地址。
    * [lockData] 锁凭证。
    */
-  fun configWifi(wifiName: String, wifiPassword: String, lockData: String, callback: (Result<Unit>) -> Unit)
+  fun configWifi(wifiName: String, wifiPassword: String, lockMac: String, lockData: String, callback: (Result<Unit>) -> Unit)
   /**
    * 配置服务器。
    *
@@ -6437,8 +6438,9 @@ interface TTLockHostApi {
             val args = message as List<Any?>
             val wifiNameArg = args[0] as String
             val wifiPasswordArg = args[1] as String
-            val lockDataArg = args[2] as String
-            api.configWifi(wifiNameArg, wifiPasswordArg, lockDataArg) { result: Result<Unit> ->
+            val lockMacArg = args[2] as String
+            val lockDataArg = args[3] as String
+            api.configWifi(wifiNameArg, wifiPasswordArg, lockMacArg, lockDataArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))

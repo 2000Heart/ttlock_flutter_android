@@ -1397,9 +1397,11 @@ class LockApi: TTLockHostApi {
     override fun configWifi(
         wifiName: String,
         wifiPassword: String,
+        lockMac: String,
         lockData: String,
         callback: (Result<Unit>) -> Unit
     ) {
+        TTLockClient.getDefault().clearAllCallback();
         TTLockClient.getDefault().configWifi(wifiName, wifiPassword, lockData, object : ConfigWifiCallback {
             override fun onConfigWifiSuccess() {
                 callback.invoke(Result.success(Unit))
