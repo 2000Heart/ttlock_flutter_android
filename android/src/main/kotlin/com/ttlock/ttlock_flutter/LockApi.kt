@@ -898,6 +898,88 @@ class LockApi: TTLockHostApi {
         })
     }
 
+    override fun addQrCode(
+        qrCodeNumber: String,
+        cycleList: List<TTCycleModel>?,
+        startDate: Long,
+        endDate: Long,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        callback.invoke(
+            Result.failure(
+                FlutterError(
+                    code = "NOT_SUPPORTED",
+                    message = "no such method",
+                    details = ""
+                )
+            )
+        )
+    }
+
+    override fun modifyQrCodeValidityPeriod(
+        qrCodeNumber: String,
+        cycleList: List<TTCycleModel>?,
+        startDate: Long,
+        endDate: Long,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        callback.invoke(
+            Result.failure(
+                FlutterError(
+                    code = "NOT_SUPPORTED",
+                    message = "no such method",
+                    details = ""
+                )
+            )
+        )
+    }
+
+    override fun deleteQrCode(
+        qrCodeNumber: String,
+        endDate: Long,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        callback.invoke(
+            Result.failure(
+                FlutterError(
+                    code = "NOT_SUPPORTED",
+                    message = "no such method",
+                    details = ""
+                )
+            )
+        )
+    }
+
+    override fun clearAllQrCodes(lockData: String, callback: (Result<Unit>) -> Unit) {
+        callback.invoke(
+            Result.failure(
+                FlutterError(
+                    code = "NOT_SUPPORTED",
+                    message = "no such method",
+                    details = ""
+                )
+            )
+        )
+    }
+
+    override fun getAllValidQrCodes(
+        lockData: String,
+        callback: (Result<List<TTQrCodeModel>>) -> Unit
+    ) {
+        callback.invoke(
+            Result.failure(
+                FlutterError(
+                    code = "NOT_SUPPORTED",
+                    message = "no such method",
+                    details = ""
+                )
+            )
+        )
+    }
+
     override fun setMotorTorqueLevel(
         torqueLevel: Long,
         lockData: String,
