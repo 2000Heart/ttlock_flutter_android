@@ -2371,6 +2371,55 @@ data class TTPalmVeinModel (
 }
 
 /**
+ * 二维码信息。
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class TTQrCodeModel (
+  /** 二维码编号。 */
+  val qrCodeNumber: String,
+  /** 有效期起始，毫秒时间戳。 */
+  val startDate: Long,
+  /** 有效期截止，毫秒时间戳。 */
+  val endDate: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): TTQrCodeModel {
+      val qrCodeNumber = pigeonVar_list[0] as String
+      val startDate = pigeonVar_list[1] as Long
+      val endDate = pigeonVar_list[2] as Long
+      return TTQrCodeModel(qrCodeNumber, startDate, endDate)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      qrCodeNumber,
+      startDate,
+      endDate,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as TTQrCodeModel
+    return MessagesPigeonUtils.deepEquals(this.qrCodeNumber, other.qrCodeNumber) && MessagesPigeonUtils.deepEquals(this.startDate, other.startDate) && MessagesPigeonUtils.deepEquals(this.endDate, other.endDate)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.qrCodeNumber)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.startDate)
+    result = 31 * result + MessagesPigeonUtils.deepHash(this.endDate)
+    return result
+  }
+}
+
+/**
  * 网关扫描结果。
  *
  * Generated class from Pigeon that represents data sent in messages.
@@ -3798,105 +3847,110 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
       }
       186.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTGatewayScanModel.fromList(it)
+          TTQrCodeModel.fromList(it)
         }
       }
       187.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GatewayDeviceInfo.fromList(it)
+          TTGatewayScanModel.fromList(it)
         }
       }
       188.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTRemoteAccessoryScanModel.fromList(it)
+          GatewayDeviceInfo.fromList(it)
         }
       }
       189.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorInitParams.fromList(it)
+          TTRemoteAccessoryScanModel.fromList(it)
         }
       }
       190.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorScanModel.fromList(it)
+          TTStandaloneDoorSensorInitParams.fromList(it)
         }
       }
       191.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTStandaloneDoorSensorInfo.fromList(it)
+          TTStandaloneDoorSensorScanModel.fromList(it)
         }
       }
       192.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTMeterScanModel.fromList(it)
+          TTStandaloneDoorSensorInfo.fromList(it)
         }
       }
       193.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWaterMeterInitResult.fromList(it)
+          TTMeterScanModel.fromList(it)
         }
       }
       194.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTElectricMeterInitResult.fromList(it)
+          TTWaterMeterInitResult.fromList(it)
         }
       }
       195.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanResult.fromList(it)
+          TTElectricMeterInitResult.fromList(it)
         }
       }
       196.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWifiScanEntry.fromList(it)
+          TTWifiScanResult.fromList(it)
         }
       }
       197.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          RemoteKeypadInitResult.fromList(it)
+          TTWifiScanEntry.fromList(it)
         }
       }
       198.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          MultifunctionalKeypadInitResult.fromList(it)
+          RemoteKeypadInitResult.fromList(it)
         }
       }
       199.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          WaterMeterDeviceInfo.fromList(it)
+          MultifunctionalKeypadInitResult.fromList(it)
         }
       }
       200.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ElectricMeterDeviceInfo.fromList(it)
+          WaterMeterDeviceInfo.fromList(it)
         }
       }
       201.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTWaterMeterInitParam.fromList(it)
+          ElectricMeterDeviceInfo.fromList(it)
         }
       }
       202.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          TTElectricMeterInitParam.fromList(it)
+          TTWaterMeterInitParam.fromList(it)
         }
       }
       203.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddCardEvent.fromList(it)
+          TTElectricMeterInitParam.fromList(it)
         }
       }
       204.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddFingerprintEvent.fromList(it)
+          AddCardEvent.fromList(it)
         }
       }
       205.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          AddFaceEvent.fromList(it)
+          AddFingerprintEvent.fromList(it)
         }
       }
       206.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AddFaceEvent.fromList(it)
+        }
+      }
+      207.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           AddPalmVeinEvent.fromList(it)
         }
@@ -4134,88 +4188,92 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
         stream.write(185)
         writeValue(stream, value.toList())
       }
-      is TTGatewayScanModel -> {
+      is TTQrCodeModel -> {
         stream.write(186)
         writeValue(stream, value.toList())
       }
-      is GatewayDeviceInfo -> {
+      is TTGatewayScanModel -> {
         stream.write(187)
         writeValue(stream, value.toList())
       }
-      is TTRemoteAccessoryScanModel -> {
+      is GatewayDeviceInfo -> {
         stream.write(188)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorInitParams -> {
+      is TTRemoteAccessoryScanModel -> {
         stream.write(189)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorScanModel -> {
+      is TTStandaloneDoorSensorInitParams -> {
         stream.write(190)
         writeValue(stream, value.toList())
       }
-      is TTStandaloneDoorSensorInfo -> {
+      is TTStandaloneDoorSensorScanModel -> {
         stream.write(191)
         writeValue(stream, value.toList())
       }
-      is TTMeterScanModel -> {
+      is TTStandaloneDoorSensorInfo -> {
         stream.write(192)
         writeValue(stream, value.toList())
       }
-      is TTWaterMeterInitResult -> {
+      is TTMeterScanModel -> {
         stream.write(193)
         writeValue(stream, value.toList())
       }
-      is TTElectricMeterInitResult -> {
+      is TTWaterMeterInitResult -> {
         stream.write(194)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanResult -> {
+      is TTElectricMeterInitResult -> {
         stream.write(195)
         writeValue(stream, value.toList())
       }
-      is TTWifiScanEntry -> {
+      is TTWifiScanResult -> {
         stream.write(196)
         writeValue(stream, value.toList())
       }
-      is RemoteKeypadInitResult -> {
+      is TTWifiScanEntry -> {
         stream.write(197)
         writeValue(stream, value.toList())
       }
-      is MultifunctionalKeypadInitResult -> {
+      is RemoteKeypadInitResult -> {
         stream.write(198)
         writeValue(stream, value.toList())
       }
-      is WaterMeterDeviceInfo -> {
+      is MultifunctionalKeypadInitResult -> {
         stream.write(199)
         writeValue(stream, value.toList())
       }
-      is ElectricMeterDeviceInfo -> {
+      is WaterMeterDeviceInfo -> {
         stream.write(200)
         writeValue(stream, value.toList())
       }
-      is TTWaterMeterInitParam -> {
+      is ElectricMeterDeviceInfo -> {
         stream.write(201)
         writeValue(stream, value.toList())
       }
-      is TTElectricMeterInitParam -> {
+      is TTWaterMeterInitParam -> {
         stream.write(202)
         writeValue(stream, value.toList())
       }
-      is AddCardEvent -> {
+      is TTElectricMeterInitParam -> {
         stream.write(203)
         writeValue(stream, value.toList())
       }
-      is AddFingerprintEvent -> {
+      is AddCardEvent -> {
         stream.write(204)
         writeValue(stream, value.toList())
       }
-      is AddFaceEvent -> {
+      is AddFingerprintEvent -> {
         stream.write(205)
         writeValue(stream, value.toList())
       }
-      is AddPalmVeinEvent -> {
+      is AddFaceEvent -> {
         stream.write(206)
+        writeValue(stream, value.toList())
+      }
+      is AddPalmVeinEvent -> {
+        stream.write(207)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -4552,6 +4610,46 @@ interface TTLockHostApi {
    * [lockData] 锁凭证。
    */
   fun getAllValidPalmVeins(lockData: String, callback: (Result<List<TTPalmVeinModel>>) -> Unit)
+  /**
+   * 添加二维码。
+   *
+   * [qrCodeNumber] 二维码编号。
+   * [cycleList] 周期时间段列表，空或 null 表示无周期。
+   * [startDate] 有效期起始时间，毫秒时间戳；永久有效时传 0。
+   * [endDate] 有效期结束时间，毫秒时间戳；永久有效时传 0。
+   * [lockData] 锁凭证。
+   */
+  fun addQrCode(qrCodeNumber: String, cycleList: List<TTCycleModel>?, startDate: Long, endDate: Long, lockData: String, callback: (Result<Unit>) -> Unit)
+  /**
+   * 修改二维码有效期。
+   *
+   * [qrCodeNumber] 二维码编号。
+   * [cycleList] 周期时间段列表，空或 null 表示无周期。
+   * [startDate] 有效期起始时间，毫秒时间戳。
+   * [endDate] 有效期结束时间，毫秒时间戳。
+   * [lockData] 锁凭证。
+   */
+  fun modifyQrCodeValidityPeriod(qrCodeNumber: String, cycleList: List<TTCycleModel>?, startDate: Long, endDate: Long, lockData: String, callback: (Result<Unit>) -> Unit)
+  /**
+   * 删除二维码。
+   *
+   * [qrCodeNumber] 二维码编号。
+   * [endDate] 二维码有效期结束时间，毫秒时间戳。
+   * [lockData] 锁凭证。
+   */
+  fun deleteQrCode(qrCodeNumber: String, endDate: Long, lockData: String, callback: (Result<Unit>) -> Unit)
+  /**
+   * 清除所有二维码。
+   *
+   * [lockData] 锁凭证。
+   */
+  fun clearAllQrCodes(lockData: String, callback: (Result<Unit>) -> Unit)
+  /**
+   * 获取所有有效二维码。
+   *
+   * [lockData] 锁凭证。
+   */
+  fun getAllValidQrCodes(lockData: String, callback: (Result<List<TTQrCodeModel>>) -> Unit)
   /**
    * 设置电机扭矩等级。
    *
@@ -5785,6 +5883,112 @@ interface TTLockHostApi {
             val args = message as List<Any?>
             val lockDataArg = args[0] as String
             api.getAllValidPalmVeins(lockDataArg) { result: Result<List<TTPalmVeinModel>> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.addQrCode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val qrCodeNumberArg = args[0] as String
+            val cycleListArg = args[1] as List<TTCycleModel>?
+            val startDateArg = args[2] as Long
+            val endDateArg = args[3] as Long
+            val lockDataArg = args[4] as String
+            api.addQrCode(qrCodeNumberArg, cycleListArg, startDateArg, endDateArg, lockDataArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.modifyQrCodeValidityPeriod$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val qrCodeNumberArg = args[0] as String
+            val cycleListArg = args[1] as List<TTCycleModel>?
+            val startDateArg = args[2] as Long
+            val endDateArg = args[3] as Long
+            val lockDataArg = args[4] as String
+            api.modifyQrCodeValidityPeriod(qrCodeNumberArg, cycleListArg, startDateArg, endDateArg, lockDataArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.deleteQrCode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val qrCodeNumberArg = args[0] as String
+            val endDateArg = args[1] as Long
+            val lockDataArg = args[2] as String
+            api.deleteQrCode(qrCodeNumberArg, endDateArg, lockDataArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.clearAllQrCodes$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val lockDataArg = args[0] as String
+            api.clearAllQrCodes(lockDataArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(MessagesPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getAllValidQrCodes$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val lockDataArg = args[0] as String
+            api.getAllValidQrCodes(lockDataArg) { result: Result<List<TTQrCodeModel>> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
