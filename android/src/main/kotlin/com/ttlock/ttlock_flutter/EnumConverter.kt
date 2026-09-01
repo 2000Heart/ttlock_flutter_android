@@ -187,7 +187,7 @@ fun featureValueConvert(lockFunction: TTLockFunction): Int? {
         TTLockFunction.YI_NUO_PHOTO_FACE -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
         TTLockFunction.URL_FACE -> FeatureValue.SUPPORT_URL_FACE_DELIVERY
         TTLockFunction.HUMAN_PRESENCE_SENSOR -> FeatureValue.SUPPORT_HUMAN_PRESENCE_SENSOR
-//        else -> null
+        TTLockFunction.UNLOCK_DIRECTION -> FeatureValue.UNLOCK_DIRECTION
     }
 }
 
