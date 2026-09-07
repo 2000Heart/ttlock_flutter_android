@@ -711,7 +711,9 @@ enum class TTRemoteAccessoryError(val raw: Int) {
   /** 设备正忙。 */
   DEVICE_IS_BUSY(6),
   /** 数据格式错误。 */
-  DATA_FORMAT_ERROR(7);
+  DATA_FORMAT_ERROR(7),
+  /** 操作超时（含 Dart 层 Future.timeout）。 */
+  TIMEOUT(8);
 
   companion object {
     fun ofRaw(raw: Int): TTRemoteAccessoryError? {
@@ -737,7 +739,9 @@ enum class TTMultifunctionalKeypadError(val raw: Int) {
   /** 键盘连接失败。 */
   KEYPAD_CONNECT_FAILED(6),
   /** 数据格式错误。 */
-  DATA_FORMAT_ERROR(7);
+  DATA_FORMAT_ERROR(7),
+  /** 操作超时（含 Dart 层 Future.timeout）。 */
+  TIMEOUT(8);
 
   companion object {
     fun ofRaw(raw: Int): TTMultifunctionalKeypadError? {
