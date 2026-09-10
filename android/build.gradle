@@ -45,4 +45,5 @@ dependencies {
     // implementation(name: 'TTLockOnPremise', ext: 'aar')
     // Phase4 配件真实调用：若 TTLockOnPremise 未包含 standalonedoorsensor/watermeter/electricmeter，请将 ttlock-release.aar 放入 libs 并取消下行注释
     implementation(name: 'ttlock-release', ext: 'aar')
+    implementation 'com.squareup.okhttp3:okhttp:3.12.10'
 }
