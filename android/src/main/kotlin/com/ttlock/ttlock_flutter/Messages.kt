@@ -7288,7 +7288,7 @@ interface TTAccessoryHostApi {
    * [clientId] 客户端 ID。
    * [accessToken] 访问令牌。
    */
-  fun electricMeterConfigServer(url: String, clientId: String, accessToken: String)
+  fun electricMeterSetClientParam(url: String, clientId: String, accessToken: String)
   /**
    * 连接电表。
    *
@@ -7395,7 +7395,7 @@ interface TTAccessoryHostApi {
    * [ip] 服务器 IP。
    * [port] 服务器端口。
    */
-  fun electricMeterConfigMeterServer(mac: String, ip: String, port: String, callback: (Result<Unit>) -> Unit)
+  fun electricMeterConfigServer(mac: String, ip: String, port: String, callback: (Result<Unit>) -> Unit)
   /**
    * 重置电表。
    *
@@ -7409,7 +7409,7 @@ interface TTAccessoryHostApi {
    * [clientId] 客户端 ID。
    * [accessToken] 访问令牌。
    */
-  fun waterMeterConfigServer(url: String, clientId: String, accessToken: String)
+  fun waterMeterSetClientParam(url: String, clientId: String, accessToken: String)
   /**
    * 连接水表。
    *
@@ -7516,7 +7516,7 @@ interface TTAccessoryHostApi {
    * [ip] 服务器 IP。
    * [port] 服务器端口。
    */
-  fun waterMeterConfigMeterServer(mac: String, ip: String, port: String, callback: (Result<Unit>) -> Unit)
+  fun waterMeterConfigServer(mac: String, ip: String, port: String, callback: (Result<Unit>) -> Unit)
   /**
    * 重置水表。
    *
@@ -7752,7 +7752,7 @@ interface TTAccessoryHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigServer$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterSetClientParam$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -7760,7 +7760,7 @@ interface TTAccessoryHostApi {
             val clientIdArg = args[1] as String
             val accessTokenArg = args[2] as String
             val wrapped: List<Any?> = try {
-              api.electricMeterConfigServer(urlArg, clientIdArg, accessTokenArg)
+              api.electricMeterSetClientParam(urlArg, clientIdArg, accessTokenArg)
               listOf(null)
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
@@ -8066,14 +8066,14 @@ interface TTAccessoryHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigMeterServer$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigServer$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val macArg = args[0] as String
             val ipArg = args[1] as String
             val portArg = args[2] as String
-            api.electricMeterConfigMeterServer(macArg, ipArg, portArg) { result: Result<Unit> ->
+            api.electricMeterConfigServer(macArg, ipArg, portArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
@@ -8106,7 +8106,7 @@ interface TTAccessoryHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetClientParam$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -8114,7 +8114,7 @@ interface TTAccessoryHostApi {
             val clientIdArg = args[1] as String
             val accessTokenArg = args[2] as String
             val wrapped: List<Any?> = try {
-              api.waterMeterConfigServer(urlArg, clientIdArg, accessTokenArg)
+              api.waterMeterSetClientParam(urlArg, clientIdArg, accessTokenArg)
               listOf(null)
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
@@ -8420,14 +8420,14 @@ interface TTAccessoryHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigMeterServer$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val macArg = args[0] as String
             val ipArg = args[1] as String
             val portArg = args[2] as String
-            api.waterMeterConfigMeterServer(macArg, ipArg, portArg) { result: Result<Unit> ->
+            api.waterMeterConfigServer(macArg, ipArg, portArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(MessagesPigeonUtils.wrapError(error))
