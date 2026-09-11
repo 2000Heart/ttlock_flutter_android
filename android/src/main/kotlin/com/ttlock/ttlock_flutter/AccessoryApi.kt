@@ -352,7 +352,7 @@ class AccessoryApi : TTAccessoryHostApi {
     ) {
         val map = HashMap<String, String>()
         map["mac"] = params.mac
-        map["number"] = params.name
+        map["name"] = params.name
         map["payMode"] = (if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1).toString()
         map["price"] = params.price.toString()
         WaterMeterClient.getDefault().add(map, object : com.ttlock.bl.sdk.watermeter.callback.AddCallback {
