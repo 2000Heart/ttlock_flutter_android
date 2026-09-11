@@ -319,7 +319,7 @@ class AccessoryApi : TTAccessoryHostApi {
         )
     }
 
-    override fun waterMeterConfigServer(
+    override fun waterMeterSetClientParam(
         url: String,
         clientId: String,
         accessToken: String
@@ -553,7 +553,7 @@ class AccessoryApi : TTAccessoryHostApi {
         })
     }
 
-    override fun waterMeterConfigMeterServer(
+    override fun waterMeterConfigServer(
         mac: String,
         ip: String,
         port: String,
@@ -585,7 +585,7 @@ class AccessoryApi : TTAccessoryHostApi {
         })
     }
 
-    override fun electricMeterConfigServer(
+    override fun electricMeterSetClientParam(
         url: String,
         clientId: String,
         accessToken: String
@@ -818,7 +818,7 @@ class AccessoryApi : TTAccessoryHostApi {
         })
     }
 
-    override fun electricMeterConfigMeterServer(
+    override fun electricMeterConfigServer(
         mac: String,
         ip: String,
         port: String,
