@@ -355,7 +355,7 @@ class AccessoryApi : TTAccessoryHostApi {
         map["name"] = params.name
         map["payMode"] = (if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1).toString()
         map["price"] = params.price.toString()
-        WaterMeterClient.getDefault().add(map, object : com.ttlock.bl.sdk.watermeter.callback.AddCallback {
+        WaterMeterClient.getDefault().add(params.name, params.mac, if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1, params.price, object : com.ttlock.bl.sdk.watermeter.callback.AddCallback {
             override fun onAddSuccess(info: com.ttlock.bl.sdk.watermeter.model.WaterMeterInfo) {
                 callback(Result.success(TTWaterMeterInitResult(waterMeterId = info.waterMeterId.toLong(), featureValue = info.featureValue)))
             }
@@ -621,7 +621,7 @@ class AccessoryApi : TTAccessoryHostApi {
         map["name"] = params.name
         map["payMode"] = (if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1).toString()
         map["price"] = params.price.toString()
-        ElectricMeterClient.getDefault().add(map, object : com.ttlock.bl.sdk.electricmeter.callback.AddCallback {
+        ElectricMeterClient.getDefault().add(params.name, params.mac, if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1, params.price, object : com.ttlock.bl.sdk.electricmeter.callback.AddCallback {
             override fun onAddSuccess(info: com.ttlock.bl.sdk.electricmeter.model.ElectricMeterInfo) {
                 callback(Result.success(TTElectricMeterInitResult(electricMeterId = info.electricMeterId.toLong(), featureValue = info.featureValue)))
             }
