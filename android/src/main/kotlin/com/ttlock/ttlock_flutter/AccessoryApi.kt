@@ -2,6 +2,7 @@ package com.ttlock.ttlock_flutter
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import com.ttlock.bl.sdk.api.TTLockClient
 import com.ttlock.bl.sdk.device.Remote
 import com.ttlock.bl.sdk.device.WirelessDoorSensor
 import com.ttlock.bl.sdk.device.WirelessKeypad
@@ -195,7 +196,7 @@ class AccessoryApi : TTAccessoryHostApi {
     }
 
     override fun getStoredLocks(mac: String, callback: (Result<List<String>>) -> Unit) {
-        callback(Result.failure(FlutterError("NOT_IMPLEMENTED", "getStoredLocks is not implemented", null)))
+        callback(Result.failure(FlutterError(TTMultifunctionalKeypadError.FAILED.raw.toString(), "getStoredLocks is not implemented", null)))
     }
 
     override fun deleteStoredLock(
@@ -355,7 +356,7 @@ class AccessoryApi : TTAccessoryHostApi {
         map["name"] = params.name
         map["payMode"] = (if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1).toString()
         map["price"] = params.price.toString()
-        WaterMeterClient.getDefault().add(map, object : com.ttlock.bl.sdk.watermeter.callback.AddCallback {
+        WaterMeterClient.getDefault().add(params.name, params.mac, if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1, params.price, object : com.ttlock.bl.sdk.watermeter.callback.AddCallback {
             override fun onAddSuccess(info: com.ttlock.bl.sdk.watermeter.model.WaterMeterInfo) {
                 callback(Result.success(TTWaterMeterInitResult(waterMeterId = info.waterMeterId.toLong(), featureValue = info.featureValue)))
             }
@@ -621,7 +622,7 @@ class AccessoryApi : TTAccessoryHostApi {
         map["name"] = params.name
         map["payMode"] = (if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1).toString()
         map["price"] = params.price.toString()
-        ElectricMeterClient.getDefault().add(map, object : com.ttlock.bl.sdk.electricmeter.callback.AddCallback {
+        ElectricMeterClient.getDefault().add(params.name, params.mac, if (params.payMode == TTMeterPayMode.POSTPAID) 0 else 1, params.price, object : com.ttlock.bl.sdk.electricmeter.callback.AddCallback {
             override fun onAddSuccess(info: com.ttlock.bl.sdk.electricmeter.model.ElectricMeterInfo) {
                 callback(Result.success(TTElectricMeterInitResult(electricMeterId = info.electricMeterId.toLong(), featureValue = info.featureValue)))
             }

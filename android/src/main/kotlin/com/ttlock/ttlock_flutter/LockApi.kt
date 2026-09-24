@@ -28,6 +28,14 @@ fun lockErrorToFlutterError(lockError: LockError): FlutterError {
     )
 }
 
+fun lockInvalidParameterError(message: String, details: Any? = null): FlutterError {
+    return FlutterError(
+        code = TTLockError.INVALID_PARAMETER.raw.toString(),
+        message = message,
+        details = details
+    )
+}
+
 class LockApi: TTLockHostApi {
     var context: Context
 
@@ -643,11 +651,7 @@ class LockApi: TTLockHostApi {
         if (faceNo == null) {
             callback.invoke(
                 Result.failure(
-                    FlutterError(
-                        code = "INVALID_PARAMETER",
-                        message = "faceNumber is not a number",
-                        details = faceNumber
-                    )
+                    lockInvalidParameterError("faceNumber is not a number", faceNumber)
                 )
             )
             return
@@ -762,7 +766,7 @@ class LockApi: TTLockHostApi {
     override fun deleteFace(faceNumber: String, lockData: String, callback: (Result<Unit>) -> Unit) {
         val faceNo = faceNumber.toLongOrNull()
         if (faceNo == null) {
-            callback.invoke(Result.failure(FlutterError("INVALID_PARAMETER", "faceNumber is not a number", faceNumber)))
+            callback.invoke(Result.failure(lockInvalidParameterError("faceNumber is not a number", faceNumber)))
             return
         }
 
@@ -805,11 +809,7 @@ class LockApi: TTLockHostApi {
         if (palmVeinNo == null) {
             callback.invoke(
                 Result.failure(
-                    FlutterError(
-                        code = "INVALID_PARAMETER",
-                        message = "palmVeinNumber is not a number",
-                        details = palmVeinNumber
-                    )
+                    lockInvalidParameterError("palmVeinNumber is not a number", palmVeinNumber)
                 )
             )
             return
@@ -840,7 +840,7 @@ class LockApi: TTLockHostApi {
         if (palmVeinNo == null) {
             callback.invoke(
                 Result.failure(
-                    FlutterError("INVALID_PARAMETER", "palmVeinNumber is not a number", palmVeinNumber)
+                    lockInvalidParameterError("palmVeinNumber is not a number", palmVeinNumber)
                 )
             )
             return
@@ -1303,7 +1303,7 @@ class LockApi: TTLockHostApi {
             .mapNotNull { it.toIntOrNull() }
 
         if (floorList.isEmpty()) {
-            callback.invoke(Result.failure(FlutterError("INVALID_PARAMETER", "floors is empty/invalid", floors)))
+            callback.invoke(Result.failure(lockInvalidParameterError("floors is empty/invalid", floors)))
             return
         }
 
@@ -1392,7 +1392,7 @@ class LockApi: TTLockHostApi {
         callback: (Result<Unit>) -> Unit
     ) {
         if (TextUtils.isEmpty(hotelInfo)) {
-            callback.invoke(Result.failure(FlutterError("INVALID_PARAMETER", "hotelInfo is empty", hotelInfo)))
+            callback.invoke(Result.failure(lockInvalidParameterError("hotelInfo is empty", hotelInfo)))
             return
         }
 
@@ -1415,7 +1415,7 @@ class LockApi: TTLockHostApi {
 
     override fun setHotelCardSector(sector: String, lockData: String, callback: (Result<Unit>) -> Unit) {
         if (TextUtils.isEmpty(sector)) {
-            callback.invoke(Result.failure(FlutterError("INVALID_PARAMETER", "sector is empty", sector)))
+            callback.invoke(Result.failure(lockInvalidParameterError("sector is empty", sector)))
             return
         }
 
@@ -1457,7 +1457,7 @@ class LockApi: TTLockHostApi {
     ) {
         val portInt = port.toIntOrNull()
         if (portInt == null) {
-            callback.invoke(Result.failure(FlutterError("INVALID_PARAMETER", "port is invalid", port)))
+            callback.invoke(Result.failure(lockInvalidParameterError("port is invalid", port)))
             return
         }
 
@@ -1496,7 +1496,7 @@ class LockApi: TTLockHostApi {
         val portValue = if (TextUtils.isEmpty(port)) "4999" else port
         val portInt = portValue.toIntOrNull()
         if (portInt == null) {
-            callback.invoke(Result.failure(FlutterError("INVALID_PARAMETER", "port is invalid", port)))
+            callback.invoke(Result.failure(lockInvalidParameterError("port is invalid", port)))
             return
         }
 
@@ -1540,7 +1540,7 @@ class LockApi: TTLockHostApi {
                 }
             })
         } catch (e: Throwable) {
-            callback.invoke(Result.failure(FlutterError("INVALID_PARAMETER", "configIp parse failed", e.message)))
+            callback.invoke(Result.failure(lockInvalidParameterError("configIp parse failed", e.message)))
         }
     }
 
