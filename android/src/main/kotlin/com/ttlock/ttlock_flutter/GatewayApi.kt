@@ -105,7 +105,7 @@ class GatewayApi : TTGatewayHostApi {
         callback: (Result<Unit>) -> Unit
     ) {
         if (mac.isEmpty()) {
-            callback(Result.failure(FlutterError("missing_mac", "mac is required for configIp", null)))
+            callback(Result.failure(FlutterError(TTGatewayError.INVALID_PARAMETER.raw.toString(), "mac is required for configIp", null)))
             return
         }
         val setting = IpSetting()

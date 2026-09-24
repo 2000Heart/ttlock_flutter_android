@@ -2,6 +2,7 @@ package com.ttlock.ttlock_flutter
 
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import com.ttlock.bl.sdk.api.TTLockClient
 import com.ttlock.bl.sdk.device.Remote
 import com.ttlock.bl.sdk.device.WirelessDoorSensor
 import com.ttlock.bl.sdk.device.WirelessKeypad
@@ -195,7 +196,7 @@ class AccessoryApi : TTAccessoryHostApi {
     }
 
     override fun getStoredLocks(mac: String, callback: (Result<List<String>>) -> Unit) {
-        callback(Result.failure(FlutterError("NOT_IMPLEMENTED", "getStoredLocks is not implemented", null)))
+        callback(Result.failure(FlutterError(TTMultifunctionalKeypadError.FAILED.raw.toString(), "getStoredLocks is not implemented", null)))
     }
 
     override fun deleteStoredLock(

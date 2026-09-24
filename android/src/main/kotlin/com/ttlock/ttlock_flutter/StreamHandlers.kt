@@ -36,6 +36,33 @@ import com.ttlock.bl.sdk.watermeter.api.WaterMeterClient
 import com.ttlock.bl.sdk.wirelessdoorsensor.WirelessDoorSensorClient
 import io.flutter.plugin.common.BinaryMessenger
 
+
+private fun sinkLockError(sink: PigeonEventSink<*>, lockError: LockError?) {
+    val mapped = if (lockError != null) lockErrorRevert(lockError) else TTLockError.FAIL
+    sink.error(
+        mapped.raw.toString(),
+        lockError?.errorMsg,
+        lockError?.description
+    )
+}
+
+private fun sinkLockInvalidParameter(sink: PigeonEventSink<*>, message: String?) {
+    sink.error(TTLockError.INVALID_PARAMETER.raw.toString(), message, null)
+}
+
+private fun sinkGatewayInvalidParameter(sink: PigeonEventSink<*>, message: String?) {
+    sink.error(TTGatewayError.INVALID_PARAMETER.raw.toString(), message, null)
+}
+
+private fun sinkKeypadInvalidParameter(sink: PigeonEventSink<*>, message: String?) {
+    sink.error(TTMultifunctionalKeypadError.INVALID_PARAMETER.raw.toString(), message, null)
+}
+
+private fun sinkKeypadTimeout(sink: PigeonEventSink<*>, message: String?) {
+    sink.error(TTMultifunctionalKeypadError.TIMEOUT.raw.toString(), message, null)
+}
+
+
 class ScanLockImpl : LockScanLockStreamHandler {
     var context: Context
 
@@ -73,11 +100,7 @@ class ScanLockImpl : LockScanLockStreamHandler {
 
             override fun onFail(lockError: LockError?) {
                 LogUtil.d("lockError:$lockError")
-                sink.error(
-                    lockError?.errorCode ?: "",
-                    lockError?.errorMsg,
-                    lockError?.description
-                )
+                sinkLockError(sink, lockError)
             }
         })
     }
@@ -103,11 +126,7 @@ class ScanLockWifiImpl : LockScanWifiStreamHandler {
         super.onListen(p0, sink)
         val lockData = LockStreamParams.scanWifiLockData
         if (lockData.isNullOrEmpty()) {
-            sink.error(
-                "NO_LOCK_DATA",
-                "请先通过 setLockScanWifiParam 设置 lockData 后再使用 lockScanWifi",
-                null
-            )
+            sinkLockInvalidParameter(sink, "请先通过 setLockScanWifiParam 设置 lockData 后再使用 lockScanWifi")
             return
         }
         TTLockClient.getDefault().scanWifi(lockData, object : ScanWifiCallback {
@@ -131,11 +150,7 @@ class ScanLockWifiImpl : LockScanWifiStreamHandler {
             }
 
             override fun onFail(lockError: LockError?) {
-                sink.error(
-                    lockError?.errorCode ?: "",
-                    lockError?.errorMsg,
-                    lockError?.description
-                )
+                sinkLockError(sink, lockError)
             }
         })
     }
@@ -159,7 +174,7 @@ class AddLockCardImpl : LockAddCardStreamHandler {
         val lockData = try {
             slot.requireLockData("LockAddCard")
         } catch (e: IllegalStateException) {
-            sink.error("NO_LOCK_DATA", e.message, null)
+            sinkLockInvalidParameter(sink, e.message)
             return
         }
         val validity = slot.buildValidityInfo()
@@ -173,11 +188,7 @@ class AddLockCardImpl : LockAddCardStreamHandler {
             }
 
             override fun onFail(lockError: LockError?) {
-                sink.error(
-                    lockError?.errorCode ?: "",
-                    lockError?.errorMsg,
-                    lockError?.description
-                )
+                sinkLockError(sink, lockError)
             }
         })
     }
@@ -201,7 +212,7 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
         val lockData = try {
             slot.requireLockData("LockAddFingerprint")
         } catch (e: IllegalStateException) {
-            sink.error("NO_LOCK_DATA", e.message, null)
+            sinkLockInvalidParameter(sink, e.message)
             return
         }
         val validity = slot.buildValidityInfo()
@@ -247,11 +258,7 @@ class AddLockFingerprintImpl : LockAddFingerprintStreamHandler {
             }
 
             override fun onFail(lockError: LockError?) {
-                sink.error(
-                    lockError?.errorCode ?: "",
-                    lockError?.errorMsg,
-                    lockError?.description
-                )
+                sinkLockError(sink, lockError)
             }
         })
     }
@@ -275,7 +282,7 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
         val lockData = try {
             slot.requireLockData("LockAddFace")
         } catch (e: IllegalStateException) {
-            sink.error("NO_LOCK_DATA", e.message, null)
+            sinkLockInvalidParameter(sink, e.message)
             return
         }
         val validity = slot.buildValidityInfo()
@@ -317,11 +324,7 @@ class AddLockFaceImpl : LockAddFaceStreamHandler {
             }
 
             override fun onFail(lockError: LockError?) {
-                sink.error(
-                    lockError?.errorCode ?: "",
-                    lockError?.errorMsg,
-                    lockError?.description
-                )
+                sinkLockError(sink, lockError)
             }
         })
     }
@@ -345,7 +348,7 @@ class AddLockPalmVeinImpl : LockAddPalmVeinStreamHandler {
         val lockData = try {
             slot.requireLockData("LockAddPalmVein")
         } catch (e: IllegalStateException) {
-            sink.error("NO_LOCK_DATA", e.message, null)
+            sinkLockInvalidParameter(sink, e.message)
             return
         }
         val validity = slot.buildValidityInfo()
@@ -381,11 +384,7 @@ class AddLockPalmVeinImpl : LockAddPalmVeinStreamHandler {
             }
 
             override fun onFail(lockError: LockError?) {
-                sink.error(
-                    lockError?.errorCode ?: "",
-                    lockError?.errorMsg,
-                    lockError?.description
-                )
+                sinkLockError(sink, lockError)
             }
         })
     }
@@ -445,7 +444,7 @@ class ScanGatewayWiFiImpl : GatewayGetNearbyWifiStreamHandler {
         super.onListen(p0, sink)
         val mac = GatewayStreamParams.nearbyWifiGatewayMac
         if (mac.isNullOrEmpty()) {
-            sink.error("NO_GATEWAY", "请先通过 setGatewayGetNearbyWifiParam 设置网关 MAC 后再使用 gatewayGetNearbyWifi", null)
+            sinkGatewayInvalidParameter(sink, "请先通过 setGatewayGetNearbyWifiParam 设置网关 MAC 后再使用 gatewayGetNearbyWifi")
             return
         }
         GatewayClient.getDefault().scanWiFiByGateway(mac, object : ScanWiFiByGatewayCallback {
@@ -601,7 +600,7 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
             if (pollCancelled) return@Runnable
             attempts++
             if (attempts > 200) {
-                sink.error("TIMEOUT", "等待键盘录入指纹超时", null)
+                sinkKeypadTimeout(sink, "等待键盘录入指纹超时")
                 stopPolling()
                 return@Runnable
             }
@@ -635,12 +634,12 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
         val slot = KeypadStreamParams.addFingerprint
         val lockData = slot.lockData
         if (lockData.isNullOrEmpty()) {
-            sink.error("NO_LOCK_DATA", "请先通过 setAccessoryAddKeypadFingerprintParam 设置 lockData", null)
+            sinkLockInvalidParameter(sink, "请先通过 setAccessoryAddKeypadFingerprintParam 设置 lockData")
             return
         }
         val mac = slot.keypadMac
         if (mac.isNullOrEmpty()) {
-            sink.error("NO_KEYPAD", "请先通过 setAccessoryAddKeypadFingerprintParam 设置 keypadMac", null)
+            sinkKeypadInvalidParameter(sink, "请先通过 setAccessoryAddKeypadFingerprintParam 设置 keypadMac")
             return
         }
 
@@ -690,11 +689,7 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
                     }
 
                     override fun onLockFail(lockError: LockError) {
-                        sink.error(
-                            lockError.errorCode ?: "",
-                            lockError.errorMsg,
-                            lockError.description
-                        )
+                        sinkLockError(sink, lockError)
                     }
 
                     override fun onKeypadFail(keypadError: MultifunctionalKeypadError) {
@@ -725,11 +720,7 @@ class AddKeypadFingerprintImpl : AccessoryAddKeypadFingerprintStreamHandler {
                 }
 
                 override fun onFail(lockError: LockError?) {
-                    sink.error(
-                        lockError?.errorCode ?: "",
-                        lockError?.errorMsg,
-                        lockError?.description
-                    )
+                    sinkLockError(sink, lockError)
                 }
             }
         )
@@ -770,7 +761,7 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
             if (pollCancelled) return@Runnable
             attempts++
             if (attempts > 200) {
-                sink.error("TIMEOUT", "等待键盘刷卡超时", null)
+                sinkKeypadTimeout(sink, "等待键盘刷卡超时")
                 stopPolling()
                 return@Runnable
             }
@@ -797,12 +788,12 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
         val slot = KeypadStreamParams.addCard
         val lockData = slot.lockData
         if (lockData.isNullOrEmpty()) {
-            sink.error("NO_LOCK_DATA", "请先通过 setAccessoryAddKeypadCardParam 设置 lockData", null)
+            sinkLockInvalidParameter(sink, "请先通过 setAccessoryAddKeypadCardParam 设置 lockData")
             return
         }
         val mac = slot.keypadMac
         if (mac.isNullOrEmpty()) {
-            sink.error("NO_KEYPAD", "请先通过 setAccessoryAddKeypadCardParam 设置 keypadMac", null)
+            sinkKeypadInvalidParameter(sink, "请先通过 setAccessoryAddKeypadCardParam 设置 keypadMac")
             return
         }
 
@@ -821,11 +812,7 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
                     }
 
                     override fun onLockFail(lockError: LockError) {
-                        sink.error(
-                            lockError.errorCode ?: "",
-                            lockError.errorMsg,
-                            lockError.description
-                        )
+                        sinkLockError(sink, lockError)
                     }
 
                     override fun onKeypadFail(keypadError: MultifunctionalKeypadError) {
@@ -849,11 +836,7 @@ class AddKeypadCardImpl : AccessoryAddKeypadCardStreamHandler {
                 }
 
                 override fun onFail(lockError: LockError?) {
-                    sink.error(
-                        lockError?.errorCode ?: "",
-                        lockError?.errorMsg,
-                        lockError?.description
-                    )
+                    sinkLockError(sink, lockError)
                 }
             }
         )

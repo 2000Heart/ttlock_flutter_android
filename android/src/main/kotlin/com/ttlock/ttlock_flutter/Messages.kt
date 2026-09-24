@@ -685,7 +685,9 @@ enum class TTGatewayError(val raw: Int) {
   /** 配置 IP 失败。 */
   FAILED_CONFIG_IP(18),
   /** 无效 IP。 */
-  INVALID_IP(19);
+  INVALID_IP(19),
+  /** 无效参数（含缺参、上下文未设置等）。 */
+  INVALID_PARAMETER(20);
 
   companion object {
     fun ofRaw(raw: Int): TTGatewayError? {
@@ -713,7 +715,9 @@ enum class TTRemoteAccessoryError(val raw: Int) {
   /** 数据格式错误。 */
   DATA_FORMAT_ERROR(7),
   /** 操作超时（含 Dart 层 Future.timeout）。 */
-  TIMEOUT(8);
+  TIMEOUT(8),
+  /** 无效参数（含缺参、上下文未设置等）。 */
+  INVALID_PARAMETER(9);
 
   companion object {
     fun ofRaw(raw: Int): TTRemoteAccessoryError? {
@@ -741,7 +745,9 @@ enum class TTMultifunctionalKeypadError(val raw: Int) {
   /** 数据格式错误。 */
   DATA_FORMAT_ERROR(7),
   /** 操作超时（含 Dart 层 Future.timeout）。 */
-  TIMEOUT(8);
+  TIMEOUT(8),
+  /** 无效参数（含缺参、上下文未设置等）。 */
+  INVALID_PARAMETER(9);
 
   companion object {
     fun ofRaw(raw: Int): TTMultifunctionalKeypadError? {
@@ -1108,7 +1114,9 @@ enum class TTStandaloneDoorSensorError(val raw: Int) {
   /** 设备正忙。 */
   DEVICE_IS_BUSY(12),
   /** 数据格式错误。 */
-  DATA_FORMAT_ERROR(13);
+  DATA_FORMAT_ERROR(13),
+  /** 无效参数（含缺参、上下文未设置等）。 */
+  INVALID_PARAMETER(14);
 
   companion object {
     fun ofRaw(raw: Int): TTStandaloneDoorSensorError? {
