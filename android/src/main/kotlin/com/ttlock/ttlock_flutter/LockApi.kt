@@ -1005,12 +1005,13 @@ class LockApi: TTLockHostApi {
     }
 
     override fun setLockLatchBolt(
+        driveLevel: Long,
         keepTime: Long,
         lockData: String,
         callback: (Result<Unit>) -> Unit
     ) {
         TTLockClient.getDefault().setLatchBolt(
-            -1,
+            driveLevel.toInt(),
             keepTime.toInt(),
             lockData,
             object : SetLatchBoltCallback {
@@ -1786,6 +1787,42 @@ class LockApi: TTLockHostApi {
                 callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
             }
         })
+    }
+
+    override fun getBluetoothAdvertisingInterval(
+        lockData: String,
+        callback: (Result<Double>) -> Unit
+    ) {
+        TTLockClient.getDefault().getBluetoothAdvertisingInterval(
+            lockData,
+            object : GetBluetoothAdvertisingIntervalCallback {
+                override fun onGetSuccess(interval: Double) {
+                    callback.invoke(Result.success(interval))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            })
+    }
+
+    override fun setBluetoothAdvertisingInterval(
+        interval: Double,
+        lockData: String,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        TTLockClient.getDefault().setBluetoothAdvertisingInterval(
+            interval,
+            lockData,
+            object : SetBluetoothAdvertisingIntervalCallback {
+                override fun onSetSuccess() {
+                    callback.invoke(Result.success(Unit))
+                }
+
+                override fun onFail(lockError: LockError) {
+                    callback.invoke(Result.failure(lockErrorToFlutterError(lockError)))
+                }
+            })
     }
 
     override fun getPassageModes(lockData: String, callback: (Result<List<TTPassageModeModel>>) -> Unit) {

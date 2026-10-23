@@ -90,103 +90,232 @@ fun controlActionConvert(action: TTControlAction): Int {
 
 fun featureValueConvert(lockFunction: TTLockFunction): Int? {
     return when(lockFunction) {
+        // id: 0
         TTLockFunction.PASSCODE -> FeatureValue.PASSCODE.toInt()
+        // id: 1
         TTLockFunction.IC_CARD -> FeatureValue.IC.toInt()
+        // id: 2
         TTLockFunction.FINGERPRINT -> FeatureValue.FINGER_PRINT.toInt()
+        // id: 3
         TTLockFunction.WRISTBAND -> FeatureValue.WRIST_BAND.toInt()
+        // id: 4
         TTLockFunction.AUTO_LOCK -> FeatureValue.AUTO_LOCK.toInt()
+        // id: 5
         TTLockFunction.DELETE_PASSCODE -> FeatureValue.PASSCODE_WITH_DELETE_FUNCTION.toInt()
+        // id: 6
+        TTLockFunction.FIRMWARE_SETTING -> FeatureValue.FIRMWARE_SETTTING.toInt()
+        // id: 7
         TTLockFunction.MANAGE_PASSCODE -> FeatureValue.MODIFY_PASSCODE_FUNCTION
+        // id: 8
         TTLockFunction.LOCKING -> FeatureValue.MANUAL_LOCK
+        // id: 9
         TTLockFunction.PASSCODE_VISIBLE -> FeatureValue.PASSWORD_DISPLAY_OR_HIDE
+        // id: 10
         TTLockFunction.GATEWAY_UNLOCK -> FeatureValue.GATEWAY_UNLOCK
+        // id: 11
         TTLockFunction.LOCK_FREEZE -> FeatureValue.FREEZE_LOCK
+        // id: 12
         TTLockFunction.CYCLE_PASSWORD -> FeatureValue.CYCLIC_PASSWORD
+        // id: 13
+        TTLockFunction.MAGNETOMETER -> FeatureValue.MAGNETOMETER
+        // id: 14
         TTLockFunction.UNLOCK_SWITCH -> FeatureValue.CONFIG_GATEWAY_UNLOCK
+        // id: 15
         TTLockFunction.AUDIO_SWITCH -> FeatureValue.AUDIO_MANAGEMENT
+        // id: 16
         TTLockFunction.NB_IO_T -> FeatureValue.NB_LOCK
+        // id: 18
         TTLockFunction.GET_ADMIN_PASSCODE -> FeatureValue.GET_ADMIN_CODE
+        // id: 19
         TTLockFunction.HOTEL_CARD -> FeatureValue.HOTEL_LOCK
+        // id: 20
         TTLockFunction.NO_CLOCK -> FeatureValue.LOCK_NO_CLOCK_CHIP
+        // id: 21
         TTLockFunction.NO_BROADCAST_IN_NORMAL -> FeatureValue.SUPPORT_CLOSE_BLUETOOTH_ADVERTISING
+        // id: 22
         TTLockFunction.PASSAGE_MODE -> FeatureValue.PASSAGE_MODE
+        // id: 23
         TTLockFunction.TURN_OFF_AUTO_LOCK -> FeatureValue.PASSAGE_MODE_AND_AUTO_LOCK_AND_CAN_CLOSE
+        // id: 24
         TTLockFunction.WIRELESS_KEYPAD -> FeatureValue.WIRELESS_KEYBOARD
+        // id: 25
         TTLockFunction.LIGHT -> FeatureValue.LAMP
+        // id: 26
         TTLockFunction.HOTEL_CARD_BLACKLIST -> null
+        // id: 27
         TTLockFunction.IDENTITY_CARD -> null
+        // id: 28
         TTLockFunction.TAMPER_ALERT -> FeatureValue.TAMPER_ALERT
+        // id: 29
         TTLockFunction.RESET_BUTTON -> FeatureValue.RESET_BUTTON
+        // id: 30
         TTLockFunction.PRIVACY_LOCK -> FeatureValue.PRIVACY_LOCK
+        // id: 32
         TTLockFunction.DEAD_LOCK -> FeatureValue.DEAD_LOCK
+        // id: 34
         TTLockFunction.CYCLIC_CARD_OR_FINGERPRINT -> FeatureValue.CYCLIC_IC_OR_FINGER_PRINT
-        TTLockFunction.FINGER_VEIN -> FeatureValue.FINGER_VEIN
-        TTLockFunction.BLE5G -> FeatureValue.TELINK_CHIP
-        TTLockFunction.NB_AWAKE -> FeatureValue.NB_ACTIVITE_CONFIGURATION
-        TTLockFunction.RECOVER_CYCLE_PASSCODE -> FeatureValue.CYCLIC_PASSCODE_CAN_RECOVERY
-        TTLockFunction.REMOTE_KEY -> FeatureValue.REMOTE
-        TTLockFunction.GET_ACCESSORY_ELECTRIC_QUANTITY -> FeatureValue.ACCESSORY_BATTERY
-        TTLockFunction.SOUND_VOLUME_AND_LANGUAGE_SETTING -> FeatureValue.SOUND_VOLUME_AND_LANGUAGE_SETTING
-        TTLockFunction.QR_CODE -> FeatureValue.QR_CODE
-        TTLockFunction.DOOR_SENSOR_STATE -> FeatureValue.DOOR_SENSOR
-        TTLockFunction.PASSAGE_MODE_AUTO_UNLOCK_SETTING -> FeatureValue.PASSAGE_MODE_AUTO_UNLOCK_SETTING
-        TTLockFunction.DOOR_SENSOR -> FeatureValue.WIRELESS_DOOR_SENSOR
-        TTLockFunction.DOOR_SENSOR_ALERT -> FeatureValue.DOOR_OPEN_ALARM
-        TTLockFunction.SENSITIVITY -> FeatureValue.SENSITIVITY
-        TTLockFunction.FACE -> FeatureValue.FACE_3D
-        TTLockFunction.CPU_CARD -> FeatureValue.CPU_CARD
-        TTLockFunction.WIFI_LOCK -> FeatureValue.WIFI_LOCK
-        TTLockFunction.WIFI_LOCK_STATIC_IP -> FeatureValue.WIFI_LOCK_SUPPORT_STATIC_IP
-        TTLockFunction.PASSCODE_KEY_NUMBER -> FeatureValue.INCOMPLETE_PASSCODE
-        TTLockFunction.STAND_ALONE_ACTIVATION -> null
-        TTLockFunction.DOUBLE_AUTH -> FeatureValue.SUPPORT_DOUBLE_CHECK
-        TTLockFunction.AUTHORIZED_UNLOCK -> FeatureValue.APP_AUTH_UNLOCK
-        TTLockFunction.GATEWAY_AUTHORIZED_UNLOCK -> FeatureValue.GATEWAY_AUTH_UNLOCK
-        TTLockFunction.NO_EKEY_UNLOCK -> FeatureValue.DO_NOT_SUPPORT_APP_AND_GATEWAY_UNLOCK
-        TTLockFunction.ZHI_AN_PHOTO_FACE -> FeatureValue.ZHI_AN_FACE_DELIVERY
-        TTLockFunction.PALM_VEIN -> FeatureValue.PALM_VEIN
-        TTLockFunction.WIFI_AREA -> null
-        TTLockFunction.XIAO_CAO_CAMERA -> FeatureValue.SUPPORT_GRASS
-        TTLockFunction.RESET_LOCK_BY_CODE -> FeatureValue.RESET_LOCK_BY_CODE
-        TTLockFunction.THIRD_PARTY_BLUETOOTH_DEVICE -> FeatureValue.SUPPORT_THIRD_PARTY_BLUETOOTH_DEVICE
-        TTLockFunction.AUTO_SET_ANGLE -> FeatureValue.AUTO_SET_ANGLE
-        TTLockFunction.MANUAL_SET_ANGLE -> FeatureValue.MANUAL_SET_ANGLE
-        TTLockFunction.CONTROL_LATCH_BOLT -> FeatureValue.CONTROL_LATCH_BOLT
-        TTLockFunction.AUTO_SET_UNLOCK_DIRECTION -> FeatureValue.AUTO_SET_UNLOCK_DIRECTION
-        TTLockFunction.IC_CARD_SECURITY_SETTING -> FeatureValue.SUPPORT_IC_CARD_SECURITY_SETTING
-        TTLockFunction.WIFI_POWER_SAVING_TIME -> FeatureValue.SUPPORT_WIFI_SLEEP_MODE_TIMES_SETTING
-        TTLockFunction.MULTI_FUNCTION_KEYPAD -> FeatureValue.SUPPORT_MULTI_FUNCTION_KEYPAD
-        TTLockFunction.DO_NOT_SUPPORT_TURN_OFF_LATCH_BOLT -> FeatureValue.DO_NOT_SUPPORT_TURN_OFF_LATCH_BOLT
-        TTLockFunction.PUBLIC_MODE -> FeatureValue.SUPPORT_PUBLIC_MODE_SETTING
-        TTLockFunction.LOW_BATTERY_AUTO_UNLOCK -> FeatureValue.SUPPORT_LOW_BATTERY_UNLOCK_SETTING
-        TTLockFunction.MOTOR_DRIVE_TIME -> FeatureValue.SUPPORT_MOTOR_DRIVE_TIME_SETTING
-        TTLockFunction.MODIFY_FEATURE_VALUE -> FeatureValue.SUPPORT_MODIFY_FEATURE_VALUE
-        TTLockFunction.MODIFY_LOCK_NAME_PREFIX -> FeatureValue.SUPPORT_MODIFY_LOCK_NAME_PREFIX
-        TTLockFunction.AUTH_CODE -> FeatureValue.SUPPORT_AUTH_CODE
-        TTLockFunction.UNAUTHORIZED_ATTEMPT_ALARM -> FeatureValue.UNAUTHORIZED_ATTEMPT_ALARM
-        TTLockFunction.POWER_SAVER_SUPPORT_WIFI -> FeatureValue.POWER_SAVER_SUPPORT_WIFI
-        TTLockFunction.BLUETOOTH_ADVERTISING_SETTING -> FeatureValue.SUPPORT_BLUETOOTH_ADVERTISING_SETTING
-        TTLockFunction.WORKING_MODE -> FeatureValue.SUPPORT_WORKING_TIMES
-        TTLockFunction.SUPPLIER_CODE -> FeatureValue.SUPPORT_SUPPLIER_CODE
-        TTLockFunction.CAT_ONE -> FeatureValue.SUPPORT_CAT_ONE
-        TTLockFunction.FORCED_OPENING_DOOR_ALARM -> FeatureValue.SUPPORT_FORCED_OPENING_DOOR_ALARM
-        TTLockFunction.ZHI_AN_FACE_FEATURE_SECOND_GENERATION -> FeatureValue.ZHI_AN_FACE_FEATURE_SECOND_GENERATION
-        TTLockFunction.SUPPORT_DEAD_LOCKING -> FeatureValue.SUPPORT_DEAD_LOCKING
-        TTLockFunction.WORKING_TIME -> FeatureValue.SUPPORT_WORKING_TIMES
-        TTLockFunction.CUSTOM_QRCODE -> FeatureValue.SUPPORT_CUSTOM_QR_CODE
-        TTLockFunction.SECURITY_M1CARD -> FeatureValue.SUPPORT_SAFE_M1_CARD
-        TTLockFunction.YI_SHENG_PHOTO_FACE -> FeatureValue.YI_SHENG_FACE_DELIVERY
-        TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
-        TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
-        TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
-        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> FeatureValue.SUPPORT_SEMI_AUTOMATIC_MODE_CONTROL
-        TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
-        TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
-        // Android FeatureValue bit 112 is SUPPORT_PICTURE_FACE_DELIVERY (= iOS YiNuoPhotoFace).
-        TTLockFunction.YI_NUO_PHOTO_FACE -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
-        TTLockFunction.URL_FACE -> FeatureValue.SUPPORT_URL_FACE_DELIVERY
-        TTLockFunction.HUMAN_PRESENCE_SENSOR -> FeatureValue.SUPPORT_HUMAN_PRESENCE_SENSOR
+        // id: 36
         TTLockFunction.UNLOCK_DIRECTION -> FeatureValue.UNLOCK_DIRECTION
+        // id: 37
+        TTLockFunction.FINGER_VEIN -> FeatureValue.FINGER_VEIN
+        // id: 38
+        TTLockFunction.BLE5G -> FeatureValue.TELINK_CHIP
+        // id: 39
+        TTLockFunction.NB_AWAKE -> FeatureValue.NB_ACTIVITE_CONFIGURATION
+        // id: 40
+        TTLockFunction.RECOVER_CYCLE_PASSCODE -> FeatureValue.CYCLIC_PASSCODE_CAN_RECOVERY
+        // id: 41
+        TTLockFunction.REMOTE_KEY -> FeatureValue.REMOTE
+        // id: 42
+        TTLockFunction.GET_ACCESSORY_ELECTRIC_QUANTITY -> FeatureValue.ACCESSORY_BATTERY
+        // id: 43
+        TTLockFunction.SOUND_VOLUME_AND_LANGUAGE_SETTING -> FeatureValue.SOUND_VOLUME_AND_LANGUAGE_SETTING
+        // id: 44
+        TTLockFunction.QR_CODE -> FeatureValue.QR_CODE
+        // id: 45
+        TTLockFunction.DOOR_SENSOR_STATE -> FeatureValue.DOOR_SENSOR
+        // id: 46
+        TTLockFunction.PASSAGE_MODE_AUTO_UNLOCK_SETTING -> FeatureValue.PASSAGE_MODE_AUTO_UNLOCK_SETTING
+        // id: 47
+        TTLockFunction.FINGERPRINT_DISTRIBUTION -> FeatureValue.FINGERPRINT_DISTRIBUTION
+        // id: 48
+        TTLockFunction.ZHONG_ZHENG -> FeatureValue.ZHONG_ZHENG
+        // id: 49
+        TTLockFunction.SYNO -> FeatureValue.SYNO
+        // id: 50
+        TTLockFunction.DOOR_SENSOR -> FeatureValue.WIRELESS_DOOR_SENSOR
+        // id: 51
+        TTLockFunction.DOOR_SENSOR_ALERT -> FeatureValue.DOOR_OPEN_ALARM
+        // id: 52
+        TTLockFunction.SENSITIVITY -> FeatureValue.SENSITIVITY
+        // id: 53
+        TTLockFunction.FACE -> FeatureValue.FACE_3D
+        // id: 54
+        TTLockFunction.MOTOR_TORQUE -> FeatureValue.SUPPORT_MOTOR_TORQUE_SETTING
+        // id: 55
+        TTLockFunction.CPU_CARD -> FeatureValue.CPU_CARD
+        // id: 56
+        TTLockFunction.WIFI_LOCK -> FeatureValue.WIFI_LOCK
+        // id: 58
+        TTLockFunction.WIFI_LOCK_STATIC_IP -> FeatureValue.WIFI_LOCK_SUPPORT_STATIC_IP
+        // id: 60
+        TTLockFunction.PASSCODE_KEY_NUMBER -> FeatureValue.INCOMPLETE_PASSCODE
+        // id: 61
+        TTLockFunction.MEARI_CAMERA -> null
+        // id: 62
+        TTLockFunction.STAND_ALONE_ACTIVATION -> null
+        // id: 63
+        TTLockFunction.DOUBLE_AUTH -> FeatureValue.SUPPORT_DOUBLE_CHECK
+        // id: 64
+        TTLockFunction.AUTHORIZED_UNLOCK -> FeatureValue.APP_AUTH_UNLOCK
+        // id: 65
+        TTLockFunction.GATEWAY_AUTHORIZED_UNLOCK -> FeatureValue.GATEWAY_AUTH_UNLOCK
+        // id: 66
+        TTLockFunction.NO_EKEY_UNLOCK -> FeatureValue.DO_NOT_SUPPORT_APP_AND_GATEWAY_UNLOCK
+        // id: 67
+        TTLockFunction.XIONG_MAI_CAMERA -> FeatureValue.SUPPORT_XM
+        // id: 68
+        TTLockFunction.ON_MICRO_CHIP -> FeatureValue.ON_MICRO_CHIP
+        // id: 69
+        TTLockFunction.ZHI_AN_PHOTO_FACE -> FeatureValue.ZHI_AN_FACE_DELIVERY
+        // id: 70
+        TTLockFunction.PALM_VEIN -> FeatureValue.PALM_VEIN
+        // id: 71
+        TTLockFunction.WIFI_AREA -> null
+        // id: 75
+        TTLockFunction.XIAO_CAO_CAMERA -> FeatureValue.SUPPORT_GRASS
+        // id: 76
+        TTLockFunction.RESET_LOCK_BY_CODE -> FeatureValue.RESET_LOCK_BY_CODE
+        // id: 77
+        TTLockFunction.THIRD_PARTY_BLUETOOTH_DEVICE -> FeatureValue.SUPPORT_THIRD_PARTY_BLUETOOTH_DEVICE
+        // id: 78
+        TTLockFunction.AUTO_SET_ANGLE -> FeatureValue.AUTO_SET_ANGLE
+        // id: 79
+        TTLockFunction.MANUAL_SET_ANGLE -> FeatureValue.MANUAL_SET_ANGLE
+        // id: 80
+        TTLockFunction.CONTROL_LATCH_BOLT -> FeatureValue.CONTROL_LATCH_BOLT
+        // id: 81
+        TTLockFunction.AUTO_SET_UNLOCK_DIRECTION -> FeatureValue.AUTO_SET_UNLOCK_DIRECTION
+        // id: 82
+        TTLockFunction.IC_CARD_SECURITY_SETTING -> FeatureValue.SUPPORT_IC_CARD_SECURITY_SETTING
+        // id: 83
+        TTLockFunction.WIFI_POWER_SAVING_TIME -> FeatureValue.SUPPORT_WIFI_SLEEP_MODE_TIMES_SETTING
+        // id: 84
+        TTLockFunction.MULTI_FUNCTION_KEYPAD -> FeatureValue.SUPPORT_MULTI_FUNCTION_KEYPAD
+        // id: 85
+        TTLockFunction.DO_NOT_SUPPORT_TURN_OFF_LATCH_BOLT -> FeatureValue.DO_NOT_SUPPORT_TURN_OFF_LATCH_BOLT
+        // id: 86
+        TTLockFunction.PUBLIC_MODE -> FeatureValue.SUPPORT_PUBLIC_MODE_SETTING
+        // id: 87
+        TTLockFunction.LOW_BATTERY_AUTO_UNLOCK -> FeatureValue.SUPPORT_LOW_BATTERY_UNLOCK_SETTING
+        // id: 88
+        TTLockFunction.MOTOR_DRIVE_TIME -> FeatureValue.SUPPORT_MOTOR_DRIVE_TIME_SETTING
+        // id: 89
+        TTLockFunction.MODIFY_FEATURE_VALUE -> FeatureValue.SUPPORT_MODIFY_FEATURE_VALUE
+        // id: 90
+        TTLockFunction.MODIFY_LOCK_NAME_PREFIX -> FeatureValue.SUPPORT_MODIFY_LOCK_NAME_PREFIX
+        // id: 91
+        TTLockFunction.PASSCODE_WITH_OPEN_PRIVACY_LOCK -> null
+        // id: 92
+        TTLockFunction.AUTH_CODE -> FeatureValue.SUPPORT_AUTH_CODE
+        // id: 93
+        TTLockFunction.UNAUTHORIZED_ATTEMPT_ALARM -> FeatureValue.UNAUTHORIZED_ATTEMPT_ALARM
+        // id: 94
+        TTLockFunction.LINK_LOCK -> null
+        // id: 95
+        TTLockFunction.CLEAR_PASSCODE_AND_DYNAMIC_PASSCODE_SETTING -> FeatureValue.SUPPORT_CLEAR_PASSCODE_AND_DYNAMIC_PASSCODE_SETTING
+        // id: 96
+        TTLockFunction.POWER_SAVER_SUPPORT_WIFI -> FeatureValue.POWER_SAVER_SUPPORT_WIFI
+        // id: 97
+        TTLockFunction.BLUETOOTH_ADVERTISING_SETTING -> FeatureValue.SUPPORT_BLUETOOTH_ADVERTISING_SETTING
+        // id: 98
+        TTLockFunction.WORKING_MODE -> FeatureValue.SUPPORT_WORKING_TIMES
+        // id: 99
+        TTLockFunction.SUPPLIER_CODE -> FeatureValue.SUPPORT_SUPPLIER_CODE
+        // id: 100
+        TTLockFunction.CAT_ONE -> FeatureValue.SUPPORT_CAT_ONE
+        // id: 102
+        TTLockFunction.FORCED_OPENING_DOOR_ALARM -> FeatureValue.SUPPORT_FORCED_OPENING_DOOR_ALARM
+        // id: 103
+        TTLockFunction.ZHI_AN_FACE_FEATURE_SECOND_GENERATION -> FeatureValue.ZHI_AN_FACE_FEATURE_SECOND_GENERATION
+        // id: 104
+        TTLockFunction.WIFI_FIRMWARE_VERSION -> null
+        // id: 106
+        TTLockFunction.SUPPORT_DEAD_LOCKING -> FeatureValue.SUPPORT_DEAD_LOCKING
+        // id: 107
+        TTLockFunction.WORKING_TIME -> FeatureValue.SUPPORT_WORKING_TIMES
+        // id: 108
+        TTLockFunction.CUSTOM_QRCODE -> FeatureValue.SUPPORT_CUSTOM_QR_CODE
+        // id: 109
+        TTLockFunction.SECURITY_M1CARD -> FeatureValue.SUPPORT_SAFE_M1_CARD
+        // id: 110
+        TTLockFunction.YI_SHENG_PHOTO_FACE -> FeatureValue.YI_SHENG_FACE_DELIVERY
+        // id: 112
+        TTLockFunction.PICTURE_FACE_DELIVERY -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
+        // id: 112
+        TTLockFunction.YI_NUO_PHOTO_FACE -> FeatureValue.SUPPORT_PICTURE_FACE_DELIVERY
+        // id: 114
+        TTLockFunction.SUPPORT_SET_ALIAS -> FeatureValue.SUPPORT_SET_ALIAS
+        // id: 117
+        TTLockFunction.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING -> FeatureValue.HIDE_WIFI_CAT_ONE_SLEEP_MODE_SETTING
+        // id: 119
+        TTLockFunction.SEMI_AUTOMATIC_MODE_CONTROL -> FeatureValue.SUPPORT_SEMI_AUTOMATIC_MODE_CONTROL
+        // id: 120
+        TTLockFunction.SUPPORT_SET_USER_ATTRIBUTES -> null
+        // id: 122
+        TTLockFunction.MOTOR_DRIVE_BOARD_FIRMWARE_VERSION -> null
+        // id: 123
+        TTLockFunction.URL_FINGER -> FeatureValue.SUPPORT_URL_FINGER_DELIVERY
+        // id: 124
+        TTLockFunction.URL_FACE -> FeatureValue.SUPPORT_URL_FACE_DELIVERY
+        // id: 125
+        TTLockFunction.URL_PALM_VEIN -> FeatureValue.SUPPORT_URL_PALM_VEIN_DELIVERY
+        // id: 126
+        TTLockFunction.SUPPORT_SUPERVISION -> FeatureValue.SUPPORT_LOCK_SUPERVISION
+        // id: 128
+        TTLockFunction.HUMAN_PRESENCE_SENSOR -> FeatureValue.SUPPORT_HUMAN_PRESENCE_SENSOR
+        // id: 132
+        TTLockFunction.FACE_FEATURE_DATA_TYPE -> null
     }
 }
 

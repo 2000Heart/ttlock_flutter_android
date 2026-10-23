@@ -934,7 +934,10 @@ class ScanWaterMeterImpl : AccessoryWaterMeterStartScanStreamHandler {
                     TTMeterScanModel(
                         name = meter.name,
                         mac = meter.address,
-                        rssi = meter.rssi.toLong()
+                        rssi = meter.rssi.toLong(),
+                        isInited = !meter.isSettingMode,
+                        type = meter.type.toLong(),
+                        scanTime = meter.date
                     )
                 )
             }
@@ -966,7 +969,10 @@ class ScanElectricMeterImpl : AccessoryElectricMeterStartScanStreamHandler {
                     TTMeterScanModel(
                         name = meter.name,
                         mac = meter.address,
-                        rssi = meter.rssi.toLong()
+                        rssi = meter.rssi.toLong(),
+                        isInited = !meter.isSettingMode,
+                        type = meter.type.toLong(),
+                        scanTime = meter.date
                     )
                 )
             }
