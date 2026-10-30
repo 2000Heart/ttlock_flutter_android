@@ -1,19 +1,25 @@
 package com.ttlock.ttlock_flutter
 
+import android.app.Activity
 import android.content.Context
 import com.ttlock.bl.sdk.api.TTLockClient
 import com.ttlock.bl.sdk.gateway.api.GatewayClient
 import com.ttlock.bl.sdk.keypad.WirelessKeypadClient
 import com.ttlock.bl.sdk.mulfunkeypad.api.MultifunctionalKeypadClient
 import com.ttlock.bl.sdk.remote.api.RemoteClient
+import com.ttlock.bl.sdk.util.LogUtil
 import com.ttlock.bl.sdk.wirelessdoorsensor.WirelessDoorSensorClient
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 
 
 /** TtlockPremiseFlutterPlugin */
-class TtlockFlutterPlugin: FlutterPlugin {
-  private var context: Context? = null
+class TtlockFlutterPlugin: FlutterPlugin, ActivityAware {
+  private var applicationContext: Context? = null
+  /** Prefer Activity when available — aligns with premise plugin / SDK prepareBTService. */
+  private var activity: Activity? = null
   private var messenger: BinaryMessenger? = null
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
@@ -37,47 +43,97 @@ class TtlockFlutterPlugin: FlutterPlugin {
   private var gatewayApi: GatewayApi? = null
   private var accessoryApi: AccessoryApi? = null
 
+  private fun activeContext(): Context? = activity ?: applicationContext
+
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    this.context = flutterPluginBinding.applicationContext
+    this.applicationContext = flutterPluginBinding.applicationContext
     this.messenger = flutterPluginBinding.binaryMessenger
+    LogUtil.setDBG(true)
     initSdk()
     initModules()
   }
 
   private fun initSdk() {
-    TTLockClient.getDefault().prepareBTService(context)
-    GatewayClient.getDefault().prepareBTService(context)
-    RemoteClient.getDefault().prepareBTService(context)
-    WirelessKeypadClient.getDefault().prepareBTService(context)
-    MultifunctionalKeypadClient.getDefault().prepareBTService(context)
-    WirelessDoorSensorClient.getDefault().prepareBTService(context)
+    val ctx = activeContext() ?: return
+    TTLockClient.getDefault().prepareBTService(ctx)
+    GatewayClient.getDefault().prepareBTService(ctx)
+    RemoteClient.getDefault().prepareBTService(ctx)
+    WirelessKeypadClient.getDefault().prepareBTService(ctx)
+    MultifunctionalKeypadClient.getDefault().prepareBTService(ctx)
+    WirelessDoorSensorClient.getDefault().prepareBTService(ctx)
+  }
+
+  private fun updateModuleContexts(ctx: Context) {
+    scanLockImpl?.context = ctx
+    scanLockWifiImpl?.context = ctx
+    addLockCardImpl?.context = ctx
+    addLockFingerprintImpl?.context = ctx
+    addLockFaceImpl?.context = ctx
+    addLockPalmVeinImpl?.context = ctx
+    scanGatewayImpl?.context = ctx
+    scanGatewayWiFiImpl?.context = ctx
+    scanRemoteKeyImpl?.context = ctx
+    scanRemoteKeypadImpl?.context = ctx
+    addKeypadFingerprintImpl?.context = ctx
+    addKeypadCardImpl?.context = ctx
+    scanDoorSensorImpl?.context = ctx
+    scanStandaloneDoorSensorImpl?.context = ctx
+    scanWaterMeterImpl?.context = ctx
+    scanElectricMeterImpl?.context = ctx
+    lockApi?.context = ctx
+    gatewayApi?.context = ctx
+    accessoryApi?.context = ctx
   }
   
   private fun initModules() {
-    scanLockImpl = ScanLockImpl(context!!, messenger!!)
-    scanLockWifiImpl = ScanLockWifiImpl(context!!, messenger!!)
-    addLockCardImpl = AddLockCardImpl(context!!, messenger!!)
-    addLockFingerprintImpl = AddLockFingerprintImpl(context!!, messenger!!)
-    addLockFaceImpl = AddLockFaceImpl(context!!, messenger!!)
-    addLockPalmVeinImpl = AddLockPalmVeinImpl(context!!, messenger!!)
-    scanGatewayImpl = ScanGatewayImpl(context!!, messenger!!)
-    scanGatewayWiFiImpl = ScanGatewayWiFiImpl(context!!, messenger!!)
-    scanRemoteKeyImpl = ScanRemoteKeyImpl(context!!, messenger!!)
-    scanRemoteKeypadImpl = ScanRemoteKeypadImpl(context!!, messenger!!)
-    addKeypadFingerprintImpl = AddKeypadFingerprintImpl(context!!, messenger!!)
-    addKeypadCardImpl = AddKeypadCardImpl(context!!, messenger!!)
-    scanDoorSensorImpl = ScanDoorSensorImpl(context!!, messenger!!)
-    scanStandaloneDoorSensorImpl = ScanStandaloneDoorSensorImpl(context!!, messenger!!)
-    scanWaterMeterImpl = ScanWaterMeterImpl(context!!, messenger!!)
-    scanElectricMeterImpl = ScanElectricMeterImpl(context!!, messenger!!)
-    lockApi = LockApi(context!!, messenger!!)
-    gatewayApi = GatewayApi(context!!, messenger!!)
-    accessoryApi = AccessoryApi(context!!, messenger!!)
+    val ctx = activeContext() ?: return
+    val messenger = this.messenger ?: return
+    scanLockImpl = ScanLockImpl(ctx, messenger)
+    scanLockWifiImpl = ScanLockWifiImpl(ctx, messenger)
+    addLockCardImpl = AddLockCardImpl(ctx, messenger)
+    addLockFingerprintImpl = AddLockFingerprintImpl(ctx, messenger)
+    addLockFaceImpl = AddLockFaceImpl(ctx, messenger)
+    addLockPalmVeinImpl = AddLockPalmVeinImpl(ctx, messenger)
+    scanGatewayImpl = ScanGatewayImpl(ctx, messenger)
+    scanGatewayWiFiImpl = ScanGatewayWiFiImpl(ctx, messenger)
+    scanRemoteKeyImpl = ScanRemoteKeyImpl(ctx, messenger)
+    scanRemoteKeypadImpl = ScanRemoteKeypadImpl(ctx, messenger)
+    addKeypadFingerprintImpl = AddKeypadFingerprintImpl(ctx, messenger)
+    addKeypadCardImpl = AddKeypadCardImpl(ctx, messenger)
+    scanDoorSensorImpl = ScanDoorSensorImpl(ctx, messenger)
+    scanStandaloneDoorSensorImpl = ScanStandaloneDoorSensorImpl(ctx, messenger)
+    scanWaterMeterImpl = ScanWaterMeterImpl(ctx, messenger)
+    scanElectricMeterImpl = ScanElectricMeterImpl(ctx, messenger)
+    lockApi = LockApi(ctx, messenger)
+    gatewayApi = GatewayApi(ctx, messenger)
+    accessoryApi = AccessoryApi(ctx, messenger)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    context = null
+    applicationContext = null
     messenger = null
+  }
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    activity = binding.activity
+    updateModuleContexts(binding.activity)
+    // premise: prepare with Activity once it is available
+    initSdk()
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+    activity = null
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    activity = binding.activity
+    updateModuleContexts(binding.activity)
+    initSdk()
+  }
+
+  override fun onDetachedFromActivity() {
+    activity = null
+    applicationContext?.let { updateModuleContexts(it) }
   }
 
 }

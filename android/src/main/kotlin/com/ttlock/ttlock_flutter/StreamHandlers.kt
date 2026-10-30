@@ -73,6 +73,9 @@ class ScanLockImpl : LockScanLockStreamHandler {
 
     override fun onListen(p0: Any?, sink: PigeonEventSink<TTLockScanModel>) {
         super.onListen(p0, sink)
+        // Align with GatewayImpl / premise: prepare before scan or SDK returns BLE_SERVER_NOT_INIT
+        // which is mapped to TTLockError.BLUETOOTH_OFF ("蓝牙未开启").
+        TTLockClient.getDefault().prepareBTService(context)
         TTLockClient.getDefault().startScanLock(object : ScanLockCallback {
             override fun onScanLockSuccess(extendedBluetoothDevice: ExtendedBluetoothDevice) {
                 val lockVersion = TTLockVersion(
@@ -129,6 +132,7 @@ class ScanLockWifiImpl : LockScanWifiStreamHandler {
             sinkLockInvalidParameter(sink, "请先通过 setLockScanWifiParam 设置 lockData 后再使用 lockScanWifi")
             return
         }
+        TTLockClient.getDefault().prepareBTService(context)
         TTLockClient.getDefault().scanWifi(lockData, object : ScanWifiCallback {
             override fun onScanWifi(wifiList: MutableList<com.ttlock.bl.sdk.gateway.model.WiFi>?, scanState: Int) {
                 val list = wifiList?.map { w ->
@@ -493,6 +497,7 @@ class ScanRemoteKeyImpl : AccessoryStartScanRemoteKeyStreamHandler {
         sink: PigeonEventSink<TTRemoteAccessoryScanModel>
     ) {
         super.onListen(p0, sink)
+        RemoteClient.getDefault().prepareBTService(context)
         RemoteClient.getDefault().startScan { remote ->
             sink.success(
                 TTRemoteAccessoryScanModel(
@@ -526,6 +531,8 @@ class ScanRemoteKeypadImpl : AccessoryStartScanRemoteKeypadStreamHandler {
         sink: PigeonEventSink<TTRemoteAccessoryScanModel>
     ) {
         super.onListen(p0, sink)
+        WirelessKeypadClient.getDefault().prepareBTService(context)
+        MultifunctionalKeypadClient.getDefault().prepareBTService(context)
         WirelessKeypadClient.getDefault().startScanKeyboard(object : ScanKeypadCallback {
             override fun onScanKeyboardSuccess(wirelessKeypad: WirelessKeypad) {
                 sink.success(
@@ -861,6 +868,7 @@ class ScanDoorSensorImpl : AccessoryStartScanDoorSensorStreamHandler {
         sink: PigeonEventSink<TTRemoteAccessoryScanModel>
     ) {
         super.onListen(p0, sink)
+        WirelessDoorSensorClient.getDefault().prepareBTService(context)
         WirelessDoorSensorClient.getDefault().startScan { doorSensor ->
             sink.success(
                 TTRemoteAccessoryScanModel(
@@ -894,6 +902,7 @@ class ScanStandaloneDoorSensorImpl : AccessoryStandaloneDoorSensorStartScanStrea
         sink: PigeonEventSink<TTStandaloneDoorSensorScanModel>
     ) {
         super.onListen(p0, sink)
+        StandaloneDoorSensorClient.getDefault().prepareBTService(context)
         StandaloneDoorSensorClient.getDefault().startScan(object : ScanStandaloneDoorSensorCallback {
             override fun onScan(doorSensor: com.ttlock.bl.sdk.device.StandaloneDoorSensor) {
                 sink.success(
@@ -928,6 +937,7 @@ class ScanWaterMeterImpl : AccessoryWaterMeterStartScanStreamHandler {
         sink: PigeonEventSink<TTMeterScanModel>
     ) {
         super.onListen(p0, sink)
+        WaterMeterClient.getDefault().prepareBTService(context)
         WaterMeterClient.getDefault().startScan { meter ->
             if (meter != null) {
                 sink.success(
@@ -963,6 +973,7 @@ class ScanElectricMeterImpl : AccessoryElectricMeterStartScanStreamHandler {
         sink: PigeonEventSink<TTMeterScanModel>
     ) {
         super.onListen(p0, sink)
+        ElectricMeterClient.getDefault().prepareBTService(context)
         ElectricMeterClient.getDefault().startScan { meter ->
             if (meter != null) {
                 sink.success(

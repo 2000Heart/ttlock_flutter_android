@@ -30,6 +30,8 @@ android {
     namespace 'com.ttlock.ttlock_flutter'
     defaultConfig {
         minSdkVersion 18
+        // Flutter release enables R8; ship keep rules to all host apps.
+        consumerProguardFiles 'consumer-rules.pro'
     }
     lintOptions {
         disable 'InvalidPackage'

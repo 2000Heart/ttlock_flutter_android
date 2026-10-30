@@ -1,11 +1,15 @@
 package com.ttlock.ttlock_flutter
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.RequiresPermission
+import androidx.core.content.ContextCompat
 import com.ttlock.bl.sdk.api.ExtendedBluetoothDevice
 import com.ttlock.bl.sdk.api.TTLockClient
 import com.ttlock.bl.sdk.entity.HotelData
@@ -119,11 +123,40 @@ class LockApi: TTLockHostApi {
 
     @RequiresPermission(Manifest.permission.BLUETOOTH)
     override fun getBluetoothState(): TTBluetoothState {
-        return if(TTLockClient.getDefault().isBLEEnabled(context)){
-            TTBluetoothState.TURN_ON
-        }else{
-            TTBluetoothState.TURN_OFF
+        // Refresh SDK bluetooth adapter (premise calls prepare before every command).
+        TTLockClient.getDefault().prepareBTService(context)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val connectGranted = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
+            if (!connectGranted) {
+                LogUtil.d("getBluetoothState: BLUETOOTH_CONNECT not granted → UN_AUTHORIZED")
+                return TTBluetoothState.UN_AUTHORIZED
+            }
         }
+
+        val manager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val adapter = manager?.adapter
+        if (adapter == null) {
+            LogUtil.d("getBluetoothState: adapter null → UNSUPPORTED")
+            return TTBluetoothState.UNSUPPORTED
+        }
+
+        // isEnabled == (getState() == STATE_ON). STATE_BLE_ON is treated as OFF by the framework.
+        val enabled = adapter.isEnabled
+        val state = try {
+            adapter.state
+        } catch (t: Throwable) {
+            LogUtil.w("getBluetoothState: adapter.state failed: ${t.message}")
+            -1
+        }
+        LogUtil.d(
+            "getBluetoothState: enabled=$enabled adapterState=$state " +
+                "(OFF=${BluetoothAdapter.STATE_OFF} ON=${BluetoothAdapter.STATE_ON})"
+        )
+        return if (enabled) TTBluetoothState.TURN_ON else TTBluetoothState.TURN_OFF
     }
 
     override fun initLock(params: TTLockInitParams, callback: (Result<String>) -> Unit) {
